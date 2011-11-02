@@ -131,5 +131,9 @@ def convert_to_prefs(qs, func):
 
 
 def get_identifier(obj):
+    """
+    Given a Django Model, returns a string identifier in the format
+    <app_label>.<model>:<object_id>.
+    """
     ctype = ContentType.objects.get_for_model(obj)
     return "%s.%s:%s" % (ctype.app_label, ctype.model, obj.id)
