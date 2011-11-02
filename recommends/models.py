@@ -1,20 +1,75 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
-from .utils import get_identier
-from .managers import RatingManager
+from .converters import get_identifier
+from .managers import RecommendsManager, RatingManager, SimilarityResultManager, RecommendationManager
 
 
-class Rating(models.Model):
+class RecommendsBaseModel(models.Model):
+    """(RecommendsBaseModel description)"""
+    object_ctype = models.ForeignKey(ContentType)
+    object_id = models.PositiveIntegerField()
+
+    objects = RecommendsManager()
+
+    class Meta:
+        abstract = True
+        unique_together = ('object_ctype', 'object_id')
+
+    def __unicode__(self):
+        return u"RecommendsBaseModel"
+
+    def _object_identifier(self, ctype, object_id):
+        obj = ctype.get_object_for_this_type(pk=object_id)
+        return get_identifier(obj)
+
+    def object_identifier(self):
+        return self._object_identifier(self.object_ctype, self.object_id)
+
+
+class Rating(RecommendsBaseModel):
+    """
+    This is a convenience model to represents Vote.
+    You don't have to use this model, you can use your own.
+    """
     user = models.ForeignKey(User)
-    rated_object_id = models.PositiveIntegerField()
-    rated_object_ctype = models.ForeignKey(ContentType)
-    rating = models.FloatField(blank=False, null=False)
+    rating = models.FloatField(null=True, blank=True, default=None)
 
     objects = RatingManager()
 
     def __unicode__(self):
         return u"Rating"
 
-    def rated_object_identifier(self):
-        return get_identier(self)
+
+class SimilarityResult(RecommendsBaseModel):
+    """(Result description)"""
+
+    score = models.FloatField(null=True, blank=True, default=None)
+
+    related_object_ctype = models.ForeignKey(ContentType)
+    related_object_id = models.PositiveIntegerField()
+
+    objects = SimilarityResultManager()
+
+    class Meta:
+        unique_together = ('object_ctype', 'object_id', 'related_object_ctype', 'related_object_id')
+
+    def __unicode__(self):
+        return u"Result"
+
+    def related_object_identifier(self):
+        return self._object_identifier(self.related_object_ctype, self.related_object_id)
+
+
+class Recommendation(RecommendsBaseModel):
+    """(Recommendation description)"""
+    user = models.ForeignKey(User)
+    score = models.FloatField(null=True, blank=True, default=None)
+
+    objects = RecommendationManager()
+
+    class Meta:
+        unique_together = ('object_ctype', 'object_id', 'user')
+
+    def __unicode__(self):
+        return u"Recommendation for user %s" % (self.user)

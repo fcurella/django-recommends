@@ -1,8 +1,10 @@
-from django.contrib.contenttypes.models import ContentType
+from django.conf import settings
+from .models import SimilarityResult, Recommendation
 from .distances import sim_distance, sim_pearson
+from .converters import get_object
 
 
-def topMatches(prefs, person, n=5, similarity=sim_pearson):
+def top_matches(prefs, person, n=5, similarity=sim_pearson):
     """
     Returns the best matches for person from the prefs dictionary.
     Number of results and similarity function are optional params.
@@ -15,7 +17,7 @@ def topMatches(prefs, person, n=5, similarity=sim_pearson):
     return scores[0:n]
 
 
-def getRecommendations(prefs, person, similarity=sim_pearson):
+def get_recommendations(prefs, person, similarity=sim_pearson):
     """
     Gets recommendations for a person by using a weighted average
     of every other user's rankings
@@ -50,7 +52,7 @@ def getRecommendations(prefs, person, similarity=sim_pearson):
     return rankings
 
 
-def transformPrefs(prefs):
+def transform_prefs(prefs):
     result = {}
     for person in prefs:
         for item in prefs[person]:
@@ -60,29 +62,65 @@ def transformPrefs(prefs):
     return result
 
 
-def calculateSimilarItems(prefs, n=10):
+def calculate_similar_items(prefs, n=10, similarity=sim_distance):
     """
     Create a dictionary of items showing which other items they
     are most similar to.
+
+    Output::
+
+        {
+            "<object_id>": [
+                            (<score>, <related_object_id>),
+                            (<score>, <related_object_id>),
+            ],
+            "<object_id>": [
+                            (<score>, <related_object_id>),
+                            (<score>, <related_object_id>),
+            ],
+        }
     """
 
     result = {}
     # Invert the preference matrix to be item-centric
-    itemPrefs = transformPrefs(prefs)
+    itemPrefs = transform_prefs(prefs)
     c = 0
     for item in itemPrefs:
         # Status updates for large datasets
         c += 1
-        if c % 100 == 0:
+        if c % 100 == 0 and settings.DEBUG:
             print "%d / %d" % (c, len(itemPrefs))
         # Find the most similar items to this one
-        scores = topMatches(itemPrefs, item, n=n, similarity=sim_distance)
+        scores = top_matches(itemPrefs, item, n=n, similarity=similarity)
         result[item] = scores
     return result
 
 
-def getRecommendedItems(prefs, itemMatch, user):
-    userRatings = prefs[user]
+def store_calculate_similar_items(itemMatch, get_object_func=get_object):
+    for object_id, scores in itemMatch.items():
+        for score, related_object_id in scores:
+            object_target = get_object_func(object_id)
+            object_related = get_object_func(related_object_id)
+
+            SimilarityResult.objects.set_score_for_objects(
+                object_target=object_target,
+                object_related=object_related,
+                score=score
+            )
+
+
+def get_recommended_items(prefs, itemMatch, user):
+    """
+    itemMatch is supposed to be the result of ``calculate_similar_items()``
+
+    Output::
+
+        [
+            (<score>, '<object_id>'),
+            (<score>, '<object_id>'),
+        ]
+    """
+    userRatings = prefs[user.id]
     scores = {}
     totalSim = {}
 
@@ -112,28 +150,11 @@ def getRecommendedItems(prefs, itemMatch, user):
     return rankings
 
 
-def convert_to_prefs(qs, func):
-    """
-    `func` must be a function that, given an item from qs, returns a tuple
-    composed of (user_id, object_identifier, rating)
-
-    `object_identifier` is any string that uniquely identifies the object ie:
-    <app_label>.<model>:<object_id>.
-
-    The `utils.get_identifier` method is provided as convenience for creatiing such identifiers.
-    """
-    prefs_tuple = map(func, qs)
-    prefs = {}
-    for pref in prefs_tuple:
-        prefs[pref[0]][pref[1]] = pref[2]
-
-    return prefs
-
-
-def get_identifier(obj):
-    """
-    Given a Django Model, returns a string identifier in the format
-    <app_label>.<model>:<object_id>.
-    """
-    ctype = ContentType.objects.get_for_model(obj)
-    return "%s.%s:%s" % (ctype.app_label, ctype.model, obj.id)
+def store_recommended_items(user, rankings, get_object_func=get_object):
+    for score, object_id in rankings:
+        object_recommended = get_object_func(object_id)
+        Recommendation.objects.set_score_for_object(
+            user=user,
+            object_recommended=object_recommended,
+            score=score
+        )
