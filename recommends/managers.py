@@ -24,7 +24,7 @@ class RatingManager(models.Manager):
         """
         prefs = {}
         for rating in self.filter_for_model(obj):
-            user = rating.user
+            user = rating.user_id
             item_key = rating.rated_object_identifier()
             rating = rating.rating
             prefs.setdefault(user, {})
