@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
-
+from .utils import get_identier
 from .managers import RatingManager
 
 
@@ -17,4 +17,4 @@ class Rating(models.Model):
         return u"Rating"
 
     def rated_object_identifier(self):
-        return "%s.%s:%s" % (self.rated_object_ctype.app_label, self.rated_object_ctype.model, self.rated_object_id)
+        return get_identier(self)

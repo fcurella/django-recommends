@@ -1,3 +1,4 @@
+from django.contrib.contenttypes.models import ContentType
 from .distances import sim_distance, sim_pearson
 
 
@@ -109,3 +110,26 @@ def getRecommendedItems(prefs, itemMatch, user):
     rankings.sort()
     rankings.reverse()
     return rankings
+
+
+def convert_to_prefs(qs, func):
+    """
+    `func` must be a function that, given an item from qs, returns a tuple
+    composed of (user_id, object_identifier, rating)
+
+    `object_identifier` is any string that uniquely identifies the object ie:
+    <app_label>.<model>:<object_id>.
+
+    The `utils.get_identifier` method is provided as convenience for creatiing such identifiers.
+    """
+    prefs_tuple = map(func, qs)
+    prefs = {}
+    for pref in prefs_tuple:
+        prefs[pref[0]][pref[1]] = pref[2]
+
+    return prefs
+
+
+def get_identier(obj):
+    ctype = ContentType.objects.get_for_model(obj)
+    return "%s.%s:%s" % (ctype.app_label, ctype.model, obj.id)
