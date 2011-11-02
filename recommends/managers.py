@@ -15,7 +15,7 @@ class RatingManager(RecommendsManager):
     def get_query_set(self):
         return super(RecommendsManager, self).get_query_set().filter(rating__isnull=False)
 
-    def prefs_for_model(self, model):
+    def prefs(self):
         """
         Returns a dict representing users' votes on items, as in::
 
@@ -27,20 +27,23 @@ class RatingManager(RecommendsManager):
 
         """
         prefs = {}
-        for rating in self.filter_for_model(model):
-            user = rating.user_id
-            item_key = rating.object_identifier()
-            rating = rating.rating
-            prefs.setdefault(user, {})
-            prefs[user][item_key] = rating
+        for result in self.get_query_set():
+            item_key = result.object_identifier()
+            related_key = result.related_object_identifier()
+            score = result.score
+            prefs.setdefault(item_key, [])
+            prefs[item_key].append((score, related_key))
         return prefs
+
+    def prefs_for_model(self, model):
+        return self.filter_for_model(model).prefs()
 
 
 class SimilarityResultManager(RecommendsManager):
     def get_query_set(self):
         return super(RecommendsManager, self).get_query_set().filter(score__isnull=False)
 
-    def prefs_for_model(self, model):
+    def prefs_for_qs(self):
         """
         Returns a dict representing similarity scores for a given content type::
 
@@ -57,13 +60,16 @@ class SimilarityResultManager(RecommendsManager):
 
         """
         prefs = {}
-        for result in self.filter_for_model(model):
+        for result in self.get_query_set():
             item_key = result.object_identifier()
             related_key = result.related_object_identifier()
             score = result.score
             prefs.setdefault(item_key, [])
             prefs[item_key].append((score, related_key))
         return prefs
+
+    def prefs_for_model(self, model):
+        return self.filter_for_model(model).prefs()
 
     def get_or_create_for_objects(self, object_target, object_related):
         object_ctype = ContentType.objects.get_for_model(object_target)
