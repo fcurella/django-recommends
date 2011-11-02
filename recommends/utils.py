@@ -130,6 +130,6 @@ def convert_to_prefs(qs, func):
     return prefs
 
 
-def get_identier(obj):
+def get_identifier(obj):
     ctype = ContentType.objects.get_for_model(obj)
     return "%s.%s:%s" % (ctype.app_label, ctype.model, obj.id)
