@@ -1,23 +1,27 @@
 from django.contrib.auth.models import User
-from celery.decorators import task, periodic_task
+from celery.decorators import periodic_task
 from celery.task.schedules import crontab
 
+from .providers import recommendation_registry
 from .models import SimilarityResult
-from .utils import calculate_similar_items, store_calculated_similar_items
-from .utils import get_recommended_items, store_recommended_items
+from .filtering import calculate_similar_items, get_recommended_items
+from .utils import store_calculated_similar_items, store_recommended_items
 
 
 @periodic_task(run_every=crontab(hour="*/24"))
-def compute_similar_items(prefs):
-    for user in User.objects.filter(is_active=True):
+def compute_similar_items():
+    for provider in recommendation_registry.providers:
+        prefs = provider.prefs()
         itemMatch = calculate_similar_items(prefs)
-        store_calculated_similar_items(itemMatch)
+        store_calculated_similar_items(itemMatch, provider)
 
 
 @periodic_task(run_every=crontab(hour="*/24"))
-def compute_reccomended_items(prefs):
+def compute_recommended_items():
     itemMatch = SimilarityResult.objects.all()
 
-    for user in User.objects.filter(is_active=True):
-        rankings = get_recommended_items(prefs, itemMatch, user)
-        store_recommended_items(user, rankings)
+    for provider in recommendation_registry.providers:
+        prefs = provider.prefs()
+        for user in User.objects.filter(is_active=True):
+            rankings = get_recommended_items(prefs, itemMatch, user)
+            store_recommended_items(user, rankings, provider)
