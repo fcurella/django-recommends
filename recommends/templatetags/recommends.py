@@ -6,36 +6,50 @@ register = template.Library()
 
 
 @register.filter
-def similar(obj):
+def similars(obj, limit):
+    """
+    Returns a list of SimilarityResult, representing how much an object is similar to the given one.
+
+    Usage::
+
+        {% for similar in myobj|similars:5 %}
+            {{ similar.get_object }}
+        {% endfor %}
+    """
     if isinstance(obj, models.Model):
         object_site = Site.objects.get_current()
 
-        return SimilarityResult.objects.similar_to(obj, site=object_site)
+        return SimilarityResult.objects.similar_to(obj, site=object_site)[:int(limit)]
 
 
 class SuggestionNode(template.Node):
-    def __init__(self, obj, varname):
-        self.obj = obj
+    def __init__(self, varname, limit):
         self.site = Site.objects.get_current()
         self.varname = varname
+        self.limit = limit
 
     def render(self, context):
         user = context['user']
-        suggestions = Recommendation.objects.get_recommendations_for_object(self.object, self.site, user)
-        context[self.varname] = suggestions
+        if user.is_authenticated():  # We need an id after all
+            suggestions = Recommendation.objects.get_recommendations_for_user(user, self.site)[:self.limit]
+            context[self.varname] = suggestions
         return ''
 
 
 @register.simple_tag(takes_context=True)
 def suggested(parser, token):
     """
-    {% suggested myobject [limit 5] as suggestions %}
+    Returns a list of Recommendation (suggestions of objects) for the current user.
+
+    {% suggested as suggestions [limit 5]  %}
     {% for suggested in suggestions %}
         {{ suggested.get_object }}
     {% endfor %}
     """
     bits = token.contents.split()
-    obj = bits[1]
     varname = bits[3]
-    if isinstance(obj, models.Model):
-        return SuggestionNode(obj, varname)
+    try:
+        limit = int(bits[5])
+    except IndexError:
+        limit = 5
+    return SuggestionNode(varname, limit)
