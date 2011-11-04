@@ -42,7 +42,7 @@ def get_recommendations(prefs, person, similarity=sim_pearson):
                 simSums.setdefault(item, 0)
                 simSums[item] += sim
     # Create the normalized list
-    rankings = [(total / simSums[item], item) for item, total in totals.items()]
+    rankings = [(total / simSums[item], item) for item, total in totals.iteritems()]
     # Return the sorted list
     rankings.sort()
     rankings.reverse()
@@ -108,7 +108,7 @@ def get_recommended_items(prefs, itemMatch, user):
     totalSim = {}
 
     # Loop over items rated by this user
-    for (item, rating) in userRatings.items():
+    for (item, rating) in userRatings.iteritems():
 
         # Loop over items similar to this one
         for (similarity, item2) in itemMatch[item]:
@@ -125,7 +125,7 @@ def get_recommended_items(prefs, itemMatch, user):
             totalSim[item2] += similarity
 
     # Divide each total score by total weighting to get an average
-    rankings = [(score / totalSim[item], item) for item, score in scores.items()]
+    rankings = [(score / totalSim[item], item) for item, score in scores.iteritems()]
 
     # Return the rankings from highest to lowest
     rankings.sort()
