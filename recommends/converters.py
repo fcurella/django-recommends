@@ -1,20 +1,33 @@
+from django.contrib.sites.models import Site
 from django.contrib.contenttypes.models import ContentType
 
 
-def get_identifier(obj):
+def get_sites(obj):
+    for field in obj._meta.fields:
+        if field.rel and field.rel.to == Site:
+            return [getattr(obj, field)]
+    for field in obj._meta.many_to_many:
+        if field.rel and field.rel.to == Site:
+            return getattr(obj, field).all()
+    return [Site.objects.get_current()]
+
+
+def get_identifier(obj, site=None):
     """
     Given a Django Model, returns a string identifier in the format
-    <app_label>.<model>:<object_id>.
+    <app_label>.<model>:<site_id>:<object_id>.
     """
+    if site is None:
+        site = Site.objects.get_current()
     ctype = ContentType.objects.get_for_model(obj)
-    return "%s.%s:%s" % (ctype.app_label, ctype.model, obj.id)
+    return "%s.%s:%s:%s" % (ctype.app_label, ctype.model, site.id, obj.id)
 
 
 def resolve_identifier(identifier):
     """
     The opposite of ``get_identifier()``
     """
-    app_module, object_id = identifier.split(':')
+    app_module, site_id, object_id = identifier.split(':')
     app_label, model = app_module.split('.')
     ModelClass = ContentType.object.get(app_label=app_label, model=model).model_class()
     return ModelClass.objects.get(pk=object_id)

@@ -10,8 +10,15 @@ class RecommendationProviderRegisty(object):
 recommendation_registry = RecommendationProviderRegisty()
 
 
+class Rating(object):
+    def __init__(self, user, rated_object, rating):
+        self.user = user
+        self.rated_object = rated_object
+        self.rating = rating
+
+
 class RecommendationProvider(object):
-    def get_identifier(self, obj):
+    def get_identifier(self, obj, *args, **kwargs):
         raise NotImplemented
 
     def resolve_identifier(self, identifier):
@@ -20,12 +27,14 @@ class RecommendationProvider(object):
     def get_items(self):
         raise NotImplemented
 
-    def get_users(self, item):
-        """Returns all the users who rated a particular item"""
+    def get_ratings(self, obj):
+        """Returns all ratings for given item"""
         raise NotImplemented
 
-    def get_rating(self, obj, user):
-        """Return what rating a given user gave to a given item"""
+    def get_rating_user(self, rating):
+        raise NotImplemented
+
+    def get_rating_rate(self, rating):
         raise NotImplemented
 
     def _convert_iterable_to_prefs(self, iterable):
@@ -34,12 +43,11 @@ class RecommendationProvider(object):
     def prefs(self):
         iterable = []
         for item in self.get_items():
-            users = self.get_users(item)
-            identifier = self.get_identifier(item)
-            for user in users:
-                rating = self.get_rating(item, user)
-                iterable.append((user, identifier, rating))
-
+            for rating in self.get_ratings():
+                user = self.get_rating_user(rating)
+                rate = self.get_rating_rate(rating)
+                identifier = self.get_identifier(item)
+                iterable.append((user, identifier, rate))
         return self._convert_iterable_to_prefs(iterable)
 
 
@@ -48,21 +56,63 @@ class DjangoRecommendationProvider(RecommendationProvider):
     Usage::
 
         class MyRecommendationProvider(DjangoRecommendationProvider):
-            queryset = MyObject.objects.all()
+            def get_items(self):
+                return MyObject.objects.all()
 
-            def get_users(self, item):
-                return User.objects.filter(voted_on=item)
+            def get_ratings(self, obj):
+                return Vote.objects.filter(object=obj)
 
-            def get_ratings(self, obj, user):
-                return Vote.objects.filter(object=obj, user=user).rating
+            def get_rating_user(self, rating):
+                return rating.user
+
+            def get_rating_rate(self, rating):
+                return rating.rate
+
     """
     def get_identifier(self, obj):
         return get_identifier(obj)
 
     def resolve_identifier(self, identifier):
-        raise resolve_identifier(identifier)
+        return resolve_identifier(identifier)
 
-    def get_items(self):
-        if not hasattr(self, 'queryset'):
-            raise NotImplemented
-        return self.queryset
+
+class DjangoSitesRecommendationProvider(DjangoRecommendationProvider):
+    """
+    Usage::
+
+        class MyRecommendationProvider(DjangoSitesRecommendationProvider):
+            def get_items(self):
+                return MyObject.objects.all()
+
+            def get_ratings(self, obj):
+                return Vote.objects.filter(object=obj)
+
+            def get_rating_user(self, rating):
+                return rating.user
+
+            def get_rating_rate(self, rating):
+                return rating.rate
+
+            def get_site(self, rating):
+                return rate.site
+
+    """
+    def get_identifier(self, obj, site):
+        return get_identifier(obj, site)
+
+    def resolve_identifier(self, identifier):
+        return resolve_identifier(identifier)
+
+    def get_site(self, rating):
+        raise NotImplemented
+
+    def prefs(self):
+        iterable = []
+        for item in self.get_items():
+            for rating in self.get_ratings():
+                user = self.get_rating_user(rating)
+                rate = self.get_rating_rate(rating)
+                site = self.get_site(rating)
+                identifier = self.get_identifier(item, site)
+                iterable.append((user, identifier, rate))
+        return self._convert_iterable_to_prefs(iterable)

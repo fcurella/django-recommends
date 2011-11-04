@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.sites.models import Site
 from .converters import get_identifier
 from .managers import RecommendsManager, RatingManager, SimilarityResultManager, RecommendationManager
 
@@ -9,12 +10,13 @@ class RecommendsBaseModel(models.Model):
     """(RecommendsBaseModel description)"""
     object_ctype = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
+    site = models.ForeignKey(Site)
 
     objects = RecommendsManager()
 
     class Meta:
         abstract = True
-        unique_together = ('object_ctype', 'object_id')
+        unique_together = ('object_ctype', 'object_id', 'site')
 
     def __unicode__(self):
         return u"RecommendsBaseModel"
@@ -42,7 +44,7 @@ class Rating(RecommendsBaseModel):
 
 
 class SimilarityResult(RecommendsBaseModel):
-    """(Result description)"""
+    """How much an object is similar to another"""
 
     score = models.FloatField(null=True, blank=True, default=None)
 
@@ -53,6 +55,7 @@ class SimilarityResult(RecommendsBaseModel):
 
     class Meta:
         unique_together = ('object_ctype', 'object_id', 'related_object_ctype', 'related_object_id')
+        ordering = ['-score']
 
     def __unicode__(self):
         return u"Result"
@@ -62,7 +65,7 @@ class SimilarityResult(RecommendsBaseModel):
 
 
 class Recommendation(RecommendsBaseModel):
-    """(Recommendation description)"""
+    """Recommended objects for a particular user"""
     user = models.ForeignKey(User)
     score = models.FloatField(null=True, blank=True, default=None)
 
@@ -70,6 +73,7 @@ class Recommendation(RecommendsBaseModel):
 
     class Meta:
         unique_together = ('object_ctype', 'object_id', 'user')
+        ordering = ['-score']
 
     def __unicode__(self):
         return u"Recommendation for user %s" % (self.user)

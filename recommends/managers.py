@@ -109,3 +109,6 @@ class RecommendationManager(RecommendsManager):
         result, created = self.get_or_create_for_objects(user, object_recommended)
         result.score = score
         result.save()
+
+    def get_recommendations_for_user(self, user):
+        return self.filter(user=user)
