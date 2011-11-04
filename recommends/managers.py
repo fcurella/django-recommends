@@ -71,7 +71,7 @@ class SimilarityResultManager(RecommendsManager):
     def prefs_for_model(self, model):
         return self.filter_for_model(model).prefs()
 
-    def get_or_create_for_objects(self, object_target, object_related):
+    def get_or_create_for_objects(self, object_target, object_target_site, object_related, object_related_site):
         object_ctype = ContentType.objects.get_for_model(object_target)
         object_id = object_target.id
 
@@ -81,34 +81,42 @@ class SimilarityResultManager(RecommendsManager):
         return self.get_or_create(
             object_ctype=object_ctype,
             object_id=object_id,
+            object_site=object_target_site,
             related_object_ctype=related_object_ctype,
-            related_object_id=related_object_id
+            related_object_id=related_object_id,
+            related_object_site=object_related_site
         )
 
-    def set_score_for_objects(self, object_target, object_related, score):
-        result, created = self.get_or_create_for_objects(object_target, object_related)
+    def set_score_for_objects(self, object_target, object_target_site, object_related, object_related_site, score):
+        result, created = self.get_or_create_for_objects(object_target, object_target_site, object_related, object_related_site)
         result.score = score
         result.save()
+
+    def similar_to(self, obj, site):
+        object_ctype = ContentType.objects.get_for_model(obj)
+        object_id = obj.pk
+        return self.filter(object_ctype=object_ctype, object_id=object_id, related_object_site=site)
 
 
 class RecommendationManager(RecommendsManager):
     def get_query_set(self):
         return super(RecommendsManager, self).get_query_set().filter(score__isnull=False)
 
-    def get_or_create_for_object(self, user, object_recommended):
+    def get_or_create_for_object(self, user, object_recommended, object_site):
         object_ctype = ContentType.objects.get_for_model(object_recommended)
         object_id = object_recommended.id
 
         return self.get_or_create(
             object_ctype=object_ctype,
             object_id=object_id,
+            object_site=object_site,
             user=user
         )
 
-    def set_score_for_object(self, user, object_recommended, score):
-        result, created = self.get_or_create_for_objects(user, object_recommended)
+    def set_score_for_object(self, user, object_recommended, object_site, score):
+        result, created = self.get_or_create_for_objects(user, object_recommended, object_site)
         result.score = score
         result.save()
-
-    def get_recommendations_for_user(self, user):
-        return self.filter(user=user)
+    
+    def get_recommendations_for_object(self, obj, site, user):
+        self.filter_for_object(obj).filter(user=user, object_site=site)

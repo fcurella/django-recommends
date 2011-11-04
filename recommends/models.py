@@ -10,13 +10,13 @@ class RecommendsBaseModel(models.Model):
     """(RecommendsBaseModel description)"""
     object_ctype = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
-    site = models.ForeignKey(Site)
+    object_site = models.ForeignKey(Site)
 
     objects = RecommendsManager()
 
     class Meta:
         abstract = True
-        unique_together = ('object_ctype', 'object_id', 'site')
+        unique_together = ('object_ctype', 'object_id', 'object_site')
 
     def __unicode__(self):
         return u"RecommendsBaseModel"
@@ -27,6 +27,10 @@ class RecommendsBaseModel(models.Model):
 
     def object_identifier(self):
         return self._object_identifier(self.object_ctype, self.object_id)
+
+    def get_object(self):
+        ModelClass = self.object_ctype.model_class()
+        return ModelClass.objects.get(pk=self.object_id)
 
 
 class Rating(RecommendsBaseModel):
@@ -50,18 +54,23 @@ class SimilarityResult(RecommendsBaseModel):
 
     related_object_ctype = models.ForeignKey(ContentType)
     related_object_id = models.PositiveIntegerField()
+    related_object_site = models.ForeignKey(Site)
 
     objects = SimilarityResultManager()
 
     class Meta:
-        unique_together = ('object_ctype', 'object_id', 'related_object_ctype', 'related_object_id')
+        unique_together = ('object_ctype', 'object_id', 'object_site', 'related_object_ctype', 'related_object_id', 'related_object_site')
         ordering = ['-score']
 
     def __unicode__(self):
-        return u"Result"
+        return u"Similarity between %s and %s" % (self.get_object(), self.get_related_object())
 
     def related_object_identifier(self):
         return self._object_identifier(self.related_object_ctype, self.related_object_id)
+
+    def get_related_object(self):
+        ModelClass = self.related_object_ctype.model_class()
+        return ModelClass.objects.get(pk=self.related_object_id)
 
 
 class Recommendation(RecommendsBaseModel):
