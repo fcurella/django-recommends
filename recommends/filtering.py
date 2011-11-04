@@ -92,6 +92,7 @@ def calculate_similar_items(prefs, n=10, similarity=sim_distance, verbose=0):
         itemMatch[item] = scores
     return itemMatch
 
+
 def get_recommended_items(prefs, itemMatch, user):
     """
     itemMatch is supposed to be the result of ``calculate_similar_items()``
