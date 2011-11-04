@@ -18,7 +18,7 @@ class Rating(object):
 
 
 class RecommendationProvider(object):
-    def get_identifier(self, obj, *args, **kwargs):
+    def get_identifier(self, obj, rating):
         raise NotImplemented
 
     def resolve_identifier(self, identifier):
@@ -69,7 +69,7 @@ class DjangoRecommendationProvider(RecommendationProvider):
                 return rating.rate
 
     """
-    def get_identifier(self, obj):
+    def get_identifier(self, obj, rating):
         return get_identifier(obj)
 
     def resolve_identifier(self, identifier):
@@ -93,26 +93,16 @@ class DjangoSitesRecommendationProvider(DjangoRecommendationProvider):
             def get_rating_rate(self, rating):
                 return rating.rate
 
-            def get_site(self, rating):
+            def get_rating_site(self, rating):
                 return rate.site
 
     """
-    def get_identifier(self, obj, site):
+    def get_identifier(self, obj, rating):
+        site = self.get_rating_site(rating)
         return get_identifier(obj, site)
 
     def resolve_identifier(self, identifier):
         return resolve_identifier(identifier)
 
-    def get_site(self, rating):
+    def get_rating_site(self, rating):
         raise NotImplemented
-
-    def prefs(self):
-        iterable = []
-        for item in self.get_items():
-            for rating in self.get_ratings():
-                user = self.get_rating_user(rating)
-                rate = self.get_rating_rate(rating)
-                site = self.get_site(rating)
-                identifier = self.get_identifier(item, site)
-                iterable.append((user, identifier, rate))
-        return self._convert_iterable_to_prefs(iterable)
