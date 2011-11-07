@@ -29,7 +29,7 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
-        #'Framework :: Django',
+        'Framework :: Django',
     ],
     install_requires = requirements,
     tests_require = ["nose",],
