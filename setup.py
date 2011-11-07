@@ -12,7 +12,7 @@ requirements = [
 ]
 
 setup(
-    name = "django-recommends",
+    name = "recommends",
     version = ".".join(map(str, VERSION)),
     description = "",
     long_description = read('README.rst'),
