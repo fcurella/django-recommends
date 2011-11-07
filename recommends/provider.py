@@ -60,6 +60,7 @@ class DjangoRecommendationProvider(RecommendationProvider):
                 return MyObject.objects.all()
 
             def get_ratings(self, obj):
+                \"\"\"Returns all the rates for a given object.\"\"\"
                 return Vote.objects.filter(object=obj)
 
             def get_rating_user(self, rating):
@@ -85,6 +86,7 @@ class DjangoSitesRecommendationProvider(DjangoRecommendationProvider):
                 return MyObject.objects.all()
 
             def get_ratings(self, obj):
+                \"\"\"Returns all the rates for a given object.\"\"\"
                 return Vote.objects.filter(object=obj)
 
             def get_rating_user(self, rating):
