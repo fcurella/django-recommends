@@ -48,3 +48,17 @@ def convert_iterable_to_prefs(iterable):
     for pref in iterable:
         prefs[pref[0]][pref[1]] = pref[2]
     return prefs
+
+
+def similary_results_to_itemMatch(qs, provider):
+    itemMatch = {}
+    for i in qs:
+        site = i.related_object_site
+        item = provider.get_identifier(i.get_object(), site)
+        similarity = i.score
+        item2 = provider.get_identifier(i.get_related_object(), site)
+
+        itemMatch.setdefault(item, [])
+        itemMatch[item] = (similarity, item2)
+
+    return itemMatch

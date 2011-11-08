@@ -1,4 +1,9 @@
-from .converters import resolve_identifier, get_identifier, convert_iterable_to_prefs
+from django.contrib.auth.models import User
+from django.contrib.sites.models import Site
+from .models import SimilarityResult
+from .converters import resolve_identifier, get_identifier, convert_iterable_to_prefs, similary_results_to_itemMatch
+from .filtering import calculate_similar_items, get_recommended_items
+from .utils import store_calculated_similar_items, store_recommended_items
 
 
 class RecommendationProviderRegisty(object):
@@ -18,7 +23,7 @@ class Rating(object):
 
 
 class RecommendationProvider(object):
-    def get_identifier(self, obj, rating):
+    def get_identifier(self, obj, site=None, rating=None):
         raise NotImplemented
 
     def resolve_identifier(self, identifier):
@@ -39,7 +44,7 @@ class RecommendationProvider(object):
 
     def _convert_iterable_to_prefs(self, iterable):
         return convert_iterable_to_prefs(iterable)
-
+    
     def prefs(self):
         iterable = []
         for item in self.get_items():
@@ -49,6 +54,9 @@ class RecommendationProvider(object):
                 identifier = self.get_identifier(item)
                 iterable.append((user, identifier, rate))
         return self._convert_iterable_to_prefs(iterable)
+
+    def precompute(self, prefs):
+        raise NotImplemented
 
 
 class DjangoRecommendationProvider(RecommendationProvider):
@@ -68,13 +76,28 @@ class DjangoRecommendationProvider(RecommendationProvider):
 
             def get_rating_rate(self, rating):
                 return rating.rate
-
+    
+            def precompute(self, prefs):
+                \"\"\"
+                This function will be called by the task manager in order
+                to compile and store the results
+                \"\"\"
     """
-    def get_identifier(self, obj, rating):
+    def get_identifier(self, obj, site=None, rating=None):
         return get_identifier(obj)
 
     def resolve_identifier(self, identifier):
         return resolve_identifier(identifier)
+
+    def precompute(self, prefs):
+        itemMatch = calculate_similar_items(prefs)
+        store_calculated_similar_items(itemMatch, self)
+
+        similarities = SimilarityResult.objects.all()
+        itemMatch = similary_results_to_itemMatch(similarities, self)
+        for user in User.objects.filter(is_active=True):
+            rankings = get_recommended_items(prefs, itemMatch, user)
+            store_recommended_items(user, rankings, self)
 
 
 class DjangoSitesRecommendationProvider(DjangoRecommendationProvider):
@@ -99,8 +122,11 @@ class DjangoSitesRecommendationProvider(DjangoRecommendationProvider):
                 return rate.site
 
     """
-    def get_identifier(self, obj, rating):
-        site = self.get_rating_site(rating)
+    def get_identifier(self, obj, site=None, rating=None):
+        if rating is not None:
+            site = self.get_rating_site(rating)
+        if site is None:
+            site = Site.objects.get_current()
         return get_identifier(obj, site)
 
     def resolve_identifier(self, identifier):
