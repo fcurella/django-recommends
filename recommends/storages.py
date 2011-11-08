@@ -2,6 +2,9 @@ from .models import SimilarityResult, Recommendation
 
 
 class DjangoOrmStorage(object):
+    def __init__(self):
+        self.provider = None
+
     def get_similarities(self):
         return SimilarityResult.objects.all()
 
