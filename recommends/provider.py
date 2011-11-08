@@ -1,9 +1,8 @@
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
-from .models import SimilarityResult
 from .converters import resolve_identifier, get_identifier, convert_iterable_to_prefs, similary_results_to_itemMatch
 from .filtering import calculate_similar_items, get_recommended_items
-from .utils import store_calculated_similar_items, store_recommended_items
+from .storages import DjangoOrmStorage
 
 
 class RecommendationProviderRegisty(object):
@@ -23,6 +22,9 @@ class Rating(object):
 
 
 class RecommendationProvider(object):
+    def __init__(self):
+        self.storage.provider = self
+
     def get_identifier(self, obj, site=None, rating=None):
         raise NotImplemented
 
@@ -44,7 +46,7 @@ class RecommendationProvider(object):
 
     def _convert_iterable_to_prefs(self, iterable):
         return convert_iterable_to_prefs(iterable)
-    
+
     def prefs(self):
         iterable = []
         for item in self.get_items():
@@ -76,13 +78,15 @@ class DjangoRecommendationProvider(RecommendationProvider):
 
             def get_rating_rate(self, rating):
                 return rating.rate
-    
+
             def precompute(self, prefs):
                 \"\"\"
                 This function will be called by the task manager in order
                 to compile and store the results
                 \"\"\"
     """
+    storage = DjangoOrmStorage()
+
     def get_identifier(self, obj, site=None, rating=None):
         return get_identifier(obj)
 
@@ -91,13 +95,13 @@ class DjangoRecommendationProvider(RecommendationProvider):
 
     def precompute(self, prefs):
         itemMatch = calculate_similar_items(prefs)
-        store_calculated_similar_items(itemMatch, self)
+        self.storage.store_calculated_similar_items(itemMatch)
 
-        similarities = SimilarityResult.objects.all()
+        similarities = self.storage.get_similarities()
         itemMatch = similary_results_to_itemMatch(similarities, self)
         for user in User.objects.filter(is_active=True):
             rankings = get_recommended_items(prefs, itemMatch, user)
-            store_recommended_items(user, rankings, self)
+            self.storage.store_recommended_items(user, rankings)
 
 
 class DjangoSitesRecommendationProvider(DjangoRecommendationProvider):
