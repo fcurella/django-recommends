@@ -13,6 +13,10 @@ class Product(models.Model):
     def __unicode__(self):
         return self.name
 
+    @models.permalink
+    def get_absolute_url(self):
+        return ('product_detail', [self.id])
+
     def sites_str(self):
         return u', '.join([s.name for s in self.sites.all()])
     sites_str.short_description = 'sites'
