@@ -58,7 +58,7 @@ class RecommendationProvider(object):
         return self._convert_iterable_to_prefs(iterable)
 
     def precompute(self, prefs):
-        raise NotImplemented
+        raise NotImplementedError
 
 
 class DjangoRecommendationProvider(RecommendationProvider):
