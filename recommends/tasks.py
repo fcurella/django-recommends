@@ -1,5 +1,5 @@
 from celery.decorators import periodic_task
-from celery.task.schedules import crontab
+from celery.schedules import crontab
 
 from .providers import recommendation_registry
 
