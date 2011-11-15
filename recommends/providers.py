@@ -41,7 +41,7 @@ class RecommendationProvider(object):
     def get_rating_user(self, rating):
 
         raise NotImplementedError
-    def get_rating_rate(self, rating):
+    def get_rating_score(self, rating):
         raise NotImplementedError
 
     def _convert_iterable_to_prefs(self, iterable):
@@ -52,9 +52,9 @@ class RecommendationProvider(object):
         for item in self.get_items():
             for rating in self.get_ratings():
                 user = self.get_rating_user(rating)
-                rate = self.get_rating_rate(rating)
+                score = self.get_rating_score(rating)
                 identifier = self.get_identifier(item)
-                iterable.append((user, identifier, rate))
+                iterable.append((user, identifier, score))
         return self._convert_iterable_to_prefs(iterable)
 
     def precompute(self, prefs):
