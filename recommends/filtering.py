@@ -104,31 +104,33 @@ def get_recommended_items(prefs, itemMatch, user):
             (<score>, '<object_id>'),
         ]
     """
-    userRatings = prefs[user.id]
-    scores = {}
-    totalSim = {}
+    if user in prefs:
+        userRatings = prefs[user]
+        scores = {}
+        totalSim = {}
 
-    # Loop over items rated by this user
-    for (item, rating) in userRatings.iteritems():
+        # Loop over items rated by this user
+        for (item, rating) in userRatings.iteritems():
 
-        # Loop over items similar to this one
-        for (similarity, item2) in itemMatch[item]:
-            # Ignore if this user has already rated this item
-            if item2 in userRatings:
-                continue
+            # Loop over items similar to this one
+            for (similarity, item2) in itemMatch[item]:
+                # Ignore if this user has already rated this item
+                if item2 in userRatings:
+                    continue
 
-            # Weighted sum of rating times similarity
-            scores.setdefault(item2, 0)
-            scores[item2] += similarity * rating
+                # Weighted sum of rating times similarity
+                scores.setdefault(item2, 0)
+                scores[item2] += similarity * rating
 
-            # Sum of all the similarities
-            totalSim.setdefault(item2, 0)
-            totalSim[item2] += similarity
+                # Sum of all the similarities
+                totalSim.setdefault(item2, 0)
+                totalSim[item2] += similarity
 
-    # Divide each total score by total weighting to get an average
-    rankings = [(score / totalSim[item], item) for item, score in scores.iteritems()]
+        # Divide each total score by total weighting to get an average
+        rankings = [(score / totalSim[item], item) for item, score in scores.iteritems() if totalSim[item] != 0]
 
-    # Return the rankings from highest to lowest
-    rankings.sort()
-    rankings.reverse()
-    return rankings
+        # Return the rankings from highest to lowest
+        rankings.sort()
+        rankings.reverse()
+        return rankings
+    return []
