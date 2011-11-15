@@ -20,7 +20,7 @@ class Product(models.Model):
 
 class Vote(models.Model):
     """(Vote description)"""
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, related_name='votes')
     product = models.ForeignKey(Product)
     site = models.ForeignKey(Site)
     score = models.FloatField()
@@ -30,6 +30,9 @@ class Vote(models.Model):
 
 
 class ProductRecommendationProvider(DjangoSitesRecommendationProvider):
+    def get_users(self):
+        return User.objects.filter(is_active=True, votes__isnull=False).distinct()
+
     def get_items(self):
         return Product.objects.all()
 
