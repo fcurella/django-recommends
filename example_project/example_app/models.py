@@ -13,6 +13,10 @@ class Product(models.Model):
     def __unicode__(self):
         return self.name
 
+    def sites_str(self):
+        return u', '.join([s.name for s in self.sites.all()])
+    sites_str.short_description = 'sites'
+
 
 class Vote(models.Model):
     """(Vote description)"""
