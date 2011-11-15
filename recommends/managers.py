@@ -114,7 +114,7 @@ class RecommendationManager(RecommendsManager):
         )
 
     def set_score_for_object(self, user, object_recommended, object_site, score):
-        result, created = self.get_or_create_for_objects(user, object_recommended, object_site)
+        result, created = self.get_or_create_for_object(user, object_recommended, object_site)
         result.score = score
         result.save()
 
