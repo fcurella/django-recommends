@@ -39,9 +39,11 @@ class RecommendationProvider(object):
         raise NotImplementedError
 
     def get_rating_user(self, rating):
-
+        """Returns the user who performed the rating"""
         raise NotImplementedError
+
     def get_rating_score(self, rating):
+        """Returns the score of the rating"""
         raise NotImplementedError
 
     def _convert_iterable_to_prefs(self, iterable):
