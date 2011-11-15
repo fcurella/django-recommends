@@ -26,23 +26,23 @@ class RecommendationProvider(object):
         self.storage.provider = self
 
     def get_identifier(self, obj, site=None, rating=None):
-        raise NotImplemented
+        raise NotImplementedError
 
     def resolve_identifier(self, identifier):
-        raise NotImplemented
+        raise NotImplementedError
 
     def get_items(self):
-        raise NotImplemented
+        raise NotImplementedError
 
     def get_ratings(self, obj):
         """Returns all ratings for given item"""
-        raise NotImplemented
+        raise NotImplementedError
 
     def get_rating_user(self, rating):
-        raise NotImplemented
 
+        raise NotImplementedError
     def get_rating_rate(self, rating):
-        raise NotImplemented
+        raise NotImplementedError
 
     def _convert_iterable_to_prefs(self, iterable):
         return convert_iterable_to_prefs(iterable)
@@ -74,10 +74,12 @@ class DjangoRecommendationProvider(RecommendationProvider):
                 return Vote.objects.filter(object=obj)
 
             def get_rating_user(self, rating):
+                \"\"\"Returns the user who performed the rating\"\"\"
                 return rating.user
 
-            def get_rating_rate(self, rating):
-                return rating.rate
+            def get_rating_score(self, rating):
+                \"\"\"Returns the score of the rating\"\"\"
+                return rating.score
 
             def precompute(self, prefs):
                 \"\"\"
@@ -119,8 +121,8 @@ class DjangoSitesRecommendationProvider(DjangoRecommendationProvider):
             def get_rating_user(self, rating):
                 return rating.user
 
-            def get_rating_rate(self, rating):
-                return rating.rate
+            def get_rating_score(self, rating):
+                return rating.score
 
             def get_rating_site(self, rating):
                 return rate.site
@@ -137,4 +139,4 @@ class DjangoSitesRecommendationProvider(DjangoRecommendationProvider):
         return resolve_identifier(identifier)
 
     def get_rating_site(self, rating):
-        raise NotImplemented
+        raise NotImplementedError

@@ -6,10 +6,10 @@ class RecommendationStorage(object):
         self.provider = None
 
     def get_similarities(self):
-        raise NotImplemented
+        raise NotImplementedError
 
     def store_recommended_items(self, user, rankings):
-        raise NotImplemented
+        raise NotImplementedError
 
 
 class DjangoOrmStorage(RecommendationStorage):
