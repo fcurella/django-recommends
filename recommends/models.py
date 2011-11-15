@@ -32,6 +32,11 @@ class RecommendsBaseModel(models.Model):
         ModelClass = self.object_ctype.model_class()
         return ModelClass.objects.get(pk=self.object_id)
 
+    # We can't use a callable name 'get_object' in the django admin, so we have to alias it.
+    def get_subject(self):
+        return self.get_object()
+    get_subject.short_description = u"subject"
+
 
 class Rating(RecommendsBaseModel):
     """
@@ -71,6 +76,7 @@ class SimilarityResult(RecommendsBaseModel):
     def get_related_object(self):
         ModelClass = self.related_object_ctype.model_class()
         return ModelClass.objects.get(pk=self.related_object_id)
+    get_related_object.short_description = u"related object"
 
 
 class Recommendation(RecommendsBaseModel):
