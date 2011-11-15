@@ -8,9 +8,9 @@ from .managers import RecommendsManager, RatingManager, SimilarityResultManager,
 
 class RecommendsBaseModel(models.Model):
     """(RecommendsBaseModel description)"""
-    object_ctype = models.ForeignKey(ContentType)
+    object_ctype = models.ForeignKey(ContentType, related_name="%(app_label)s_%(class)s_object_ctypes")
     object_id = models.PositiveIntegerField()
-    object_site = models.ForeignKey(Site)
+    object_site = models.ForeignKey(Site, related_name="%(app_label)s_%(class)s_object_sites")
 
     objects = RecommendsManager()
 
@@ -52,9 +52,9 @@ class SimilarityResult(RecommendsBaseModel):
 
     score = models.FloatField(null=True, blank=True, default=None)
 
-    related_object_ctype = models.ForeignKey(ContentType)
+    related_object_ctype = models.ForeignKey(ContentType, related_name="%(app_label)s_%(class)s_related_object_ctypes")
     related_object_id = models.PositiveIntegerField()
-    related_object_site = models.ForeignKey(Site)
+    related_object_site = models.ForeignKey(Site, related_name="%(app_label)s_%(class)s_related_object_sites")
 
     objects = SimilarityResultManager()
 
