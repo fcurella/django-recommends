@@ -30,7 +30,7 @@ def resolve_identifier(identifier):
     app_module, site_id, object_id = identifier.split(':')
     app_label, model = app_module.split('.')
     site = Site.objects.get(pk=site_id)
-    ModelClass = ContentType.object.get(app_label=app_label, model=model).model_class()
+    ModelClass = ContentType.objects.get(app_label=app_label, model=model).model_class()
     model = ModelClass.objects.get(pk=object_id)
     return model, site
 
