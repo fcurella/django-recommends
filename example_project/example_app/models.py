@@ -36,10 +36,13 @@ class ProductRecommendationProvider(DjangoSitesRecommendationProvider):
     def get_ratings(self, obj):
         return Vote.objects.filter(product=obj)
 
-    def get_rating_rate(self, rating):
-        return rating.vote
+    def get_rating_score(self, rating):
+        return rating.score
 
     def get_rating_site(self, rating):
         return rating.site
+
+    def get_rating_user(self, rating):
+        return rating.user
 
 recommendation_registry.register(ProductRecommendationProvider)
