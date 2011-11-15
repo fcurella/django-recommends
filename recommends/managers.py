@@ -92,10 +92,10 @@ class SimilarityResultManager(RecommendsManager):
         result.score = score
         result.save()
 
-    def similar_to(self, obj, site):
+    def similar_to(self, obj, site, **kwargs):
         object_ctype = ContentType.objects.get_for_model(obj)
         object_id = obj.pk
-        return self.filter(object_ctype=object_ctype, object_id=object_id, related_object_site=site)
+        return self.filter(object_ctype=object_ctype, object_id=object_id, related_object_site=site, **kwargs)
 
 
 class RecommendationManager(RecommendsManager):
@@ -117,6 +117,3 @@ class RecommendationManager(RecommendsManager):
         result, created = self.get_or_create_for_object(user, object_recommended, object_site)
         result.score = score
         result.save()
-
-    def get_recommendations_for_user(self, user, site):
-        self.filter(user=user, object_site=site)
