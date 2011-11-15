@@ -68,6 +68,10 @@ class DjangoRecommendationProvider(RecommendationProvider):
     Usage::
 
         class MyRecommendationProvider(DjangoRecommendationProvider):
+            def get_users(self):
+                \"\"\"Returns all users who have voted something\"\"\"
+                return User.objects.filter(is_active=True)
+
             def get_items(self):
                 return MyObject.objects.all()
 
@@ -97,13 +101,16 @@ class DjangoRecommendationProvider(RecommendationProvider):
     def resolve_identifier(self, identifier):
         return resolve_identifier(identifier)
 
+    def get_users(self):
+        return User.objects.filter(is_active=True)
+
     def precompute(self, prefs):
         itemMatch = calculate_similar_items(prefs)
         self.storage.store_calculated_similar_items(itemMatch)
 
         similarities = self.storage.get_similarities()
         itemMatch = similary_results_to_itemMatch(similarities, self)
-        for user in User.objects.filter(is_active=True):
+        for user in self.get_users():
             rankings = get_recommended_items(prefs, itemMatch, user)
             self.storage.store_recommended_items(user, rankings)
 
@@ -113,6 +120,10 @@ class DjangoSitesRecommendationProvider(DjangoRecommendationProvider):
     Usage::
 
         class MyRecommendationProvider(DjangoSitesRecommendationProvider):
+            def get_users(self):
+                \"\"\"Returns all users who have voted something\"\"\"
+                return User.objects.filter(is_active=True)
+
             def get_items(self):
                 return MyObject.objects.all()
 
@@ -121,9 +132,11 @@ class DjangoSitesRecommendationProvider(DjangoRecommendationProvider):
                 return Vote.objects.filter(object=obj)
 
             def get_rating_user(self, rating):
+                \"\"\"Returns the user who performed the rating\"\"\"
                 return rating.user
 
             def get_rating_score(self, rating):
+                \"\"\"Returns the score of the rating\"\"\"
                 return rating.score
 
             def get_rating_site(self, rating):
