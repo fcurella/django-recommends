@@ -3,4 +3,4 @@ from .models import SimilarityResult, Recommnedation
 
 
 admin.site.register(SimilarityResult)
-admin.site.register(Recommnedation)
+admin.site.register(Recommendation)
