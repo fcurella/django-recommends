@@ -50,7 +50,7 @@ class RecommendationProvider(object):
     def prefs(self):
         iterable = []
         for item in self.get_items():
-            for rating in self.get_ratings():
+            for rating in self.get_ratings(item):
                 user = self.get_rating_user(rating)
                 score = self.get_rating_score(rating)
                 identifier = self.get_identifier(item)
