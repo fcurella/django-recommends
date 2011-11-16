@@ -23,7 +23,7 @@ class Product(models.Model):
 
 
 class Vote(models.Model):
-    """(Vote description)"""
+    """A Vote on a Product"""
     user = models.ForeignKey(User, related_name='votes')
     product = models.ForeignKey(Product)
     site = models.ForeignKey(Site)
