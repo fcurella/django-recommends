@@ -81,7 +81,7 @@ Example::
 Settings
 ----
 
-Computations are done by a scheduled celery task. The task is run every 24 hours by default, but can be overridden by the RECOMMENDS_TASK_CRONTAB setting::
+Computations are done by a scheduled celery task. The task is run every 24 hours by default, but can be overridden by the ``RECOMMENDS_TASK_CRONTAB`` setting::
     
     RECOMMENDS_TASK_CRONTAB = {'hour': '*/24'}
 
