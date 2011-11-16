@@ -1,2 +1,0 @@
-recommends
-example_project
