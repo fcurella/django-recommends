@@ -17,6 +17,8 @@ necessary for computing recommendation and similarities for a set of objects.
 Subclasses override methods in order to determine what constitutes voted items, a vote,
 its score, and user.
 
+A basic algorithm to calculate similarities and recommendations is provided by default, but subclasses can use their own by overriding the ``calculate_similarities`` and ``calculate_recommendations`` methods.
+
 Example::
 
     # models.py
