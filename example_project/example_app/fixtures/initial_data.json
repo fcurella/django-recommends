@@ -1,0 +1,92 @@
+[
+    {
+        "pk": 1, 
+        "model": "example_app.product", 
+        "fields": {
+            "name": "Dozen Red Roses", 
+            "sites": [
+                1
+            ]
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "example_app.product", 
+        "fields": {
+            "name": "Orange Juice", 
+            "sites": [
+                1
+            ]
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "example_app.product", 
+        "fields": {
+            "name": "Coffee Mug", 
+            "sites": [
+                1
+            ]
+        }
+    }, 
+    {
+        "pk": 4, 
+        "model": "example_app.product", 
+        "fields": {
+            "name": "Batteries", 
+            "sites": [
+                1
+            ]
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "example_app.vote", 
+        "fields": {
+            "product": 1, 
+            "score": 1.0, 
+            "user": 2, 
+            "site": 1
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "example_app.vote", 
+        "fields": {
+            "product": 2, 
+            "score": 1.0, 
+            "user": 2, 
+            "site": 1
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "example_app.vote", 
+        "fields": {
+            "product": 2, 
+            "score": 1.0, 
+            "user": 3, 
+            "site": 1
+        }
+    }, 
+    {
+        "pk": 4, 
+        "model": "example_app.vote", 
+        "fields": {
+            "product": 3, 
+            "score": 1.0, 
+            "user": 3, 
+            "site": 1
+        }
+    }, 
+    {
+        "pk": 5, 
+        "model": "example_app.vote", 
+        "fields": {
+            "product": 4, 
+            "score": 1.0, 
+            "user": 4, 
+            "site": 1
+        }
+    }
+]
