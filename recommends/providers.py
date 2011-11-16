@@ -24,7 +24,7 @@ class Rating(object):
 class RecommendationProvider(object):
     """
     A ``RecommendationProvider`` specifies how to retrieve various informations (items, users, votes)
-    necessary for computing recommendation for a set of objects.
+    necessary for computing recommendation and similarities for a set of objects.
 
     Subclasses override methods in order to determine what constitutes voted items, a vote,
     its score, and user.
