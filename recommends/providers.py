@@ -30,7 +30,7 @@ class RecommendationProvider(object):
     its score, and user.
     """
 
-    storage = DummyStorage
+    storage = DummyStorage()
 
     def __init__(self):
         self.storage.provider = self
@@ -67,13 +67,13 @@ class RecommendationProvider(object):
         Returns a dictionary of votes, with the following schema::
 
             {
-                "<user_id>": {
-                    "<object_identifier>": <score>,
-                    "<object_identifier>": <score>,
+                "<user_id1>": {
+                    "<object_identifier1>": <score>,
+                    "<object_identifier2>": <score>,
                 },
-                "<user_id>": {
-                    "<object_identifier>": <score>,
-                    "<object_identifier>": <score>,
+                "<user_id2>": {
+                    "<object_identifier1>": <score>,
+                    "<object_identifier2>": <score>,
                 },
             }
 
@@ -94,21 +94,22 @@ class RecommendationProvider(object):
         Accepts a dictionary representing votes with the following schema::
 
             {
-                "<user_id>": {
-                    "<object_identifier>": <score>
+                "<user1>": {
+                    "<object_identifier1>": <score>,
+                    "<object_identifier2>": <score>,
                 }
             }
 
         Output must be a dictionary with the following schema::
 
         {
-            "<object_identifier>": [
-                            (<score>, <related_object_identifier>),
-                            (<score>, <related_object_identifier>),
+            "<object_identifier1>": [
+                            (<score>, <related_object_identifier2>),
+                            (<score>, <related_object_identifier3>),
             ],
-            "<object_identifier>": [
-                            (<score>, <related_object_identifier>),
-                            (<score>, <related_object_identifier>),
+            "<object_identifier2>": [
+                            (<score>, <related_object_identifier1>),
+                            (<score>, <related_object_identifier3>),
             ],
         }
 
@@ -120,13 +121,13 @@ class RecommendationProvider(object):
         Returns a list of recommendations::
 
         [
-            (<user>, [
-                (<score>, "<object_identifier"),
-                (<score>, "<object_identifier"),
+            (<user1>, [
+                (<score>, "<object_identifier1>"),
+                (<score>, "<object_identifier2>"),
             ]),
-            (<user>, [
-                (<score>, "<object_identifier"),
-                (<score>, "<object_identifier"),
+            (<user2>, [
+                (<score>, "<object_identifier2>"),
+                (<score>, "<object_identifier3>"),
             ]),
         ]
 
