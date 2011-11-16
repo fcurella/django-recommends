@@ -1,34 +1,54 @@
+from django.contrib.sites.models import Site
+from .converters import resolve_identifier, get_identifier
 from .models import SimilarityResult, Recommendation
 
 
 class RecommendationStorage(object):
-    def __init__(self):
-        self.provider = None
-
-    def get_similarities(self):
+    def get_identifier(self, obj, *args, **kwargs):
+        """Given an object and optional parameters, returns a string identifying the object uniquely"""
         raise NotImplementedError
 
-    def store_recommended_items(self, user, rankings):
+    def resolve_identifier(self, identifier):
+        """Returns an object corresponding to an identifier in the format returned by ``get_identifier``"""
         raise NotImplementedError
 
+    def get_similarities_for_object(self, obj, limit):
+        raise NotImplementedError
 
-class DummyStorage(RecommendationStorage):
-    def store_similarities(self):
-        pass
+    def get_recommendations_for_user(self, user, limit):
+        raise NotImplementedError
+
+    def store_similarities(self, itemMatch):
+        raise NotImplementedError
 
     def store_user_recommendations(self, user, rankings):
-        pass
+        raise NotImplementedError
 
 
 class DjangoOrmStorage(RecommendationStorage):
-    def get_similarities(self):
-        return SimilarityResult.objects.all()
+    def get_identifier(self, obj, site=None, rating=None, *args, **kwargs):
+        if rating is not None:
+            site = self.get_rating_site(rating)
+        if site is None:
+            site = Site.objects.get_current()
+        return get_identifier(obj, site)
+
+    def resolve_identifier(self, identifier):
+        return resolve_identifier(identifier)
+
+    def get_similarities_for_object(self, obj, limit):
+        object_site = Site.objects.get_current()
+        return SimilarityResult.objects.similar_to(obj, site=object_site, score__gt=0)[:limit]
+
+    def get_recommendations_for_user(self, user, limit):
+        object_site = Site.objects.get_current()
+        return Recommendation.objects.filter(user=user, object_site=object_site)[:limit]
 
     def store_similarities(self, itemMatch):
         for object_id, scores in itemMatch.items():
             for score, related_object_id in scores:
-                object_target, object_target_site = self.provider.resolve_identifier(object_id)
-                object_related, object_related_site = self.provider.resolve_identifier(related_object_id)
+                object_target, object_target_site = self.resolve_identifier(object_id)
+                object_related, object_related_site = self.resolve_identifier(related_object_id)
                 SimilarityResult.objects.set_score_for_objects(
                     object_target=object_target,
                     object_target_site=object_target_site,
@@ -39,7 +59,7 @@ class DjangoOrmStorage(RecommendationStorage):
 
     def store_user_recommendations(self, user, rankings):
         for score, object_id in rankings:
-            object_recommended, site = self.provider.resolve_identifier(object_id)
+            object_recommended, site = self.resolve_identifier(object_id)
             Recommendation.objects.set_score_for_object(
                 user=user,
                 object_recommended=object_recommended,

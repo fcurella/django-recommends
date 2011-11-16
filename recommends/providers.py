@@ -1,17 +1,23 @@
 from django.contrib.auth.models import User
-from django.contrib.sites.models import Site
-from .converters import resolve_identifier, get_identifier, convert_iterable_to_prefs
+from django.utils import importlib
+from .converters import convert_iterable_to_prefs
 from .filtering import calculate_similar_items, get_recommended_items
-from .storages import DummyStorage, DjangoOrmStorage
+from .settings import RECOMMENDS_STORAGE_BACKEND
 
 
-class RecommendationProviderRegisty(object):
+class RecommendationProviderRegistry(object):
     providers = []
+
+    def __init__(self):
+        storage_module = '.'.join(RECOMMENDS_STORAGE_BACKEND.split('.')[:-1])
+        storage_class_name = RECOMMENDS_STORAGE_BACKEND.split('.')[-1]
+        StorageClass = getattr(importlib.import_module(storage_module), storage_class_name)
+        self.storage = StorageClass()
 
     def register(self, provider):
         self.providers.append(provider)
 
-recommendation_registry = RecommendationProviderRegisty()
+recommendation_registry = RecommendationProviderRegistry()
 
 
 class Rating(object):
@@ -29,19 +35,8 @@ class RecommendationProvider(object):
     Subclasses override methods in order to determine what constitutes voted items, a vote,
     its score, and user.
     """
-
-    storage = DummyStorage()
-
     def __init__(self):
-        self.storage.provider = self
-
-    def get_identifier(self, obj, *args, **kwargs):
-        """Given an object and optional parameters, returns a string identifying the object uniquely"""
-        raise NotImplementedError
-
-    def resolve_identifier(self, identifier):
-        """Returns an object corresponding to an identifier in the format returned by ``get_identifier``"""
-        raise NotImplementedError
+        self.storage = recommendation_registry.storage
 
     def get_items(self):
         """Return items that have been voted"""
@@ -83,7 +78,7 @@ class RecommendationProvider(object):
             for rating in self.get_ratings(item):
                 user = self.get_rating_user(rating)
                 score = self.get_rating_score(rating)
-                identifier = self.get_identifier(item)
+                identifier = self.storage.get_identifier(item)
                 iterable.append((user, identifier, score))
         return self._convert_iterable_to_prefs(iterable)
 
@@ -148,15 +143,8 @@ class RecommendationProvider(object):
 
 class DjangoRecommendationProvider(RecommendationProvider):
     """
-    Convenience provider for Django models. Uses Django ORM as storage.
+    Convenience provider for Django models.
     """
-    storage = DjangoOrmStorage()
-
-    def get_identifier(self, obj, *args, **kwargs):
-        return get_identifier(obj)
-
-    def resolve_identifier(self, identifier):
-        return resolve_identifier(identifier)
 
     def get_users(self):
         """Returns all users who have voted something"""
@@ -175,20 +163,11 @@ class DjangoRecommendationProvider(RecommendationProvider):
 
 class DjangoSitesRecommendationProvider(DjangoRecommendationProvider):
     """
-    Convenience provider for Django models that use sites. Uses Django ORM as storage.
+    Convenience provider for Django models that use sites.
 
     Subclass and override the ``get_rating_site`` method to specify how to determine
     the site a particular vote was performed on.
     """
-    def get_identifier(self, obj, site=None, rating=None, *args, **kwargs):
-        if rating is not None:
-            site = self.get_rating_site(rating)
-        if site is None:
-            site = Site.objects.get_current()
-        return get_identifier(obj, site)
-
-    def resolve_identifier(self, identifier):
-        return resolve_identifier(identifier)
 
     def get_rating_site(self, rating):
         """

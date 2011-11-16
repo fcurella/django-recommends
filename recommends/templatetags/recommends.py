@@ -1,5 +1,5 @@
 from ..models import SimilarityResult, Recommendation
-from django.contrib.sites.models import Site
+from ..providers import recommendation_registry
 from django.db import models
 from django import template
 register = template.Library()
@@ -17,20 +17,18 @@ def similarities(obj, limit=5):
         {% endfor %}
     """
     if isinstance(obj, models.Model):
-        object_site = Site.objects.get_current()
-        return SimilarityResult.objects.similar_to(obj, site=object_site, score__gt=0)[:int(limit)]
+        return recommendation_registry.storage.get_similarities_for_object(obj, int(limit))
 
 
 class SuggestionNode(template.Node):
     def __init__(self, varname, limit):
-        self.site = Site.objects.get_current()
         self.varname = varname
         self.limit = limit
 
     def render(self, context):
         user = context['user']
         if user.is_authenticated():  # We need an id after all
-            suggestions = Recommendation.objects.filter(user=user, object_site=self.site)[:self.limit]
+            suggestions = recommendation_registry.storage.get_recommendations_for_user(user, int(self.limit))
             context[self.varname] = suggestions
         return ''
 

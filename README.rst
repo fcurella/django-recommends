@@ -86,3 +86,14 @@ Computations are done by a scheduled celery task. The task is run every 24 hours
     RECOMMENDS_TASK_CRONTAB = {'hour': '*/24'}
 
 ``RECOMMENDS_TASK_CRONTAB`` must be a dictionary of kwargs acceptable by celery.schedulers.crontab.
+
+Results of the computation are stored according to the storage backend defined in ``RECOMMENDS_STORAGE_BACKEND`` (default to ``'recommends.storages.DjangoOrmStorage'``). A storage backend defines how de/serialize and store/retrieve objects and results.
+
+A storage backend can be any class extending ``recommends.storages.RecommendationStorage`` that implements the following methods:
+
+    * ``get_identifier(self, obj, *args, **kwargs)``
+    * ``resolve_identifier(self, identifier)``
+    * ``get_similarities_for_object(self, obj, limit)``
+    * ``get_recommendations_for_user(self, user, limit)``
+    * ``store_similarities(self, itemMatch)``
+    * ``store_user_recommendations(self, user, rankings)``
