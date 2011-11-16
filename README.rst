@@ -82,4 +82,4 @@ Computations are done by a scheduled celery task. The task is run every 24 hours
     
     RECOMMENDS_TASK_CRONTAB = {'hour': '*/24'}
 
-``RECOMMENDS_TASK_CRONTAB`` must be a dictionary of kwargs accettable by celery.schedulers.crontab.
+``RECOMMENDS_TASK_CRONTAB`` must be a dictionary of kwargs acceptable by celery.schedulers.crontab.
