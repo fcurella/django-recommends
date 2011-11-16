@@ -139,6 +139,7 @@ class RecommendationProvider(object):
         to compile and store the results.
         """
         itemMatch = self.calculate_similarities(prefs)
+        self.storage.store_similarities(itemMatch)
 
         for (user, rankings) in self.calculate_recommendations(prefs, itemMatch):
             self.storage.store_user_recommendations(user, rankings)
