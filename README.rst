@@ -78,8 +78,8 @@ Example::
     recommendation_registry.register(ProductRecommendationProvider)
 
 
-Computation are done by a scheduled celery task. The task is run every 24 hours by default. This can be overridden by using the RECOMMENDS_TASK_CRONTAB settings::
+Computations are done by a scheduled celery task. The task is run every 24 hours by default, but can be overridden by the RECOMMENDS_TASK_CRONTAB setting::
     
-    RECOMMENDS_TASK_CRONTAB = {'hour': '*/12'}
+    RECOMMENDS_TASK_CRONTAB = {'hour': '*/24'}
 
 ``RECOMMENDS_TASK_CRONTAB`` must be a dictionary of kwargs accettable by celery.schedulers.crontab.
