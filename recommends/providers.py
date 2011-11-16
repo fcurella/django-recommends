@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
-from .converters import resolve_identifier, get_identifier, convert_iterable_to_prefs, similary_results_to_itemMatch
+from .converters import resolve_identifier, get_identifier, convert_iterable_to_prefs
 from .filtering import calculate_similar_items, get_recommended_items
 from .storages import DummyStorage, DjangoOrmStorage
 
@@ -63,6 +63,21 @@ class RecommendationProvider(object):
         return convert_iterable_to_prefs(iterable)
 
     def prefs(self):
+        """
+        Returns a dictionary of votes, with the following schema::
+
+            {
+                "<user_id>": {
+                    "<object_identifier>": <score>,
+                    "<object_identifier>": <score>,
+                },
+                "<user_id>": {
+                    "<object_identifier>": <score>,
+                    "<object_identifier>": <score>,
+                },
+            }
+
+        """
         iterable = []
         for item in self.get_items():
             for rating in self.get_ratings(item):
@@ -72,12 +87,61 @@ class RecommendationProvider(object):
                 iterable.append((user, identifier, score))
         return self._convert_iterable_to_prefs(iterable)
 
+    def calculate_similarities(self, prefs):
+        """
+        Must return an dict of similarities for every object:
+
+        Accepts a dictionary representing votes with the following schema::
+
+            {
+                "<user_id>": {
+                    "<object_identifier>": <score>
+                }
+            }
+
+        Output must be a dictionary with the following schema::
+
+        {
+            "<object_identifier>": [
+                            (<score>, <related_object_identifier>),
+                            (<score>, <related_object_identifier>),
+            ],
+            "<object_identifier>": [
+                            (<score>, <related_object_identifier>),
+                            (<score>, <related_object_identifier>),
+            ],
+        }
+
+        """
+        raise NotImplementedError
+
+    def calculate_recommendations(self, prefs, itemMatch):
+        """
+        Returns a list of recommendations::
+
+        [
+            (<user>, [
+                (<score>, "<object_identifier"),
+                (<score>, "<object_identifier"),
+            ]),
+            (<user>, [
+                (<score>, "<object_identifier"),
+                (<score>, "<object_identifier"),
+            ]),
+        ]
+
+        """
+        raise NotImplementedError
+
     def precompute(self, prefs):
         """
         This function will be called by the task manager in order
         to compile and store the results.
         """
-        raise NotImplementedError
+        itemMatch = self.calculate_similarities(prefs)
+
+        for (user, rankings) in self.calculate_recommendations(prefs, itemMatch):
+            self.storage.store_user_recommendations(user, rankings)
 
 
 class DjangoRecommendationProvider(RecommendationProvider):
@@ -96,15 +160,15 @@ class DjangoRecommendationProvider(RecommendationProvider):
         """Returns all users who have voted something"""
         return User.objects.filter(is_active=True)
 
-    def precompute(self, prefs):
-        itemMatch = calculate_similar_items(prefs)
-        self.storage.store_similarities(itemMatch)
+    def calculate_similarities(self, prefs):
+        return calculate_similar_items(prefs)
 
-        similarities = self.storage.get_similarities()
-        itemMatch = similary_results_to_itemMatch(similarities, self)
+    def calculate_recommendations(self, prefs, itemMatch):
+        recommendations = []
         for user in self.get_users():
             rankings = get_recommended_items(prefs, itemMatch, user)
-            self.storage.store_user_recommendations(user, rankings)
+            recommendations.append((user, rankings))
+        return recommendations
 
 
 class DjangoSitesRecommendationProvider(DjangoRecommendationProvider):
