@@ -12,11 +12,19 @@ class RecommendationStorage(object):
         raise NotImplementedError
 
 
+class DummyStorage(RecommendationStorage):
+    def store_similarities(self):
+        pass
+
+    def store_user_recommendations(self, user, rankings):
+        pass
+
+
 class DjangoOrmStorage(RecommendationStorage):
     def get_similarities(self):
         return SimilarityResult.objects.all()
 
-    def store_calculated_similar_items(self, itemMatch):
+    def store_similarities(self, itemMatch):
         for object_id, scores in itemMatch.items():
             for score, related_object_id in scores:
                 object_target, object_target_site = self.provider.resolve_identifier(object_id)
@@ -29,7 +37,7 @@ class DjangoOrmStorage(RecommendationStorage):
                     score=score
                 )
 
-    def store_recommended_items(self, user, rankings):
+    def store_user_recommendations(self, user, rankings):
         for score, object_id in rankings:
             object_recommended, site = self.provider.resolve_identifier(object_id)
             Recommendation.objects.set_score_for_object(
