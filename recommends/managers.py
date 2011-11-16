@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.sites.models import Site
 
 
 class RecommendsManager(models.Manager):
@@ -65,10 +66,10 @@ class SimilarityResultManager(RecommendsManager):
         result.save()
         return result
 
-    def similar_to(self, obj, site, **kwargs):
-        object_ctype = ContentType.objects.get_for_model(obj)
-        object_id = obj.pk
-        return self.filter(object_ctype=object_ctype, object_id=object_id, related_object_site=site, **kwargs)
+    def similar_to(self, obj, site=None, **kwargs):
+        if site is None:
+            site = Site.objects.get_current()
+        return self.filter_for_object(obj).filter(related_object_site=site, **kwargs)
 
 
 class RecommendationManager(RecommendsManager):
