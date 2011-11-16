@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
 from .converters import get_identifier
-from .managers import RecommendsManager, RatingManager, SimilarityResultManager, RecommendationManager
+from .managers import RecommendsManager, SimilarityResultManager, RecommendationManager
 
 
 class RecommendsBaseModel(models.Model):
@@ -36,20 +36,6 @@ class RecommendsBaseModel(models.Model):
     def get_subject(self):
         return self.get_object()
     get_subject.short_description = u"subject"
-
-
-class Rating(RecommendsBaseModel):
-    """
-    This is a convenience model to represents Vote.
-    You don't have to use this model, you can use your own.
-    """
-    user = models.ForeignKey(User)
-    rating = models.FloatField(null=True, blank=True, default=None)
-
-    objects = RatingManager()
-
-    def __unicode__(self):
-        return u"Rating"
 
 
 class SimilarityResult(RecommendsBaseModel):

@@ -11,34 +11,6 @@ class RecommendsManager(models.Manager):
         return self.filter_for_model(obj).filter(object_id=obj.id)
 
 
-class RatingManager(RecommendsManager):
-    def get_query_set(self):
-        return super(RecommendsManager, self).get_query_set().filter(rating__isnull=False)
-
-    def prefs(self):
-        """
-        Returns a dict representing users' votes on items, as in::
-
-            {
-                '<user_id>': {
-                    '<app_label>.<model>:<object_id>': <rating>,
-                },
-            }
-
-        """
-        prefs = {}
-        for result in self.get_query_set():
-            item_key = result.object_identifier()
-            related_key = result.related_object_identifier()
-            score = result.score
-            prefs.setdefault(item_key, [])
-            prefs[item_key].append((score, related_key))
-        return prefs
-
-    def prefs_for_model(self, model):
-        return self.filter_for_model(model).prefs()
-
-
 class SimilarityResultManager(RecommendsManager):
     def get_query_set(self):
         return super(RecommendsManager, self).get_query_set().filter(score__isnull=False)
