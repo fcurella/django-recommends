@@ -79,13 +79,19 @@ Example::
 
 
 Settings
-----
+---------
+
+Celery Task
+~~~~~~~~~~~
 
 Computations are done by a scheduled celery task. The task is run every 24 hours by default, but can be overridden by the ``RECOMMENDS_TASK_CRONTAB`` setting::
     
     RECOMMENDS_TASK_CRONTAB = {'hour': '*/24'}
 
 ``RECOMMENDS_TASK_CRONTAB`` must be a dictionary of kwargs acceptable by celery.schedulers.crontab.
+
+Storage backends
+~~~~~~~~~~~~~~~~
 
 Results of the computation are stored according to the storage backend defined in ``RECOMMENDS_STORAGE_BACKEND`` (default to ``'recommends.storages.DjangoOrmStorage'``). A storage backend defines how de/serialize and store/retrieve objects and results.
 
