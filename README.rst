@@ -6,7 +6,8 @@ A django app that build item-based suggestions for users.
 Requires Celery.
 
 
-Usage:
+Usage
+----
 
 In order to compute and retrieve similarities and recommendations, you must register a ``RecommendationProvider``.
 
