@@ -97,9 +97,9 @@ Results of the computation are stored according to the storage backend defined i
 
 A storage backend can be any class extending ``recommends.storages.RecommendationStorage`` that implements the following methods:
 
-    * ``get_identifier(self, obj, *args, **kwargs)``
-    * ``resolve_identifier(self, identifier)``
-    * ``get_similarities_for_object(self, obj, limit)``
-    * ``get_recommendations_for_user(self, user, limit)``
-    * ``store_similarities(self, itemMatch)``
-    * ``store_user_recommendations(self, user, rankings)``
+* ``get_identifier(self, obj, *args, **kwargs)``
+* ``resolve_identifier(self, identifier)``
+* ``get_similarities_for_object(self, obj, limit)``
+* ``get_recommendations_for_user(self, user, limit)``
+* ``store_similarities(self, itemMatch)``
+* ``store_user_recommendations(self, user, rankings)``
