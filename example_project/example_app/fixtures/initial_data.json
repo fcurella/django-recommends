@@ -94,6 +94,66 @@
         }
     }, 
     {
+        "pk": 5, 
+        "model": "example_app.product", 
+        "fields": {
+            "name": "Bottle of Red Wine", 
+            "sites": [
+                1
+            ]
+        }
+    }, 
+    {
+        "pk": 6, 
+        "model": "example_app.product", 
+        "fields": {
+            "name": "Red Sofa", 
+            "sites": [
+                1
+            ]
+        }
+    }, 
+    {
+        "pk": 7, 
+        "model": "example_app.product", 
+        "fields": {
+            "name": "30\" Cinema Display", 
+            "sites": [
+                1
+            ]
+        }
+    }, 
+    {
+        "pk": 8, 
+        "model": "example_app.product", 
+        "fields": {
+            "name": "Standing Desk", 
+            "sites": [
+                1
+            ]
+        }
+    }, 
+    {
+        "pk": 9, 
+        "model": "example_app.product", 
+        "fields": {
+            "name": "Pots & Pans", 
+            "sites": [
+                1
+            ]
+        }
+    }, 
+    {
+        "pk": 10, 
+        "model": "example_app.product", 
+        "fields": {
+            "name": "Sunflower Seeds", 
+            "sites": [
+                1
+            ]
+        }
+    }, 
+    {
         "pk": 1, 
         "model": "example_app.vote", 
         "fields": {
@@ -140,6 +200,56 @@
             "product": 4, 
             "score": 1.0, 
             "user": 4, 
+            "site": 1
+        }
+    }, 
+    {
+        "pk": 6, 
+        "model": "example_app.vote", 
+        "fields": {
+            "product": 9, 
+            "score": 1.0, 
+            "user": 4, 
+            "site": 1
+        }
+    }, 
+    {
+        "pk": 7, 
+        "model": "example_app.vote", 
+        "fields": {
+            "product": 10, 
+            "score": 1.0, 
+            "user": 4, 
+            "site": 1
+        }
+    }, 
+    {
+        "pk": 8, 
+        "model": "example_app.vote", 
+        "fields": {
+            "product": 5, 
+            "score": 1.0, 
+            "user": 3, 
+            "site": 1
+        }
+    }, 
+    {
+        "pk": 9, 
+        "model": "example_app.vote", 
+        "fields": {
+            "product": 5, 
+            "score": 1.0, 
+            "user": 4, 
+            "site": 1
+        }
+    }, 
+    {
+        "pk": 10, 
+        "model": "example_app.vote", 
+        "fields": {
+            "product": 7, 
+            "score": 1.0, 
+            "user": 2, 
             "site": 1
         }
     }
