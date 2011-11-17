@@ -1,4 +1,5 @@
 from collections import defaultdict
+from django.conf import settings
 from django.contrib.sites.models import Site
 from django.db import models
 
@@ -19,10 +20,12 @@ def get_identifier(obj, site=None):
     <app_label>.<model>:<site_id>:<object_id>.
     """
     if site is None:
-        site = Site.objects.get_current()
+        site_id = settings.SITE_ID
+    else:
+        site_id = site.id
     app_label = obj._meta.app_label
     model = obj._meta.object_name.lower()
-    return "%s.%s:%s:%s" % (app_label, model, site.id, obj.id)
+    return "%s.%s:%s:%s" % (app_label, model, site_id, obj.id)
 
 
 def resolve_identifier(identifier):
