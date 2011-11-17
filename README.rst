@@ -102,4 +102,4 @@ A storage backend can be any class extending ``recommends.storages.Recommendatio
 * ``get_similarities_for_object(self, obj, limit)``
 * ``get_recommendations_for_user(self, user, limit)``
 * ``store_similarities(self, itemMatch)``
-* ``store_user_recommendations(self, user, rankings)``
+* ``store_recommendations(self, user, recommendations)``

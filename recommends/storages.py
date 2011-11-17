@@ -21,7 +21,20 @@ class RecommendationStorage(object):
     def store_similarities(self, itemMatch):
         raise NotImplementedError
 
-    def store_user_recommendations(self, user, rankings):
+    def store_recommendations(self, recommendations):
+        """
+        ``recommendations`` is an iterable with the following schema::
+
+            (
+                (
+                    <user>,
+                    (
+                        (<score>, <object_identifier>),
+                        (<score>, <object_identifier>)
+                    ),
+                )
+            )
+        """
         raise NotImplementedError
 
 
@@ -38,11 +51,11 @@ class DjangoOrmStorage(RecommendationStorage):
 
     def get_similarities_for_object(self, obj, limit):
         object_site = Site.objects.get_current()
-        return SimilarityResult.objects.similar_to(obj, site=object_site, score__gt=0)[:limit]
+        return SimilarityResult.objects.similar_to(obj, site=object_site, score__gt=0).order_by('-score')[:limit]
 
     def get_recommendations_for_user(self, user, limit):
         object_site = Site.objects.get_current()
-        return Recommendation.objects.filter(user=user, object_site=object_site)[:limit]
+        return Recommendation.objects.filter(user=user, object_site=object_site).order_by('-score')[:limit]
 
     def store_similarities(self, itemMatch):
         for object_id, scores in itemMatch.items():
@@ -57,12 +70,13 @@ class DjangoOrmStorage(RecommendationStorage):
                     score=score
                 )
 
-    def store_user_recommendations(self, user, rankings):
-        for score, object_id in rankings:
-            object_recommended, site = self.resolve_identifier(object_id)
-            Recommendation.objects.set_score_for_object(
-                user=user,
-                object_recommended=object_recommended,
-                object_site=site,
-                score=score
-            )
+    def store_recommendations(self, recommendations):
+        for (user, rankings) in recommendations:
+            for score, object_id in rankings:
+                object_recommended, site = self.resolve_identifier(object_id)
+                Recommendation.objects.set_score_for_object(
+                    user=user,
+                    object_recommended=object_recommended,
+                    object_site=site,
+                    score=score
+                )
