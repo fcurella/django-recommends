@@ -1,4 +1,3 @@
-from ..models import SimilarityResult, Recommendation
 from ..providers import recommendation_registry
 from django.db import models
 from django import template
