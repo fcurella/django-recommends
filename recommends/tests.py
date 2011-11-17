@@ -1,3 +1,4 @@
+import timeit
 from django.utils import unittest
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
@@ -12,6 +13,7 @@ class RecommendsTestCase(unittest.TestCase):
         self.client = Client()
         self.mug = Product.objects.get(name='Coffee Mug')
         self.orange_juice = Product.objects.get(name='Orange Juice')
+        self.wine = Product.objects.get(name='Bottle of Red Wine')
         self.user1 = User.objects.get(username='user1')
 
         recommends_precompute()
@@ -23,7 +25,7 @@ class RecommendsTestCase(unittest.TestCase):
         self.assertNotEquals(SimilarityResult.objects.filter(score=0).count(), SimilarityResult.objects.count())
 
         similar_to_mug = SimilarityResult.objects.similar_to(self.mug, score__gt=0)
-        self.assertEquals(similar_to_mug.count(), 1)
+        self.assertEquals(similar_to_mug.count(), 2)
         self.assertEquals(similar_to_mug[0].get_related_object(), self.orange_juice)
 
     def test_recommendation(self):
@@ -33,8 +35,8 @@ class RecommendsTestCase(unittest.TestCase):
         self.assertNotEquals(Recommendation.objects.filter(score=0).count(), Recommendation.objects.count())
 
         recommended = Recommendation.objects.filter(user=self.user1)
-        self.assertEquals(recommended.count(), 1)
-        self.assertEquals(recommended[0].get_object(), self.mug)
+        self.assertEquals(recommended.count(), 2)
+        self.assertEquals(recommended[0].get_object(), self.wine)
 
         # Make sure we don't recommend item that the user already have
         self.assertFalse(self.mug in [v.product for v in Vote.objects.filter(user=self.user1)])
