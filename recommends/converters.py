@@ -1,6 +1,6 @@
 from collections import defaultdict
 from django.contrib.sites.models import Site
-from django.contrib.contenttypes.models import ContentType
+from django.db import models
 
 
 def get_sites(obj):
@@ -20,8 +20,9 @@ def get_identifier(obj, site=None):
     """
     if site is None:
         site = Site.objects.get_current()
-    ctype = ContentType.objects.get_for_model(obj)
-    return "%s.%s:%s:%s" % (ctype.app_label, ctype.model, site.id, obj.id)
+    app_label = obj._meta.app_label
+    model = obj._meta.object_name.lower()
+    return "%s.%s:%s:%s" % (app_label, model, site.id, obj.id)
 
 
 def resolve_identifier(identifier):
@@ -31,7 +32,7 @@ def resolve_identifier(identifier):
     app_module, site_id, object_id = identifier.split(':')
     app_label, model = app_module.split('.')
     site = Site.objects.get(pk=site_id)
-    ModelClass = ContentType.objects.get(app_label=app_label, model=model).model_class()
+    ModelClass = models.get_model(app_label, model)
     model = ModelClass.objects.get(pk=object_id)
     return model, site
 
