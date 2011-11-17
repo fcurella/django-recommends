@@ -59,8 +59,9 @@ class DjangoOrmStorage(RecommendationStorage):
 
     def store_similarities(self, itemMatch):
         for object_id, scores in itemMatch.items():
+            object_target, object_target_site = self.resolve_identifier(object_id)
+
             for score, related_object_id in scores:
-                object_target, object_target_site = self.resolve_identifier(object_id)
                 object_related, object_related_site = self.resolve_identifier(related_object_id)
                 SimilarityResult.objects.set_score_for_objects(
                     object_target=object_target,
