@@ -49,3 +49,10 @@ class RecommendsTestCase(unittest.TestCase):
 
         response = self.client.get(self.mug.get_absolute_url())
         self.assertTrue(self.orange_juice.get_absolute_url() in response.content)
+
+    def _test_performance(self):
+        stmt = """recommends_precompute()"""
+        setup = """from recommends.tasks import recommends_precompute"""
+        print "timing..."
+        times = timeit.repeat(stmt, setup, number=100)
+        print times
