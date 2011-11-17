@@ -71,8 +71,7 @@ def calculate_similar_items(prefs, similarity=sim_distance, verbose=0):
     #[itemMatch.set(item, top_matches(itemPrefs, item, similarity=similarity)) for item in itemPrefs]
     for item in itemPrefs:
         # Find the most similar items to this one
-        scores = top_matches(itemPrefs, item, similarity=similarity)
-        itemMatch[item] = scores
+        itemMatch[item] = top_matches(itemPrefs, item, similarity=similarity)
     return itemMatch
 
 
