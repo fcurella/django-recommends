@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
-from recommends.providers import recommendation_registry, DjangoSitesRecommendationProvider
+from recommends.providers import recommendation_registry, DjangoRecommendationProvider
 
 
 # Create your models here.
@@ -33,7 +33,7 @@ class Vote(models.Model):
         return u"Vote"
 
 
-class ProductRecommendationProvider(DjangoSitesRecommendationProvider):
+class ProductRecommendationProvider(DjangoRecommendationProvider):
     def get_users(self):
         return User.objects.filter(is_active=True, votes__isnull=False).distinct()
 

@@ -54,6 +54,10 @@ class RecommendationProvider(object):
         """Returns the score of the rating"""
         raise NotImplementedError
 
+    def get_rating_site(self, rating):
+        """Returns the site of the rating"""
+        raise None
+
     def _convert_iterable_to_prefs(self, iterable):
         return convert_iterable_to_prefs(iterable)
 
@@ -78,7 +82,8 @@ class RecommendationProvider(object):
             for rating in self.get_ratings(item):
                 user = self.get_rating_user(rating)
                 score = self.get_rating_score(rating)
-                identifier = self.storage.get_identifier(item)
+                site = self.get_rating_site(rating)
+                identifier = self.storage.get_identifier(item, site)
                 iterable.append((user, identifier, score))
         return self._convert_iterable_to_prefs(iterable)
 
@@ -158,18 +163,3 @@ class DjangoRecommendationProvider(RecommendationProvider):
             rankings = get_recommended_items(prefs, itemMatch, user)
             recommendations.append((user, rankings))
         return recommendations
-
-
-class DjangoSitesRecommendationProvider(DjangoRecommendationProvider):
-    """
-    Convenience provider for Django models that use sites.
-
-    Subclass and override the ``get_rating_site`` method to specify how to determine
-    the site a particular vote was performed on.
-    """
-
-    def get_rating_site(self, rating):
-        """
-        Returns the site a particular vote was performed on.
-        """
-        raise NotImplementedError

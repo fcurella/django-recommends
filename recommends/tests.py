@@ -24,6 +24,9 @@ class RecommendsTestCase(unittest.TestCase):
         # Make sure we didn't get all 0s
         self.assertNotEquals(SimilarityResult.objects.filter(score=0).count(), SimilarityResult.objects.count())
 
+        # Make sure we didn't get all 1s
+        self.assertNotEquals(SimilarityResult.objects.filter(score=1).count(), SimilarityResult.objects.count())
+
         similar_to_mug = SimilarityResult.objects.similar_to(self.mug, score__gt=0)
         self.assertEquals(similar_to_mug.count(), 2)
         self.assertEquals(similar_to_mug[0].get_related_object(), self.orange_juice)
