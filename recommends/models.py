@@ -67,7 +67,7 @@ class SimilarityResult(RecommendsBaseModel):
 
 class Recommendation(RecommendsBaseModel):
     """Recommended an object for a particular user"""
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, related_name="%(app_label)s_%(class)s_users")
     score = models.FloatField(null=True, blank=True, default=None)
 
     objects = RecommendationManager()
