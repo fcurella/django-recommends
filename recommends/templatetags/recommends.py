@@ -1,6 +1,9 @@
 from ..providers import recommendation_registry
-from django.db import models
+from ..settings import RECOMMENDS_CACHE_TEMPLATETAGS_TIMEOUT
 from django import template
+from django.core.cache import cache
+from django.conf import settings
+from django.db import models
 register = template.Library()
 
 
@@ -16,7 +19,12 @@ def similarities(obj, limit=5):
         {% endfor %}
     """
     if isinstance(obj, models.Model):
-        return recommendation_registry.storage.get_similarities_for_object(obj, int(limit))
+        cache_key = 'recommends:similarities:%s:%s.%s:%s' % (settings.SITE_ID, obj._meta.app_label, obj._meta.object_name.lower(), limit)
+        similarities = cache.get(cache_key)
+        if similarities is None:
+            similarities = recommendation_registry.storage.get_similarities_for_object(obj, int(limit))
+            cache.set(cache_key, similarities, RECOMMENDS_CACHE_TEMPLATETAGS_TIMEOUT)
+        return similarities
 
 
 class SuggestionNode(template.Node):
@@ -27,7 +35,11 @@ class SuggestionNode(template.Node):
     def render(self, context):
         user = context['user']
         if user.is_authenticated():  # We need an id after all
-            suggestions = recommendation_registry.storage.get_recommendations_for_user(user, int(self.limit))
+            cache_key = 'recommends:recommendations:%s:%s:%s' % (settings.SITE_ID, user.id, self.limit)
+            suggestions = cache.get(cache_key)
+            if suggestions is None:
+                suggestions = recommendation_registry.storage.get_recommendations_for_user(user, int(self.limit))
+                cache.set(cache_key, suggestions, RECOMMENDS_CACHE_TEMPLATETAGS_TIMEOUT)
             context[self.varname] = suggestions
         return ''
 
