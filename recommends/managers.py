@@ -14,7 +14,7 @@ class RecommendsManager(models.Manager):
 
 class SimilarityResultManager(RecommendsManager):
     def get_query_set(self):
-        return super(RecommendsManager, self).get_query_set().filter(score__isnull=False)
+        return super(SimilarityResultManager, self).get_query_set().filter(score__isnull=False)
 
     def get_or_create_for_objects(self, object_target, object_target_site, object_related, object_related_site):
         object_ctype = ContentType.objects.get_for_model(object_target)
@@ -46,7 +46,7 @@ class SimilarityResultManager(RecommendsManager):
 
 class RecommendationManager(RecommendsManager):
     def get_query_set(self):
-        return super(RecommendsManager, self).get_query_set().filter(score__isnull=False)
+        return super(RecommendationManager, self).get_query_set().filter(score__isnull=False)
 
     def get_or_create_for_object(self, user, object_recommended, object_site):
         object_ctype = ContentType.objects.get_for_model(object_recommended)
