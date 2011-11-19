@@ -1,12 +1,12 @@
 from django.contrib.auth.models import User
 from django.utils import importlib
-from .converters import convert_iterable_to_prefs
+from .converters import convert_iterable_to_prefs, model_path
 from .filtering import calculate_similar_items, get_recommended_items
 from .settings import RECOMMENDS_STORAGE_BACKEND
 
 
 class RecommendationProviderRegistry(object):
-    providers = []
+    providers = {}
 
     def __init__(self):
         storage_module = '.'.join(RECOMMENDS_STORAGE_BACKEND.split('.')[:-1])
@@ -14,8 +14,11 @@ class RecommendationProviderRegistry(object):
         StorageClass = getattr(importlib.import_module(storage_module), storage_class_name)
         self.storage = StorageClass()
 
-    def register(self, provider):
-        self.providers.append(provider)
+    def register(self, model, provider):
+        self.providers[model_path(model)] = provider
+
+    def provider_for_model(self, model):
+        return self.providers[model_path(model)]
 
 recommendation_registry = RecommendationProviderRegistry()
 

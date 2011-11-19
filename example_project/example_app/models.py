@@ -52,4 +52,4 @@ class ProductRecommendationProvider(DjangoRecommendationProvider):
     def get_rating_user(self, rating):
         return rating.user
 
-recommendation_registry.register(ProductRecommendationProvider)
+recommendation_registry.register(Product, ProductRecommendationProvider)

@@ -12,4 +12,4 @@ def recommends_precompute():
         provider_instance = ProviderClass()
         prefs = provider_instance.prefs()
         provider_instance.precompute(prefs)
-    [_precompute(Provider) for Provider in recommendation_registry.providers]
+    [_precompute(Provider) for model, Provider in recommendation_registry.providers.iteritems()]

@@ -4,6 +4,10 @@ from django.contrib.sites.models import Site
 from django.db import models
 
 
+def model_path(obj):
+    return '%s.%s' % (obj._meta.app_label, obj._meta.object_name.lower())
+
+
 def get_sites(obj):
     for field in obj._meta.fields:
         if field.rel and field.rel.to == Site:
@@ -23,9 +27,7 @@ def get_identifier(obj, site=None):
         site_id = settings.SITE_ID
     else:
         site_id = site.id
-    app_label = obj._meta.app_label
-    model = obj._meta.object_name.lower()
-    return "%s.%s:%s:%s" % (app_label, model, site_id, obj.id)
+    return "%s:%s:%s" % (model_path(obj), site_id, obj.id)
 
 
 def resolve_identifier(identifier):
