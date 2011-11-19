@@ -82,6 +82,9 @@ Template Tags & Filters
 
 To use the included template tags and filters, load the library in your templates by using ``{% load recommends %}``.
 
+Filters
+~~~~~~~
+
 The available filters are:
 
 ``similar:<limit>``: returns a list of SimilarityResult, representing how much an object is similar to the given one::
@@ -90,9 +93,12 @@ The available filters are:
         {{ similarities.get_object }}
     {% endfor %}
 
+Tags
+~~~~
+
 The available tags are:
 
-``{% suggested as <varname> [limit <limit>] %}``: Returns a list of Recommendation (suggestions of objects) for the current user::
+``{% suggested as <varname> [limit <limit>] %}``: Returns a list of Recommendation (suggestions of objects) for the current user. ``limit`` default is ``5``::
 
     {% suggested as suggestions [limit 5]  %}
     {% for suggested in suggestions %}
