@@ -87,7 +87,7 @@ Filters
 
 The available filters are:
 
-``similar:<limit>``: returns a list of SimilarityResult, representing how much an object is similar to the given one::
+``similar:<limit>``: returns a list of SimilarityResult, representing how much an object is similar to the given one. The ``limit`` argument is optional and defaults to ``5``::
 
     {% for similarities in myobj|similar:5 %}
         {{ similarities.get_object }}
@@ -98,7 +98,7 @@ Tags
 
 The available tags are:
 
-``{% suggested as <varname> [limit <limit>] %}``: Returns a list of Recommendation (suggestions of objects) for the current user. ``limit`` default is ``5``::
+``{% suggested as <varname> [limit <limit>] %}``: Returns a list of Recommendation (suggestions of objects) for the current user. ``limit`` is optional and defaults to ``5``::
 
     {% suggested as suggestions [limit 5]  %}
     {% for suggested in suggestions %}
