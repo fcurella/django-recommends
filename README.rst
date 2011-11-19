@@ -77,7 +77,7 @@ Example::
 
     recommendation_registry.register(ProductRecommendationProvider)
 
-Templatetags & Filters
+Template Tags & Filters
 ----------------------
 
 To use the included template tags and filters, load the library in your templates by using ``{% load recommends %}``.
@@ -114,7 +114,7 @@ Computations are done by a scheduled celery task. The task is run every 24 hours
 Templatetags Cache
 ~~~~~~~~~~~~~~~~~~
 
-By default, the templatetags provided by django-recommends will cache their result for 24 hours (86400 seconds).
+By default, the templatetags provided by django-recommends will cache their result for 60 seconds.
 This time can be overridden via the ``RECOMMENDS_CACHE_TEMPLATETAGS_TIMEOUT``.
 
 
