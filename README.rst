@@ -87,7 +87,7 @@ Filters
 
 The available filters are:
 
-``similar:<limit>``: returns a list of SimilarityResult, representing how much an object is similar to the given one. The ``limit`` argument is optional and defaults to ``5``::
+``similar:<limit>``: returns a list of Similarity objects, representing how much an object is similar to the given one. The ``limit`` argument is optional and defaults to ``5``::
 
     {% for similarities in myobj|similar:5 %}
         {{ similarities.get_object }}

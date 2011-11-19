@@ -1,11 +1,11 @@
 from django.contrib import admin
-from .models import SimilarityResult, Recommendation
+from .models import Similarity, Recommendation
 
 
-class SimilarityResultAdmin(admin.ModelAdmin):
+class SimilarityAdmin(admin.ModelAdmin):
     list_display = ('get_subject', 'object_site', 'get_related_object', 'related_object_site', 'score')
     list_filter = ('object_site',)
-admin.site.register(SimilarityResult, SimilarityResultAdmin)
+admin.site.register(Similarity, SimilarityAdmin)
 
 
 class RecommendationAdmin(admin.ModelAdmin):

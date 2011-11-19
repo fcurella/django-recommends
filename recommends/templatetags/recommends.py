@@ -10,7 +10,7 @@ register = template.Library()
 @register.filter
 def similarities(obj, limit=5):
     """
-    Returns a list of SimilarityResult, representing how much an object is similar to the given one.
+    Returns a list of Similarity objects, representing how much an object is similar to the given one.
 
     Usage::
 

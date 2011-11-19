@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 from django.test import Client
 from example_app.models import Product, Vote
 from recommends.tasks import recommends_precompute
-from recommends.models import SimilarityResult, Recommendation
+from recommends.models import Similarity, Recommendation
 
 
 class RecommendsTestCase(unittest.TestCase):
@@ -19,15 +19,15 @@ class RecommendsTestCase(unittest.TestCase):
         recommends_precompute()
 
     def test_similarities(self):
-        self.assertNotEquals(SimilarityResult.objects.count(), 0)
+        self.assertNotEquals(Similarity.objects.count(), 0)
 
         # Make sure we didn't get all 0s
-        self.assertNotEquals(SimilarityResult.objects.filter(score=0).count(), SimilarityResult.objects.count())
+        self.assertNotEquals(Similarity.objects.filter(score=0).count(), Similarity.objects.count())
 
         # Make sure we didn't get all 1s
-        self.assertNotEquals(SimilarityResult.objects.filter(score=1).count(), SimilarityResult.objects.count())
+        self.assertNotEquals(Similarity.objects.filter(score=1).count(), Similarity.objects.count())
 
-        similar_to_mug = SimilarityResult.objects.similar_to(self.mug, score__gt=0)
+        similar_to_mug = Similarity.objects.similar_to(self.mug, score__gt=0)
         self.assertEquals(similar_to_mug.count(), 2)
         self.assertEquals(similar_to_mug[0].get_related_object(), self.orange_juice)
 

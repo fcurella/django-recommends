@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
 from .converters import get_identifier
-from .managers import RecommendsManager, SimilarityResultManager, RecommendationManager
+from .managers import RecommendsManager, SimilarityManager, RecommendationManager
 
 
 class RecommendsBaseModel(models.Model):
@@ -38,7 +38,7 @@ class RecommendsBaseModel(models.Model):
     get_subject.short_description = u"subject"
 
 
-class SimilarityResult(RecommendsBaseModel):
+class Similarity(RecommendsBaseModel):
     """How much an object is similar to another"""
 
     score = models.FloatField(null=True, blank=True, default=None)
@@ -47,9 +47,10 @@ class SimilarityResult(RecommendsBaseModel):
     related_object_id = models.PositiveIntegerField()
     related_object_site = models.ForeignKey(Site, related_name="%(app_label)s_%(class)s_related_object_sites")
 
-    objects = SimilarityResultManager()
+    objects = SimilarityManager()
 
     class Meta:
+        verbose_name_plural = 'similarities'
         unique_together = ('object_ctype', 'object_id', 'object_site', 'related_object_ctype', 'related_object_id', 'related_object_site')
         ordering = ['-score']
 

@@ -1,6 +1,6 @@
 from django.contrib.sites.models import Site
 from .converters import resolve_identifier, get_identifier
-from .models import SimilarityResult, Recommendation
+from .models import Similarity, Recommendation
 from django.conf import settings
 
 
@@ -52,7 +52,7 @@ class DjangoOrmStorage(RecommendationStorage):
 
     def get_similarities_for_object(self, obj, limit):
         object_site = Site.objects.get_current()
-        return SimilarityResult.objects.similar_to(obj, site=object_site, score__gt=0).order_by('-score')[:limit]
+        return Similarity.objects.similar_to(obj, site=object_site, score__gt=0).order_by('-score')[:limit]
 
     def get_recommendations_for_user(self, user, limit):
         object_site_id = settings.SITE_ID
@@ -64,7 +64,7 @@ class DjangoOrmStorage(RecommendationStorage):
 
             for score, related_object_id in scores:
                 object_related, object_related_site = self.resolve_identifier(related_object_id)
-                SimilarityResult.objects.set_score_for_objects(
+                Similarity.objects.set_score_for_objects(
                     object_target=object_target,
                     object_target_site=object_target_site,
                     object_related=object_related,
