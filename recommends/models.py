@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
 from .converters import get_identifier
@@ -11,6 +12,7 @@ class RecommendsBaseModel(models.Model):
     object_ctype = models.ForeignKey(ContentType, related_name="%(app_label)s_%(class)s_object_ctypes")
     object_id = models.PositiveIntegerField()
     object_site = models.ForeignKey(Site, related_name="%(app_label)s_%(class)s_object_sites")
+    object = generic.GenericForeignKey('object_ctype', 'object_id')
 
     objects = RecommendsManager()
 
@@ -28,15 +30,6 @@ class RecommendsBaseModel(models.Model):
     def object_identifier(self):
         return self._object_identifier(self.object_ctype, self.object_id)
 
-    def get_object(self):
-        ModelClass = self.object_ctype.model_class()
-        return ModelClass.objects.get(pk=self.object_id)
-
-    # We can't use a callable name 'get_object' in the django admin, so we have to alias it.
-    def get_subject(self):
-        return self.get_object()
-    get_subject.short_description = u"subject"
-
 
 class Similarity(RecommendsBaseModel):
     """How much an object is similar to another"""
@@ -46,6 +39,7 @@ class Similarity(RecommendsBaseModel):
     related_object_ctype = models.ForeignKey(ContentType, related_name="%(app_label)s_%(class)s_related_object_ctypes")
     related_object_id = models.PositiveIntegerField()
     related_object_site = models.ForeignKey(Site, related_name="%(app_label)s_%(class)s_related_object_sites")
+    related_object = generic.GenericForeignKey('related_object_ctype', 'related_object_id')
 
     objects = SimilarityManager()
 
@@ -59,11 +53,6 @@ class Similarity(RecommendsBaseModel):
 
     def related_object_identifier(self):
         return self._object_identifier(self.related_object_ctype, self.related_object_id)
-
-    def get_related_object(self):
-        ModelClass = self.related_object_ctype.model_class()
-        return ModelClass.objects.get(pk=self.related_object_id)
-    get_related_object.short_description = u"related object"
 
 
 class Recommendation(RecommendsBaseModel):
