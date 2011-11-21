@@ -24,9 +24,9 @@ Contents:
 Requirements
 ============
 
-* django 1.3+
-* celery
-
+* Django>=1.3.1
+* celery>=2.3.3
+* django-celery>=2.3.3
 
 Indices and tables
 ==================
