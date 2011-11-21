@@ -1,6 +1,8 @@
 from collections import defaultdict
 from .distances import sim_distance, sim_pearson
 
+# Most of this is adapted from: Programming collective intelligence, Toby Segaran, 2007
+
 
 def top_matches(prefs, person, similarity=sim_pearson):
     """
