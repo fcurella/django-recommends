@@ -8,7 +8,7 @@ A ``RecommendationProvider`` is a class that specifies how to retrieve various i
 
 Subclasses override properties amd methods in order to determine what constitutes rated items, a rating, its score, and user.
 
-A basic algorithm to calculate similarities and recommendations is provided by *ault, but subclasses can use their own by overriding the ``calculate_similarities`` and ``calculate_recommendations`` methods.
+A basic algorithm to calculate similarities and recommendations is provided by default, but subclasses can use their own by overriding the ``calculate_similarities`` and ``calculate_recommendations`` methods.
 
 Properties
 ----------
@@ -22,9 +22,9 @@ Properties
         
         A callable that determines the similiarity between two elements.
 
-        Functions for Euclidean Distance and Pearson Coefficient are provided for convenience at ``reccomends.similarities.sim_distance`` and ``reccomends.similarities.sim_pearson``.
+        Functions for Euclidean Distance and Pearson Coefficient are provided for convenience at ``recomends.similarities.sim_distance`` and ``recomends.similarities.sim_pearson``.
 
-        Defaults to ``reccomends.similarities.sim_distance``
+        Defaults to ``recomends.similarities.sim_distance``
 
 Methods
 -------
