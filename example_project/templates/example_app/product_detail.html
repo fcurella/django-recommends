@@ -7,7 +7,7 @@
 {% if similarities %}
 <ul>
 	{% for similarity in similarities %}
-	<li><a href="{{similarity.get_related_object.get_absolute_url}}">{{similarity.get_related_object}}</a></li>
+	<li><a href="{{similarity.related_object.get_absolute_url}}">{{similarity.related_object}}</a></li>
 	{% endfor %}
 </ul>
 {% endif %}

@@ -141,4 +141,13 @@ LOGGING = {
     }
 }
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+    }
+}
+
+CELERY_ALWAYS_EAGER = True
+
+
 from local_settings import *

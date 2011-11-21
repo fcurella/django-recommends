@@ -1,8 +1,10 @@
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
 from django.utils import importlib
 from .converters import convert_iterable_to_prefs, model_path
 from .filtering import calculate_similar_items, get_recommended_items
 from .settings import RECOMMENDS_STORAGE_BACKEND
+from .tasks import remove_suggestion
 
 
 class RecommendationProviderRegistry(object):
@@ -14,8 +16,11 @@ class RecommendationProviderRegistry(object):
         StorageClass = getattr(importlib.import_module(storage_module), storage_class_name)
         self.storage = StorageClass()
 
-    def register(self, model, provider):
-        self.providers[model_path(model)] = provider
+    def register(self, model, Provider):
+        provider_instance = Provider()
+        self.providers[model_path(model)] = provider_instance
+        for signal in provider_instance.rate_signals:
+            signal.connect(provider_instance.on_signal, sender=model)
 
     def provider_for_model(self, model):
         return self.providers[model_path(model)]
@@ -38,6 +43,8 @@ class RecommendationProvider(object):
     Subclasses override methods in order to determine what constitutes voted items, a vote,
     its score, and user.
     """
+    rate_signals = [post_save]
+
     def __init__(self):
         self.storage = recommendation_registry.storage
 
@@ -57,9 +64,23 @@ class RecommendationProvider(object):
         """Returns the score of the rating"""
         raise NotImplementedError
 
+    def get_rating_item(self, rating):
+        """Returns the rated object"""
+        raise NotImplementedError
+
     def get_rating_site(self, rating):
         """Returns the site of the rating"""
-        raise None
+        return None
+
+    def is_rating_active(self, instance):
+        """Returns if the rating is active"""
+        return True
+
+    def on_signal(self, sender, instance, **kwargs):
+        if self.is_rating_active(instance):
+            user = self.get_rating_user(instance)
+            obj = self.get_rating_item(instance)
+            remove_suggestion.delay(user_id=user.id, rating_model=model_path(sender), model_path=model_path(obj), object_id=obj.id)
 
     def _convert_iterable_to_prefs(self, iterable):
         return convert_iterable_to_prefs(iterable)

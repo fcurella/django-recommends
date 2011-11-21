@@ -59,3 +59,33 @@ class RecommendsTestCase(unittest.TestCase):
         print "timing..."
         times = timeit.repeat(stmt, setup, number=100)
         print times
+
+
+class RecommendsListenersTestCase(unittest.TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.mug = Product.objects.get(name='Coffee Mug')
+        self.orange_juice = Product.objects.get(name='Orange Juice')
+        self.wine = Product.objects.get(name='Bottle of Red Wine')
+        self.user1 = User.objects.get(username='user1')
+
+        recommends_precompute()
+
+    def test_listeners(self):
+        self.client.login(username='user1', password='user1')
+        response = self.client.get(reverse('home'))
+        self.assertTrue(self.mug.get_absolute_url() in response.content)
+
+        self.vote = Vote.objects.create(
+            user=self.user1,
+            product=self.mug,
+            site_id=1,
+            score=1
+        )
+
+        response = self.client.get(reverse('home'))
+        self.assertFalse(self.mug.get_absolute_url() in response.content)
+
+    def tearDown(self):
+        self.vote.delete()
+        recommends_precompute()

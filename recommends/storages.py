@@ -37,6 +37,9 @@ class RecommendationStorage(object):
             )
         """
         raise NotImplementedError
+    
+    def remove_recommendation(self, user, obj):
+        raise NotImplementedError
 
 
 class DjangoOrmStorage(RecommendationStorage):
@@ -82,3 +85,12 @@ class DjangoOrmStorage(RecommendationStorage):
                     object_site=site,
                     score=score
                 )
+
+    def remove_recommendation(self, user, obj):
+        app_label = obj._meta.app_label
+        model = obj._meta.object_name.lower()
+
+        try:
+            Recommendation.objects.get(user=user, object_ctype__app_label=app_label, object_ctype__model=model, object_id=obj.id).delete()
+        except Recommendation.DoesNotExist:
+            pass

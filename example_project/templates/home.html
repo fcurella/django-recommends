@@ -8,7 +8,7 @@
 	<h3>Suggestions for you:</h3>
 	<ul>
 	{% for suggestion in suggestions %}
-		<li><a href="{{suggestion.get_object.get_absolute_url}}">{{suggestion.get_object}}</a></li>
+		<li><a href="{{suggestion.object.get_absolute_url}}">{{suggestion.object}}</a></li>
 	{% endfor %}
 	</ul>
 

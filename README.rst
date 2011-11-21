@@ -9,12 +9,11 @@ Requires Celery.
 Usage
 ----
 
-In order to compute and retrieve similarities and recommendations, you must register a ``RecommendationProvider``.
+In order to compute and retrieve similarities and recommendations, you must create a ``RecommendationProvider`` and register it with a model that represents the rating.
 
-A ``RecommendationProvider`` is a class that specifies how to retrieve various informations (items, users, votes)
-necessary for computing recommendation and similarities for a set of objects.
+A ``RecommendationProvider`` is a class that specifies how to retrieve various informations (items, users, votes) necessary for computing recommendation and similarities for a set of objects.
 
-Subclasses override methods in order to determine what constitutes voted items, a vote,
+Subclasses override methods in order to determine what constitutes rated items, a rating,
 its score, and user.
 
 A basic algorithm to calculate similarities and recommendations is provided by default, but subclasses can use their own by overriding the ``calculate_similarities`` and ``calculate_recommendations`` methods.
@@ -75,7 +74,10 @@ Example::
         def get_rating_user(self, rating):
             return rating.user
 
-    recommendation_registry.register(Product, ProductRecommendationProvider)
+        def get_rating_item(self, rating):
+            return rating.product
+
+    recommendation_registry.register(Vote, ProductRecommendationProvider)
 
 Template Tags & Filters
 ----------------------
@@ -89,8 +91,8 @@ The available filters are:
 
 ``similar:<limit>``: returns a list of Similarity objects, representing how much an object is similar to the given one. The ``limit`` argument is optional and defaults to ``5``::
 
-    {% for similarities in myobj|similar:5 %}
-        {{ similarities.get_object }}
+    {% for similarity in myobj|similar:5 %}
+        {{ similarity.related_object }}
     {% endfor %}
 
 Tags
@@ -102,8 +104,25 @@ The available tags are:
 
     {% suggested as suggestions [limit 5]  %}
     {% for suggested in suggestions %}
-        {{ suggested.get_object }}
+        {{ suggested.object }}
     {% endfor %}
+
+Signals
+-------
+
+Django-recommends automaticaly connect a function called ``on_rate`` to the ``post_save`` signal of the rating model.
+
+By default, this function removes the suggestion for the rated instance for the user that just rated, via a celery task.
+
+You can override this function and connect to a different set of signals on the provider::
+    from django.db.models.signals import post_save, post_delete
+
+    class MyProvider(DjangoRecommendationProvider):
+        signals = [post_save, post_delete]
+
+        def on_signal(self, sender, instance, **kwargs):
+            # Code that hadnles what should happen…
+
 
 Settings
 ---------
@@ -137,3 +156,4 @@ A storage backend can be any class extending ``recommends.storages.Recommendatio
 * ``get_recommendations_for_user(self, user, limit)``
 * ``store_similarities(self, itemMatch)``
 * ``store_recommendations(self, user, recommendations)``
+* ``remove_recommendation(self, user, obj)``
