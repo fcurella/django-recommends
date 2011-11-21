@@ -5,8 +5,7 @@ In order to compute and retrieve similarities and recommendations, you must crea
 
 A ``RecommendationProvider`` is a class that specifies how to retrieve various informations (items, users, votes) necessary for computing recommendation and similarities for a set of objects.
 
-Subclasses override methods in order to determine what constitutes rated items, a rating,
-its score, and user.
+Subclasses override methods in order to determine what constitutes rated items, a rating, its score, and user.
 
 A basic algorithm to calculate similarities and recommendations is provided by default, but subclasses can use their own by overriding the ``calculate_similarities`` and ``calculate_recommendations`` methods.
 
