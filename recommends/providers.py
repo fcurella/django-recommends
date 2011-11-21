@@ -77,6 +77,9 @@ class RecommendationProvider(object):
         return True
 
     def on_signal(self, sender, instance, **kwargs):
+        """
+        This function gets called when a signal in ``self.signals`` is called from the rating model.
+        """
         if self.is_rating_active(instance):
             user = self.get_rating_user(instance)
             obj = self.get_rating_item(instance)
