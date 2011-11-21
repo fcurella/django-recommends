@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.utils import importlib
 from .converters import convert_iterable_to_prefs, model_path
+from .similarities import sim_distance
 from .filtering import calculate_similar_items, get_recommended_items
 from .settings import RECOMMENDS_STORAGE_BACKEND
 from .tasks import remove_suggestion
@@ -44,6 +45,7 @@ class RecommendationProvider(object):
     its score, and user.
     """
     rate_signals = [post_save]
+    similarity = sim_distance
 
     def __init__(self):
         self.storage = recommendation_registry.storage
@@ -190,7 +192,7 @@ class DjangoRecommendationProvider(RecommendationProvider):
         return User.objects.filter(is_active=True)
 
     def calculate_similarities(self, prefs):
-        return calculate_similar_items(prefs)
+        return calculate_similar_items(prefs, similarity=self.similarity)
 
     def calculate_recommendations(self, prefs, itemMatch):
         recommendations = []

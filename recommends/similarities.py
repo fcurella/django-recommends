@@ -1,6 +1,7 @@
 from math import sqrt
 
 
+@staticmethod
 def sim_distance(prefs, p1, p2):
     """Returns a distance-based similarity score for p1 and p2"""
 
@@ -17,6 +18,8 @@ def sim_distance(prefs, p1, p2):
         return 1 / (1 + sqrt(sum_of_squares))
     return 0
 
+
+@staticmethod
 def sim_pearson(prefs, p1, p2):
     """
     Returns the Pearson correlation coefficient for p1 and p2

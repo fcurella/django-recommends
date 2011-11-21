@@ -1,5 +1,5 @@
 from collections import defaultdict
-from .distances import sim_distance, sim_pearson
+from .similarities import sim_distance, sim_pearson
 
 # Most of this is adapted from: Programming collective intelligence, Toby Segaran, 2007
 
@@ -7,7 +7,6 @@ from .distances import sim_distance, sim_pearson
 def top_matches(prefs, person, similarity=sim_pearson):
     """
     Returns the best matches for person from the prefs dictionary.
-    Number of results and similarity function are optional params.
     """
 
     return [(similarity(prefs, person, other), other) for other in prefs if other != person]
