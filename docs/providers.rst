@@ -1,5 +1,5 @@
 Recommendation Providers
-======================
+========================
 
 In order to compute and retrieve similarities and recommendations, you must create a ``RecommendationProvider`` and register it with a model that represents the rating.
 

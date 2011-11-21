@@ -10,14 +10,13 @@ Computations are done by a scheduled celery task. The task is run every 24 hours
 
 ``RECOMMENDS_TASK_CRONTAB`` must be a dictionary of kwargs acceptable by celery.schedulers.crontab.
 
-
 Template tags and filters cache timeout
-----------
+---------------------------------------
 
 RECOMMENDS_CACHE_TEMPLATETAGS_TIMEOUT controls how long tample tags and fitlers cache their results. Default is 60 seconds.
 
 
 Storage backend
-----------------
+---------------
 
 RECOMMENDS_STORAGE_BACKEND specifies which :doc:`storages` class to use for storing similarity and recommendations. Defaults to ``'recommends.storages.DjangoOrmStorage'``.
