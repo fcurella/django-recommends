@@ -181,12 +181,6 @@ class RecommendationProvider(object):
 
         self.storage.store_recommendations(self.calculate_recommendations(prefs, itemMatch))
 
-
-class DjangoRecommendationProvider(RecommendationProvider):
-    """
-    Convenience provider for Django models.
-    """
-
     def get_users(self):
         """Returns all users who have voted something"""
         return User.objects.filter(is_active=True)

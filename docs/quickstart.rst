@@ -15,7 +15,7 @@ Example::
     from django.db import models
     from django.contrib.auth.models import User
     from django.contrib.sites.models import Site
-    from recommends.providers import recommendation_registry, DjangoRecommendationProvider
+    from recommends.providers import recommendation_registry, RecommendationProvider
 
 
     class Product(models.Model):
@@ -46,7 +46,7 @@ Example::
             return u"Vote"
 
 
-    class ProductRecommendationProvider(DjangoRecommendationProvider):
+    class ProductRecommendationProvider(RecommendationProvider):
         def get_users(self):
             return User.objects.filter(is_active=True, votes__isnull=False).distinct()
 
