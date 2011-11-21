@@ -72,7 +72,7 @@ class RecommendationProvider(object):
         """Returns the site of the rating"""
         return None
 
-    def is_rating_active(self, instance):
+    def is_rating_active(self, rating):
         """Returns if the rating is active"""
         return True
 
