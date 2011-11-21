@@ -3,9 +3,10 @@ from setuptools import setup, find_packages
 
 from recommends import VERSION
 
+
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
-    
+
 requirements = [
     'django',
     'celery',
@@ -14,9 +15,9 @@ requirements = [
 setup(
     name = "recommends",
     version = ".".join(map(str, VERSION)),
-    description = "",
+    description = "A django app that build item-based suggestions for users",
     long_description = read('README.rst'),
-    url = '',
+    url = 'https://github.com/fcurella/django-recommends',
     license = 'MIT',
     author = 'Flavio Curella',
     author_email = 'flavio.curella@gmail.com',
@@ -32,6 +33,4 @@ setup(
         'Framework :: Django',
     ],
     install_requires = requirements,
-    tests_require = ["nose",],
-    test_suite = "nose.collector",
 )
