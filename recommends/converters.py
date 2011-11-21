@@ -44,12 +44,12 @@ def resolve_identifier(identifier):
 
 def convert_iterable_to_prefs(iterable):
     """
-    `iterable must be composed of (user_id, object_identifier, rating)
+    ``iterable must be`` composed of (user_id, object_identifier, rating)
 
-    `object_identifier` is any string that uniquely identifies the object ie:
+    ``object_identifier`` is any string that uniquely identifies the object ie:
     <app_label>.<model>:<object_id>.
 
-    The `utils.get_identifier` method is provided as convenience for creating such identifiers.
+    The ``utils.get_identifier`` method is provided as convenience for creating such identifiers.
     """
     prefs = defaultdict(dict)
     for pref in iterable:

@@ -24,7 +24,9 @@ class RecommendationStorage(object):
 
     def store_recommendations(self, recommendations):
         """
-        ``recommendations`` is an iterable with the following schema::
+        ``recommendations`` is an iterable with the following schema:
+
+        ::
 
             (
                 (

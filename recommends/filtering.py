@@ -53,7 +53,9 @@ def calculate_similar_items(prefs, similarity=sim_distance, verbose=0):
     Create a dictionary of items showing which other items they
     are most similar to.
 
-    Output::
+    Output:
+
+    ::
 
         {
             "<object_id>": [
@@ -81,7 +83,9 @@ def get_recommended_items(prefs, itemMatch, user):
     """
     itemMatch is supposed to be the result of ``calculate_similar_items()``
 
-    Output::
+    Output:
+
+    ::
 
         [
             (<score>, '<object_id>'),

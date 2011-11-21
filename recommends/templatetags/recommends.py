@@ -12,7 +12,9 @@ def similarities(obj, limit=5):
     """
     Returns a list of Similarity objects, representing how much an object is similar to the given one.
 
-    Usage::
+    Usage:
+
+    ::
 
         {% for similarities in myobj|similar:5 %}
             {{ similarities.get_object }}
@@ -49,10 +51,14 @@ def suggested(parser, token):
     """
     Returns a list of Recommendation (suggestions of objects) for the current user.
 
-    {% suggested as suggestions [limit 5]  %}
-    {% for suggested in suggestions %}
-        {{ suggested.get_object }}
-    {% endfor %}
+    Usage:
+
+    ::
+
+        {% suggested as suggestions [limit 5]  %}
+        {% for suggested in suggestions %}
+            {{ suggested.get_object }}
+        {% endfor %}
     """
     bits = token.contents.split()
     varname = bits[2]

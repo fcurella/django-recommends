@@ -87,7 +87,9 @@ class RecommendationProvider(object):
 
     def prefs(self):
         """
-        Returns a dictionary of votes, with the following schema::
+        Returns a dictionary of votes, with the following schema:
+
+        ::
 
             {
                 "<user_id1>": {
@@ -115,7 +117,9 @@ class RecommendationProvider(object):
         """
         Must return an dict of similarities for every object:
 
-        Accepts a dictionary representing votes with the following schema::
+        Accepts a dictionary representing votes with the following schema:
+
+        ::
 
             {
                 "<user1>": {
@@ -124,36 +128,40 @@ class RecommendationProvider(object):
                 }
             }
 
-        Output must be a dictionary with the following schema::
+        Output must be a dictionary with the following schema:
 
-        {
-            "<object_identifier1>": [
-                            (<score>, <related_object_identifier2>),
-                            (<score>, <related_object_identifier3>),
-            ],
-            "<object_identifier2>": [
-                            (<score>, <related_object_identifier1>),
-                            (<score>, <related_object_identifier3>),
-            ],
-        }
+        ::
+
+            {
+                "<object_identifier1>": [
+                                (<score>, <related_object_identifier2>),
+                                (<score>, <related_object_identifier3>),
+                ],
+                "<object_identifier2>": [
+                                (<score>, <related_object_identifier1>),
+                                (<score>, <related_object_identifier3>),
+                ],
+            }
 
         """
         raise NotImplementedError
 
     def calculate_recommendations(self, prefs, itemMatch):
         """
-        Returns a list of recommendations::
+        Returns a list of recommendations:
 
-        [
-            (<user1>, [
-                (<score>, "<object_identifier1>"),
-                (<score>, "<object_identifier2>"),
-            ]),
-            (<user2>, [
-                (<score>, "<object_identifier2>"),
-                (<score>, "<object_identifier3>"),
-            ]),
-        ]
+        ::
+
+            [
+                (<user1>, [
+                    (<score>, "<object_identifier1>"),
+                    (<score>, "<object_identifier2>"),
+                ]),
+                (<user2>, [
+                    (<score>, "<object_identifier2>"),
+                    (<score>, "<object_identifier3>"),
+                ]),
+            ]
 
         """
         raise NotImplementedError
