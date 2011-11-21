@@ -16,8 +16,8 @@ def similarities(obj, limit=5):
 
     ::
 
-        {% for similarities in myobj|similar:5 %}
-            {{ similarities.get_object }}
+        {% for similarity in myobj|similar:5 %}
+            {{ similarity.related_object }}
         {% endfor %}
     """
     if isinstance(obj, models.Model):
@@ -57,7 +57,7 @@ def suggested(parser, token):
 
         {% suggested as suggestions [limit 5]  %}
         {% for suggested in suggestions %}
-            {{ suggested.get_object }}
+            {{ suggested.object }}
         {% endfor %}
     """
     bits = token.contents.split()
