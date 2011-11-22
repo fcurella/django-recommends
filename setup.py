@@ -31,6 +31,7 @@ setup(
         'Operating System :: OS Independent',
         'Programming Language :: Python :: 2.6',
         'Framework :: Django',
+        'Topic :: Scientific/Engineering :: Information Analysis',
     ],
     install_requires = requirements,
 )
