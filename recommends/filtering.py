@@ -4,12 +4,12 @@ from .similarities import sim_distance, sim_pearson
 # Most of this is adapted from: Programming collective intelligence, Toby Segaran, 2007
 
 
-def top_matches(prefs, person, similarity=sim_pearson):
+def top_matches(prefs, p1, similarity=sim_pearson):
     """
-    Returns the best matches for person from the prefs dictionary.
+    Returns the best matches for p1 from the prefs dictionary.
     """
 
-    return [(similarity(prefs, person, other), other) for other in prefs if other != person]
+    return [(similarity(prefs[p1], prefs[p2]), p2) for p2 in prefs if p2 != p1]
 
 
 def get_recommendations(prefs, person, similarity=sim_pearson):
