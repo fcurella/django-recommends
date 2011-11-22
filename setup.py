@@ -13,7 +13,7 @@ requirements = [
 ]
 
 setup(
-    name = "recommends",
+    name = "django-recommends",
     version = ".".join(map(str, VERSION)),
     description = "A django app that build item-based suggestions for users",
     long_description = read('README.rst'),
