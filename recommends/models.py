@@ -49,7 +49,7 @@ class Similarity(RecommendsBaseModel):
         ordering = ['-score']
 
     def __unicode__(self):
-        return u"Similarity between %s and %s" % (self.get_object(), self.get_related_object())
+        return u"Similarity between %s and %s" % (self.object, self.related_object)
 
     def related_object_identifier(self):
         return self._object_identifier(self.related_object_ctype, self.related_object_id)

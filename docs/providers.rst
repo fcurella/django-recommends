@@ -22,7 +22,7 @@ Properties
         
         A callable that determines the similiarity between two elements.
 
-        Functions for Euclidean Distance and Pearson Coefficient are provided for convenience at ``recommends.similarities.sim_distance`` and ``recommends.similarities.sim_pearson``.
+        Functions for Euclidean Distance and Pearson Correlation are provided for convenience at ``recommends.similarities.sim_distance`` and ``recommends.similarities.sim_pearson``.
 
         Defaults to ``recommends.similarities.sim_distance``
 
