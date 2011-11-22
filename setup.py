@@ -15,7 +15,7 @@ requirements = [
 setup(
     name = "django-recommends",
     version = ".".join(map(str, VERSION)),
-    description = "A django app that build item-based suggestions for users",
+    description = "A django app that builds item-based suggestions for users",
     long_description = read('README.rst'),
     url = 'https://github.com/fcurella/django-recommends',
     license = 'MIT',
