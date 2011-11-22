@@ -5,10 +5,7 @@ from math import sqrt
 def sim_distance(p1, p2):
     """Returns a distance-based similarity score for p1 and p2"""
     # Get the list of shared_items
-    si = []
-    for item in p1:
-        if item in p2:
-            si.append(item)
+    si = [item for item in p1 if item in p2]
 
     if len(si) != 0:
         squares = [pow(p1[item] - p2[item], 2) for item in si]
@@ -24,11 +21,7 @@ def sim_pearson(p1, p2):
     Returns the Pearson correlation coefficient for p1 and p2
     """
     # Get the list of mutually rated items
-    si = []
-
-    for item in p1:
-        if item in p2:
-            si.append(item)
+    si = [item for item in p1 if item in p2]
 
     # Find the number of elements
     n = len(si)
