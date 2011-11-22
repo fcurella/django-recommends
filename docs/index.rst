@@ -6,7 +6,7 @@
 Welcome to django-recommends's documentation!
 =============================================
 
-A django app that build item-based suggestions for users.
+A django app that builds item-based suggestions for users.
 
 Contents:
 
