@@ -151,22 +151,24 @@ class RecommendationProvider(object):
 
         ::
 
-            {
-                "<object_identifier1>": [
+            [
+                ("<object_identifier1>", [
                                 (<related_object_identifier2>, <score>),
                                 (<related_object_identifier3>, <score>),
-                ],
-                "<object_identifier2>": [
+                ]),
+                ("<object_identifier2>", [
                                 (<related_object_identifier2>, <score>),
                                 (<related_object_identifier3>, <score>),
-                ],
-            }
+                ]),
+            ]
 
         """
         return calculate_similar_items(prefs, similarity=self.similarity)
 
     def calculate_recommendations(self, prefs, itemMatch):
         """
+        ``itemMatch`` is supposed to be the result of ``calculate_similar_items()``
+
         Returns a list of recommendations:
 
         ::

@@ -64,7 +64,7 @@ class DjangoOrmStorage(RecommendationStorage):
         return Recommendation.objects.filter(user=user, object_site__id=object_site_id).order_by('-score')[:limit]
 
     def store_similarities(self, itemMatch):
-        for object_id, scores in itemMatch.iteritems():
+        for object_id, scores in itemMatch:
             object_target, object_target_site = self.resolve_identifier(object_id)
 
             for related_object_id, score in scores:

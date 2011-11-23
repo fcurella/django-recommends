@@ -54,23 +54,23 @@ def transform_prefs(prefs):
 
 def calculate_similar_items(prefs, similarity=sim_distance, verbose=0):
     """
-    Create a dictionary of items showing which other items they
+    Create an iterator of items showing which other items they
     are most similar to.
 
     Output:
 
     ::
 
-        {
-            "<object_id>": [
+        [
+            ("<object_id>", [
                             (<related_object_id>, <score>),
                             (<related_object_id>, <score>),
-            ],
-            "<object_id>": [
+            ]),
+            ("<object_id>", [
                             (<related_object_id>, <score>),
                             (<related_object_id>, <score>),
-            ],
-        }
+            ]),
+        ]
     """
 
     itemMatch = {}
@@ -80,12 +80,13 @@ def calculate_similar_items(prefs, similarity=sim_distance, verbose=0):
     for item in itemPrefs:
         # Find the most similar items to this one
         itemMatch[item] = top_matches(itemPrefs, item, similarity=similarity)
-    return itemMatch
+        iteritems = itemMatch.items()
+    return iteritems
 
 
 def get_recommended_items(prefs, itemMatch, user):
     """
-    itemMatch is supposed to be the result of ``calculate_similar_items()``
+    ``itemMatch`` is supposed to be the result of ``calculate_similar_items()``
 
     Output:
 
@@ -100,6 +101,7 @@ def get_recommended_items(prefs, itemMatch, user):
         userRatings = prefs[user]
         scores = defaultdict(int)
         totalSim = defaultdict(int)
+        itemMatch = dict(itemMatch)
 
         # Loop over items rated by this user
         for (item, rating) in userRatings.iteritems():
