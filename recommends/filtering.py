@@ -9,13 +9,18 @@ def top_matches(prefs, p1, similarity=sim_pearson):
     Returns the best matches for p1 from the prefs dictionary.
     """
 
-    return [(similarity(prefs[p1], prefs[p2]), p2) for p2 in prefs if p2 != p1]
+    return [(p2, similarity(prefs[p1], prefs[p2])) for p2 in prefs if p2 != p1]
 
 
 def get_recommendations(prefs, person, similarity=sim_pearson):
     """
     Gets recommendations for a person by using a weighted average
     of every other user's rankings
+
+    Returns a generator of tuples in the format::
+
+        ("<object_identifier1>", <score>)
+
     """
 
     totals = defaultdict(int)
@@ -35,7 +40,7 @@ def get_recommendations(prefs, person, similarity=sim_pearson):
                         # Sum of similarities
                         simSums[item] += sim
     # Create the normalized list
-    return ((total / simSums[item], item) for item, total in totals.iteritems())
+    return ((item, (total / simSums[item])) for item, total in totals.iteritems())
 
 
 def transform_prefs(prefs):
@@ -58,12 +63,12 @@ def calculate_similar_items(prefs, similarity=sim_distance, verbose=0):
 
         {
             "<object_id>": [
-                            (<score>, <related_object_id>),
-                            (<score>, <related_object_id>),
+                            (<related_object_id>, <score>),
+                            (<related_object_id>, <score>),
             ],
             "<object_id>": [
-                            (<score>, <related_object_id>),
-                            (<score>, <related_object_id>),
+                            (<related_object_id>, <score>),
+                            (<related_object_id>, <score>),
             ],
         }
     """
@@ -87,8 +92,8 @@ def get_recommended_items(prefs, itemMatch, user):
     ::
 
         [
-            (<score>, '<object_id>'),
-            (<score>, '<object_id>'),
+            ('<object_id>', <score>),
+            ('<object_id>', <score>),
         ]
     """
     if user in prefs:
@@ -99,7 +104,7 @@ def get_recommended_items(prefs, itemMatch, user):
         # Loop over items rated by this user
         for (item, rating) in userRatings.iteritems():
             # Loop over items similar to this one
-            for (similarity, item2) in itemMatch[item]:
+            for (item2, similarity) in itemMatch[item]:
                 # Ignore if this user has already rated this item
                 if item2 not in userRatings:
                     # Weighted sum of rating times similarity
@@ -109,6 +114,6 @@ def get_recommended_items(prefs, itemMatch, user):
                     totalSim[item2] += similarity
 
         # Divide each total score by total weighting to get an average
-        rankings = ((score / totalSim[item], item) for item, score in scores.iteritems() if totalSim[item] != 0)
+        rankings = ((item, (score / totalSim[item])) for item, score in scores.iteritems() if totalSim[item] != 0)
         return rankings
     return []

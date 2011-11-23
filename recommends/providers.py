@@ -118,6 +118,20 @@ class RecommendationProvider(object):
                 iterable.append((user, identifier, score))
         return self._convert_iterable_to_prefs(iterable)
 
+    def precompute(self, prefs):
+        """
+        This function will be called by the task manager in order
+        to compile and store the results.
+        """
+        itemMatch = self.calculate_similarities(prefs)
+        self.storage.store_similarities(itemMatch)
+
+        self.storage.store_recommendations(self.calculate_recommendations(prefs, itemMatch))
+
+    def get_users(self):
+        """Returns all users who have voted something"""
+        return User.objects.filter(is_active=True)
+
     def calculate_similarities(self, prefs):
         """
         Must return an dict of similarities for every object:
@@ -139,17 +153,17 @@ class RecommendationProvider(object):
 
             {
                 "<object_identifier1>": [
-                                (<score>, <related_object_identifier2>),
-                                (<score>, <related_object_identifier3>),
+                                (<related_object_identifier2>, <score>),
+                                (<related_object_identifier3>, <score>),
                 ],
                 "<object_identifier2>": [
-                                (<score>, <related_object_identifier1>),
-                                (<score>, <related_object_identifier3>),
+                                (<related_object_identifier2>, <score>),
+                                (<related_object_identifier3>, <score>),
                 ],
             }
 
         """
-        raise NotImplementedError
+        return calculate_similar_items(prefs, similarity=self.similarity)
 
     def calculate_recommendations(self, prefs, itemMatch):
         """
@@ -159,36 +173,16 @@ class RecommendationProvider(object):
 
             [
                 (<user1>, [
-                    (<score>, "<object_identifier1>"),
-                    (<score>, "<object_identifier2>"),
+                    ("<object_identifier1>", <score>),
+                    ("<object_identifier2>", <score>),
                 ]),
                 (<user2>, [
-                    (<score>, "<object_identifier2>"),
-                    (<score>, "<object_identifier3>"),
+                    ("<object_identifier1>", <score>),
+                    ("<object_identifier2>", <score>),
                 ]),
             ]
 
         """
-        raise NotImplementedError
-
-    def precompute(self, prefs):
-        """
-        This function will be called by the task manager in order
-        to compile and store the results.
-        """
-        itemMatch = self.calculate_similarities(prefs)
-        self.storage.store_similarities(itemMatch)
-
-        self.storage.store_recommendations(self.calculate_recommendations(prefs, itemMatch))
-
-    def get_users(self):
-        """Returns all users who have voted something"""
-        return User.objects.filter(is_active=True)
-
-    def calculate_similarities(self, prefs):
-        return calculate_similar_items(prefs, similarity=self.similarity)
-
-    def calculate_recommendations(self, prefs, itemMatch):
         recommendations = []
         for user in self.get_users():
             rankings = get_recommended_items(prefs, itemMatch, user)
