@@ -1,3 +1,4 @@
+import math
 from django.contrib.sites.models import Site
 from .converters import resolve_identifier, get_identifier
 from .models import Similarity, Recommendation
@@ -68,25 +69,28 @@ class DjangoOrmStorage(RecommendationStorage):
             object_target, object_target_site = self.resolve_identifier(object_id)
 
             for related_object_id, score in scores:
-                object_related, object_related_site = self.resolve_identifier(related_object_id)
-                Similarity.objects.set_score_for_objects(
-                    object_target=object_target,
-                    object_target_site=object_target_site,
-                    object_related=object_related,
-                    object_related_site=object_related_site,
-                    score=score
-                )
+                if not math.isnan(score):
+                    object_related, object_related_site = self.resolve_identifier(related_object_id)
+                    if object_target != object_related:
+                        Similarity.objects.set_score_for_objects(
+                            object_target=object_target,
+                            object_target_site=object_target_site,
+                            object_related=object_related,
+                            object_related_site=object_related_site,
+                            score=score
+                        )
 
     def store_recommendations(self, recommendations):
         for (user, rankings) in recommendations:
             for object_id, score in rankings:
-                object_recommended, site = self.resolve_identifier(object_id)
-                Recommendation.objects.set_score_for_object(
-                    user=user,
-                    object_recommended=object_recommended,
-                    object_site=site,
-                    score=score
-                )
+                if not math.isnan(score):
+                    object_recommended, site = self.resolve_identifier(object_id)
+                    Recommendation.objects.set_score_for_object(
+                        user=user,
+                        object_recommended=object_recommended,
+                        object_site=site,
+                        score=score
+                    )
 
     def remove_recommendation(self, user, obj):
         app_label = obj._meta.app_label

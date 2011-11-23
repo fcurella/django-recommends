@@ -1,3 +1,4 @@
+import math
 from collections import defaultdict
 from .similarities import sim_distance, sim_pearson
 
@@ -105,10 +106,10 @@ def get_recommended_items(prefs, itemMatch, user):
 
         # Loop over items rated by this user
         for (item, rating) in userRatings.iteritems():
-            # Loop over items similar to this one
+                # Loop over items similar to this one
             for (item2, similarity) in itemMatch[item]:
                 # Ignore if this user has already rated this item
-                if item2 not in userRatings:
+                if not math.isnan(similarity) and item2 not in userRatings:
                     # Weighted sum of rating times similarity
                     scores[item2] += similarity * rating
 
