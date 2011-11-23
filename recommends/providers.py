@@ -167,7 +167,7 @@ class RecommendationProvider(object):
 
     def calculate_recommendations(self, prefs, itemMatch):
         """
-        ``itemMatch`` is supposed to be the result of ``calculate_similar_items()``
+        ``itemMatch`` is supposed to be the result of ``calculate_similarities()``
 
         Returns a list of recommendations:
 
