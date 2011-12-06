@@ -20,3 +20,5 @@ Storage backend
 ---------------
 
 RECOMMENDS_STORAGE_BACKEND specifies which :doc:`storages` class to use for storing similarity and recommendations. Defaults to ``'recommends.storages.DjangoOrmStorage'``.
+
+if set, RECOMMENDS_STORAGE_ORM_DATABASE specifies which database recommends should use. Note that you will need to add ``recommends.storages.RecommendsRouter`` to the ``DATABASE_ROUTERS`` setting in order to store and read recommendations using a database diffeerent than ``'default'``.

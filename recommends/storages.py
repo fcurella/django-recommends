@@ -3,6 +3,7 @@ from django.contrib.sites.models import Site
 from .converters import resolve_identifier, get_identifier
 from .models import Similarity, Recommendation
 from django.conf import settings
+from .settings import RECOMMENDS_STORAGE_ORM_DATABASE
 
 
 class RecommendationStorage(object):
@@ -100,3 +101,27 @@ class DjangoOrmStorage(RecommendationStorage):
             Recommendation.objects.get(user=user, object_ctype__app_label=app_label, object_ctype__model=model, object_id=obj.id).delete()
         except Recommendation.DoesNotExist:
             pass
+
+
+class RecommendsRouter(object):
+    def db_for_read(self, model, **hints):
+        if model._meta.app_label == 'recommends':
+            return RECOMMENDS_STORAGE_ORM_DATABASE
+        return None
+
+    def db_for_write(self, model, **hints):
+        if model._meta.app_label == 'recommends':
+            return RECOMMENDS_STORAGE_ORM_DATABASE
+        return None
+
+    def allow_relation(self, obj1, obj2, **hints):
+        if obj1._meta.app_label == 'recommends' or obj2._meta.app_label == 'recommends':
+            return True
+        return None
+
+    def allow_syncdb(self, db, model):
+        if db == RECOMMENDS_STORAGE_ORM_DATABASE:
+            return model._meta.app_label == 'recommends'
+        elif model._meta.app_label == 'recommends':
+            return False
+        return None
