@@ -10,6 +10,8 @@ Computations are done by a scheduled celery task. The task is run every 24 hours
 
 ``RECOMMENDS_TASK_CRONTAB`` must be a dictionary of kwargs acceptable by celery.schedulers.crontab.
 
+If you don’t want to run this task (maybe because you want to write your own), set ``RECOMMENDS_TASK_RUN = False``
+
 Template tags and filters cache timeout
 ---------------------------------------
 

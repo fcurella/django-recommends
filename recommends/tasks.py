@@ -1,18 +1,20 @@
 from celery.decorators import task, periodic_task
 from celery.schedules import crontab
 
-from .settings import RECOMMENDS_TASK_CRONTAB
+from .settings import RECOMMENDS_TASK_RUN, RECOMMENDS_TASK_CRONTAB
 
 
-@periodic_task(run_every=crontab(**RECOMMENDS_TASK_CRONTAB))
-def recommends_precompute():
-    from .providers import recommendation_registry
+if RECOMMENDS_TASK_RUN:
 
-    # I know this is weird, but it's faster (tested on CPyhton 2.6.5)
-    def _precompute(provider_instance):
-        prefs = provider_instance.prefs()
-        provider_instance.precompute(prefs)
-    [_precompute(provider_instance) for model, provider_instance in recommendation_registry.providers.iteritems()]
+    @periodic_task(run_every=crontab(**RECOMMENDS_TASK_CRONTAB))
+    def recommends_precompute():
+        from .providers import recommendation_registry
+
+        # I know this is weird, but it's faster (tested on CPyhton 2.6.5)
+        def _precompute(provider_instance):
+            prefs = provider_instance.prefs()
+            provider_instance.precompute(prefs)
+        [_precompute(provider_instance) for model, provider_instance in recommendation_registry.providers.iteritems()]
 
 
 @task
