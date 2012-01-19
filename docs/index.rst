@@ -19,7 +19,7 @@ Contents:
    signals
    templatetags
    settings
-   large datasets
+   large_datasets
 
 
 Requirements
