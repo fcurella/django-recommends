@@ -1,5 +1,6 @@
 from celery.decorators import task, periodic_task
 from celery.schedules import crontab
+from .utils import filelock
 
 from .settings import RECOMMENDS_TASK_RUN, RECOMMENDS_TASK_CRONTAB
 
@@ -14,7 +15,9 @@ if RECOMMENDS_TASK_RUN:
         def _precompute(provider_instance):
             prefs = provider_instance.prefs()
             provider_instance.precompute(prefs)
-        [_precompute(provider_instance) for model, provider_instance in recommendation_registry.providers.iteritems()]
+
+        with filelock('recommends_precompute.lock'):
+            [_precompute(provider_instance) for model, provider_instance in recommendation_registry.providers.iteritems()]
 
 
 @task
