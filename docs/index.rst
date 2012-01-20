@@ -20,6 +20,7 @@ Contents:
    templatetags
    settings
    large_datasets
+   changelog
 
 
 Requirements

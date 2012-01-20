@@ -1,3 +1,5 @@
+.. ref-templatetags:
+
 Template Tags & Filters
 =======================
 
