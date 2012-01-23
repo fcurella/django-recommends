@@ -67,6 +67,7 @@ class RecommendsListenersTestCase(unittest.TestCase):
         self.mug = Product.objects.get(name='Coffee Mug')
         self.orange_juice = Product.objects.get(name='Orange Juice')
         self.wine = Product.objects.get(name='Bottle of Red Wine')
+        self.steak = Product.objects.get(name='1lb Tenderloin Steak')
         self.user1 = User.objects.get(username='user1')
 
         recommends_precompute()
@@ -74,17 +75,24 @@ class RecommendsListenersTestCase(unittest.TestCase):
     def test_listeners(self):
         self.client.login(username='user1', password='user1')
         response = self.client.get(reverse('home'))
-        self.assertTrue(self.mug.get_absolute_url() in response.content)
 
         self.vote = Vote.objects.create(
             user=self.user1,
-            product=self.mug,
+            product=self.steak,
             site_id=1,
             score=1
         )
 
         response = self.client.get(reverse('home'))
-        self.assertFalse(self.mug.get_absolute_url() in response.content)
+        steak_url = self.steak.get_absolute_url()
+        self.assertTrue(steak_url in response.content)
+        self.assertEqual(1L, Recommendation.objects.filter(user=self.user1, object_id=self.steak.id).count())
+
+        self.steak.delete()
+
+        response = self.client.get(reverse('home'))
+        self.assertFalse(steak_url in response.content)
+        self.assertEqual(0L, Recommendation.objects.filter(user=self.user1, object_id=self.steak.id).count())
 
     def tearDown(self):
         self.vote.delete()

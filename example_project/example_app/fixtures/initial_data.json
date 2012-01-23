@@ -154,6 +154,16 @@
         }
     }, 
     {
+        "pk": 11, 
+        "model": "example_app.product", 
+        "fields": {
+            "name": "1lb Tenderloin Steak", 
+            "sites": [
+                1
+            ]
+        }
+    }, 
+    {
         "pk": 1, 
         "model": "example_app.vote", 
         "fields": {
@@ -250,6 +260,16 @@
             "product": 7, 
             "score": 1.0, 
             "user": 2, 
+            "site": 1
+        }
+    },
+    {
+        "pk": 11, 
+        "model": "example_app.vote", 
+        "fields": {
+            "product": 11, 
+            "score": 1.0, 
+            "user": 3, 
             "site": 1
         }
     }

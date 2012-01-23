@@ -5,7 +5,7 @@ from .converters import convert_iterable_to_prefs, model_path
 from .similarities import sim_distance
 from .filtering import calculate_similar_items, get_recommended_items
 from .settings import RECOMMENDS_STORAGE_BACKEND
-from .tasks import remove_suggestion
+from .tasks import remove_suggestion, remove_similarity
 
 
 class RecommendationProviderRegistry(object):
@@ -21,10 +21,27 @@ class RecommendationProviderRegistry(object):
         provider_instance = Provider()
         self.providers[model_path(model)] = provider_instance
         for signal in provider_instance.rate_signals:
-            signal.connect(provider_instance.on_signal, sender=model)
+            if isinstance(signal, str):
+                sig_module = '.'.join(signal.split('.')[:-1])
+                sig_class_name = signal.split('.')[-1]
+                sig_instance = getattr(importlib.import_module(sig_module), sig_class_name)
+                if getattr(provider_instance, sig_class_name, None) is not None:
+                    sig_instance.connect(getattr(provider_instance, sig_class_name), sender=model)
+                else:
+                    sig_instance.connect(provider_instance.on_signal, sender=model)
+            else:
+                signal.connect(provider_instance.on_signal, sender=model)
 
     def provider_for_model(self, model):
         return self.providers[model_path(model)]
+
+    def on_signal(self, sender, instance, **kwargs):
+        """
+        This function gets called as a fallback when a signal in ``self.rate_signals`` is fired by the rated object and
+        the provider doesn't have a function of the same name.
+        """
+        raise NotImplementedError
+
 
 recommendation_registry = RecommendationProviderRegistry()
 
@@ -44,7 +61,7 @@ class RecommendationProvider(object):
     Subclasses override methods in order to determine what constitutes voted items, a vote,
     its score, and user.
     """
-    rate_signals = [post_save]
+    rate_signals = ['django.db.models.signals.pre_delete']
     similarity = sim_distance
 
     def __init__(self):
@@ -78,14 +95,15 @@ class RecommendationProvider(object):
         """Returns if the rating is active"""
         return True
 
-    def on_signal(self, sender, instance, **kwargs):
+    def pre_delete(self, sender, instance, **kwargs):
         """
-        This function gets called when a signal in ``self.signals`` is called from the rating model.
+        This function gets called when a signal in ``self.rate_signals`` is called from the rating model.
         """
         if self.is_rating_active(instance):
             user = self.get_rating_user(instance)
             obj = self.get_rating_item(instance)
             remove_suggestion.delay(user_id=user.id, rating_model=model_path(sender), model_path=model_path(obj), object_id=obj.id)
+            remove_similarity.delay(rating_model=model_path(sender), model_path=model_path(obj), object_id=obj.id)
 
     def _convert_iterable_to_prefs(self, iterable):
         return convert_iterable_to_prefs(iterable)

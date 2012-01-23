@@ -8,4 +8,5 @@ Changelog
 * v0.0.2
 	* Added the ``RECOMMENDS_TASK_RUN`` setting
 * v0.0.3
-	* Added filelock to the pre-shipped precomputing task
+	* Added filelocking to the pre-shipped precomputing task
+	* Refactored signal handling, and added a task to remove similarities on pre_delete

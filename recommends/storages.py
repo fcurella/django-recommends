@@ -40,8 +40,11 @@ class RecommendationStorage(object):
             )
         """
         raise NotImplementedError
-    
+
     def remove_recommendation(self, user, obj):
+        raise NotImplementedError
+
+    def remove_similarity(self, obj):
         raise NotImplementedError
 
 
@@ -100,3 +103,10 @@ class DjangoOrmStorage(RecommendationStorage):
             Recommendation.objects.get(user=user, object_ctype__app_label=app_label, object_ctype__model=model, object_id=obj.id).delete()
         except Recommendation.DoesNotExist:
             pass
+
+    def remove_similarity(self, obj):
+        app_label = obj._meta.app_label
+        model = obj._meta.object_name.lower()
+
+        Similarity.objects.filter(object_ctype__app_label=app_label, object_ctype__model=model, object_id=obj.id).delete()
+        Similarity.objects.filter(related_object_ctype__app_label=app_label, related_object_ctype__model=model, related_object_id=obj.id).delete()

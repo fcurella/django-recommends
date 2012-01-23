@@ -33,3 +33,16 @@ def remove_suggestion(user_id, rating_model, model_path, object_id):
     obj = ObjectClass.objects.get(pk=object_id)
 
     provider_instance.storage.remove_recommendation(user, obj)
+
+
+@task
+def remove_similarity(rating_model, model_path, object_id):
+    from django.db.models import get_model
+    from recommends.providers import recommendation_registry
+
+    provider_instance = recommendation_registry.providers[rating_model]
+
+    ObjectClass = get_model(*model_path.split('.'))
+    obj = ObjectClass.objects.get(pk=object_id)
+
+    provider_instance.storage.remove_similarity(obj)
