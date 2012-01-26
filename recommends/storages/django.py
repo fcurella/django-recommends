@@ -34,7 +34,7 @@ class DjangoOrmStorage(BaseRecommendationStorage):
     def get_votes(self):
         pass
 
-    def store_votes(self, prefs):
+    def store_votes(self, iterable):
         pass
 
     def store_similarities(self, itemMatch):

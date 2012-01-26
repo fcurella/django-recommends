@@ -37,22 +37,18 @@ class BaseRecommendationStorage(object):
     def get_votes(self):
         raise NotImplementedError
 
-    def store_votes(self, prefs):
+    def store_votes(self, iterable):
         """
         Input schema:
 
         ::
 
-            {
-                "<user_id1>": {
-                    "<object_identifier1>": <score>,
-                    "<object_identifier2>": <score>,
-                },
-                "<user_id2>": {
-                    "<object_identifier1>": <score>,
-                    "<object_identifier2>": <score>,
-                },
-            }
+            [
+                ("<user_id1>", "<object_identifier1>", <score>),
+                ("<user_id1>", "<object_identifier2>", <score>),
+                ("<user_id2>", "<object_identifier1>", <score>),
+                ("<user_id2>", "<object_identifier2>", <score>),
+            ]
         """
         raise NotImplementedError
 
