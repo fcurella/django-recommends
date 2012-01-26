@@ -1,9 +1,15 @@
+try:
+    from django.contrib.sites.models import Site
+except ImportError:
+    pass
+try:
+    from django.conf import settings
+except ImportError:
+    pass
 from .base import BaseRecommendationStorage
 import math
-from django.contrib.sites.models import Site
-from .converters import resolve_identifier, get_identifier
-from .models import Similarity, Recommendation
-from django.conf import settings
+from ..converters import resolve_identifier, get_identifier
+from ..models import Similarity, Recommendation
 
 
 class DjangoOrmStorage(BaseRecommendationStorage):
@@ -24,6 +30,12 @@ class DjangoOrmStorage(BaseRecommendationStorage):
     def get_recommendations_for_user(self, user, limit):
         object_site_id = settings.SITE_ID
         return Recommendation.objects.filter(user=user, object_site__id=object_site_id).order_by('-score')[:limit]
+
+    def get_votes(self):
+        pass
+
+    def store_votes(self, prefs):
+        pass
 
     def store_similarities(self, itemMatch):
         for object_id, scores in itemMatch:
