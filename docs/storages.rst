@@ -3,9 +3,9 @@
 Storage backend
 ================
 
-Results of the computation are stored according to the storage backend defined in ``RECOMMENDS_STORAGE_BACKEND`` (default to ``'recommends.storages.DjangoOrmStorage'``). A storage backend defines how de/serialize and store/retrieve objects and results.
+Results of the computation are stored according to the storage backend defined in ``RECOMMENDS_STORAGE_BACKEND`` (default to ``'recommends.storages.django.DjangoOrmStorage'``). A storage backend defines how de/serialize and store/retrieve objects and results.
 
-A storage backend can be any class extending ``recommends.storages.RecommendationStorage`` that implements the following methods:
+A storage backend can be any class extending ``recommends.storages.base.RecommendationStorage`` that implements the following methods:
 
 * ``get_identifier(self, obj, *args, **kwargs)``
 * ``resolve_identifier(self, identifier)``
