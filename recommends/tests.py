@@ -28,7 +28,7 @@ class RecommendsTestCase(unittest.TestCase):
         self.assertNotEquals(Similarity.objects.filter(score=1).count(), Similarity.objects.count())
 
         similar_to_mug = Similarity.objects.similar_to(self.mug, score__gt=0)
-        self.assertEquals(similar_to_mug.count(), 2)
+        self.assertEquals(similar_to_mug.count(), 3)
         self.assertEquals(similar_to_mug[0].related_object, self.orange_juice)
 
     def test_recommendation(self):
@@ -38,7 +38,7 @@ class RecommendsTestCase(unittest.TestCase):
         self.assertNotEquals(Recommendation.objects.filter(score=0).count(), Recommendation.objects.count())
 
         recommended = Recommendation.objects.filter(user=self.user1)
-        self.assertEquals(recommended.count(), 2)
+        self.assertEquals(recommended.count(), 3)
         self.assertEquals(recommended[0].object, self.wine)
 
         # Make sure we don't recommend item that the user already have
