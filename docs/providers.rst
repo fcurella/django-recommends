@@ -12,11 +12,11 @@ A basic algorithm to calculate similarities and recommendations is provided by d
 
 Properties
 ----------
-    * ``rate_signals``
+    * ``signals``
 
         This property define to hat signals connect the ``on_signal`` function.
 
-        Defaults to ``[post_save]``
+        Defaults to ``['django.db.models.post_save', 'django.db.models.pre_delete']``
     
     * ``similarity``
         
@@ -57,17 +57,16 @@ Methods
 
         Returns if the rating is active
 
-    * ``on_signal(self, sender, instance, **kwargs)``
-        
-        This function gets called when a signal in ``self.signals`` is called from the rating model (defaults to ``[post_save]``.
-        
+    * ``pre_delete(self, sender, instance, **lwargs)``
+
+        This function gets called when a signal a pre_delete is fired from the rating model.
+
         Overriding this method is optional. The default method removes the suggestion for the rated instance for the user that just rated, via a celery task.
 
-        if self.is_rating_active(instance)``
-            user = self.get_rating_user(instance)
-            obj = self.get_rating_item(instance)
-            remove_suggestion.delay(user_id=user.id, rating_model=model_path(sender), model_path=model_path(obj), object_id=obj.id)
-
+    * ``on_signal(self, sender, instance, **kwargs)``
+        
+        This function gets called as a fallback when a signal in ``self.signals`` is fired from the rating model, but the provider doesn't have a corresponding funcion declared.
+        
         See :doc:`signals`.
 
     * ``calculate_similarities(self, prefs)``

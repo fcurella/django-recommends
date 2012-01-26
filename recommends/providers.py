@@ -1,5 +1,4 @@
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save
 from django.utils import importlib
 from .converters import convert_iterable_to_prefs, model_path
 from .similarities import sim_distance
