@@ -61,7 +61,7 @@ class RecommendationProvider(object):
     similarity = sim_distance
 
     def __init__(self):
-        if getattr(self, 'storage', False):
+        if not getattr(self, 'storage', False):
             self.storage = recommendation_registry.storage
 
     def get_items(self):
@@ -131,7 +131,7 @@ class RecommendationProvider(object):
                 site = self.get_rating_site(rating)
                 identifier = self.storage.get_identifier(item, site)
                 iterable.append((user, identifier, score))
-        self.storage.store_votes(self, iterable)
+        self.storage.store_votes(iterable)
         return self._convert_iterable_to_prefs(iterable)
 
     def precompute(self, prefs):
