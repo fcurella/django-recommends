@@ -3,6 +3,14 @@ import errno
 import os
 import time
 import tempfile
+from django.utils import importlib
+
+
+def import_from_classname(class_name_str):
+    module = '.'.join(class_name_str.split('.')[:-1])
+    class_name = class_name_str.split('.')[-1]
+    Class = getattr(importlib.import_module(module), class_name)
+    return Class
 
 
 @contextlib.contextmanager

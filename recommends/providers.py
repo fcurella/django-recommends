@@ -1,19 +1,17 @@
 from django.contrib.auth.models import User
-from django.utils import importlib
 from .converters import convert_iterable_to_prefs, model_path
 from .similarities import sim_distance
 from .filtering import calculate_similar_items, get_recommended_items
 from .settings import RECOMMENDS_STORAGE_BACKEND
 from .tasks import remove_suggestion, remove_similarity
+from .utils import import_from_classname
 
 
 class RecommendationProviderRegistry(object):
     providers = {}
 
     def __init__(self):
-        storage_module = '.'.join(RECOMMENDS_STORAGE_BACKEND.split('.')[:-1])
-        storage_class_name = RECOMMENDS_STORAGE_BACKEND.split('.')[-1]
-        StorageClass = getattr(importlib.import_module(storage_module), storage_class_name)
+        StorageClass = import_from_classname(RECOMMENDS_STORAGE_BACKEND)
         self.storage = StorageClass()
 
     def register(self, model, Provider):
@@ -21,9 +19,8 @@ class RecommendationProviderRegistry(object):
         self.providers[model_path(model)] = provider_instance
         for signal in provider_instance.rate_signals:
             if isinstance(signal, str):
-                sig_module = '.'.join(signal.split('.')[:-1])
                 sig_class_name = signal.split('.')[-1]
-                sig_instance = getattr(importlib.import_module(sig_module), sig_class_name)
+                sig_instance = import_from_classname(signal)
                 if getattr(provider_instance, sig_class_name, None) is not None:
                     sig_instance.connect(getattr(provider_instance, sig_class_name), sender=model)
                 else:
@@ -64,7 +61,8 @@ class RecommendationProvider(object):
     similarity = sim_distance
 
     def __init__(self):
-        self.storage = recommendation_registry.storage
+        if getattr(self, 'storage', False):
+            self.storage = recommendation_registry.storage
 
     def get_items(self):
         """Return items that have been voted"""
@@ -133,6 +131,7 @@ class RecommendationProvider(object):
                 site = self.get_rating_site(rating)
                 identifier = self.storage.get_identifier(item, site)
                 iterable.append((user, identifier, score))
+        self.storage.store_votes(self, iterable)
         return self._convert_iterable_to_prefs(iterable)
 
     def precompute(self, prefs):
