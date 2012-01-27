@@ -69,20 +69,18 @@ Methods
         
         See :doc:`signals`.
 
-    * ``calculate_similarities(self, prefs)``
+    * ``calculate_similarities(self, vote_list)``
         
         Must return an dict of similarities for every object:
 
-        Accepts a dictionary representing votes with the following schema:
+        Accepts a list of votes with the following schema:
 
         ::
 
-            {
-                "<user1>": {
-                    "<object_identifier1>": <score>,
-                    "<object_identifier2>": <score>,
-                }
-            }
+            [
+                ("<user1>", "<object_identifier1>", <score>),
+                ("<user1>", "<object_identifier2>", <score>),
+            ]
 
         Output must be a dictionary with the following schema:
 
@@ -101,7 +99,7 @@ Methods
 
         
 
-    * ``calculate_recommendations(self, prefs, itemMatch)``
+    * ``calculate_recommendations(self, vote_list, itemMatch)``
         
         Returns a list of recommendations:
 
