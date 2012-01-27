@@ -1,11 +1,11 @@
 from django.contrib.auth.models import User
 from django.conf import settings
-from .converters import model_path
-from .similarities import sim_distance
-from .filtering import calculate_similar_items, get_recommended_items
-from .settings import RECOMMENDS_STORAGE_BACKEND
-from .tasks import remove_suggestion, remove_similarity
-from .utils import import_from_classname
+from ..converters import model_path
+from ..similarities import sim_distance
+from ..filtering import calculate_similar_items, get_recommended_items
+from ..settings import RECOMMENDS_STORAGE_BACKEND
+from ..tasks import remove_suggestion, remove_similarity
+from ..utils import import_from_classname
 
 
 class RecommendationProviderRegistry(object):

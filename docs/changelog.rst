@@ -11,3 +11,6 @@ Changelog
 	* Added filelocking to the pre-shipped precomputing task
 	* Refactored signal handling, and added a task to remove similarities on pre_delete
 	* Added optional hooks for storing and retrieving the vote matrix 
+* v0.0.4
+	* Refactored providers to use lists of votes instead of dictionaries
+	* fixed a critical bug where we ere calling the wrong method with the wrong signature.
