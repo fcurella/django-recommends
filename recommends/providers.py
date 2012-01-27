@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.conf import settings
-from .converters import convert_iterable_to_prefs, model_path
+from .converters import model_path
 from .similarities import sim_distance
 from .filtering import calculate_similar_items, get_recommended_items
 from .settings import RECOMMENDS_STORAGE_BACKEND
@@ -103,68 +103,48 @@ class RecommendationProvider(object):
             remove_suggestion.delay(user_id=user.id, rating_model=model_path(sender), model_path=model_path(obj), object_id=obj.id)
             remove_similarity.delay(rating_model=model_path(sender), model_path=model_path(obj), object_id=obj.id)
 
-    def _convert_iterable_to_prefs(self, iterable):
-        return convert_iterable_to_prefs(iterable)
-
-    def prefs(self):
-        """
-        Returns a dictionary of votes, with the following schema:
-
-        ::
-
-            {
-                "<user_id1>": {
-                    "<object_identifier1>": <score>,
-                    "<object_identifier2>": <score>,
-                },
-                "<user_id2>": {
-                    "<object_identifier1>": <score>,
-                    "<object_identifier2>": <score>,
-                },
-            }
-
-        """
-        iterable = self.storage.get_votes()
-        if iterable is None:
-            iterable = []
+    def vote_list(self):
+        vote_list = self.storage.get_votes()
+        if vote_list is None:
+            vote_list = []
             for item in self.get_items():
                 for rating in self.get_ratings(item):
                     user = self.get_rating_user(rating)
                     score = self.get_rating_score(rating)
                     site_id = self.get_rating_site(rating).id
                     identifier = self.storage.get_identifier(item, site_id)
-                    iterable.append((user, identifier, score))
-            self.storage.store_votes(iterable)
-        return self._convert_iterable_to_prefs(iterable)
+                    vote_list.append((user, identifier, score))
+            self.storage.store_votes(vote_list)
+        return vote_list
 
-    def precompute(self, prefs):
+    def precompute(self, vote_list=None):
         """
         This function will be called by the task manager in order
         to compile and store the results.
         """
-        itemMatch = self.calculate_similarities(prefs)
+        if vote_list is None:
+            vote_list = self.vote_list()
+        itemMatch = self.calculate_similarities(vote_list)
         self.storage.store_similarities(itemMatch)
 
-        self.storage.store_recommendations(self.calculate_recommendations(prefs, itemMatch))
+        self.storage.store_recommendations(self.calculate_recommendations(vote_list, itemMatch))
 
     def get_users(self):
         """Returns all users who have voted something"""
         return User.objects.filter(is_active=True)
 
-    def calculate_similarities(self, prefs):
+    def calculate_similarities(self, vote_list):
         """
         Must return an dict of similarities for every object:
 
-        Accepts a dictionary representing votes with the following schema:
+        Accepts a vote matrix representing votes with the following schema:
 
         ::
 
-            {
-                "<user1>": {
-                    "<object_identifier1>": <score>,
-                    "<object_identifier2>": <score>,
-                }
-            }
+            [
+                ("<user1>", "<object_identifier1>", <score>),
+                ("<user1>", "<object_identifier2>", <score>),
+            ]
 
         Output must be a dictionary with the following schema:
 
@@ -182,9 +162,9 @@ class RecommendationProvider(object):
             ]
 
         """
-        return calculate_similar_items(prefs, similarity=self.similarity)
+        return calculate_similar_items(vote_list, similarity=self.similarity)
 
-    def calculate_recommendations(self, prefs, itemMatch):
+    def calculate_recommendations(self, vote_list, itemMatch):
         """
         ``itemMatch`` is supposed to be the result of ``calculate_similarities()``
 
@@ -206,6 +186,6 @@ class RecommendationProvider(object):
         """
         recommendations = []
         for user in self.get_users():
-            rankings = get_recommended_items(prefs, itemMatch, user)
+            rankings = get_recommended_items(vote_list, itemMatch, user)
             recommendations.append((user, rankings))
         return recommendations

@@ -1,6 +1,7 @@
 import math
 from collections import defaultdict
 from .similarities import sim_distance, sim_pearson
+from .converters import convert_vote_list_to_userprefs, convert_vote_list_to_itemprefs
 
 # Most of this is adapted from: Programming collective intelligence, Toby Segaran, 2007
 
@@ -53,7 +54,7 @@ def transform_prefs(prefs):
     return result
 
 
-def calculate_similar_items(prefs, similarity=sim_distance, verbose=0):
+def calculate_similar_items(vote_list, similarity=sim_distance, verbose=0):
     """
     Create an iterator of items showing which other items they
     are most similar to.
@@ -74,9 +75,9 @@ def calculate_similar_items(prefs, similarity=sim_distance, verbose=0):
         ]
     """
 
-    itemMatch = {}
     # Invert the preference matrix to be item-centric
-    itemPrefs = transform_prefs(prefs)
+    itemPrefs = convert_vote_list_to_itemprefs(vote_list)
+    itemMatch = {}
     #[itemMatch.set(item, top_matches(itemPrefs, item, similarity=similarity)) for item in itemPrefs]
     for item in itemPrefs:
         # Find the most similar items to this one
@@ -85,7 +86,7 @@ def calculate_similar_items(prefs, similarity=sim_distance, verbose=0):
     return iteritems
 
 
-def get_recommended_items(prefs, itemMatch, user):
+def get_recommended_items(vote_list, itemMatch, user):
     """
     ``itemMatch`` is supposed to be the result of ``calculate_similar_items()``
 
@@ -98,6 +99,8 @@ def get_recommended_items(prefs, itemMatch, user):
             ('<object_id>', <score>),
         ]
     """
+    prefs = convert_vote_list_to_userprefs(vote_list)
+
     if user in prefs:
         userRatings = prefs[user]
         scores = defaultdict(int)

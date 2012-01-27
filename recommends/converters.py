@@ -40,9 +40,11 @@ def resolve_identifier(identifier):
     return model, site
 
 
-def convert_iterable_to_prefs(iterable):
+def convert_vote_list_to_userprefs(vote_list):
     """
-    ``iterable must be`` composed of (user_id, object_identifier, rating)
+    Return a user-centerd prefernce matrix.
+
+    ``vote_list must be`` composed of (user_id, object_identifier, rating)
 
     ``object_identifier`` is any string that uniquely identifies the object ie:
     <app_label>.<model>:<object_id>.
@@ -50,8 +52,25 @@ def convert_iterable_to_prefs(iterable):
     The ``utils.get_identifier`` method is provided as convenience for creating such identifiers.
     """
     prefs = defaultdict(dict)
-    for pref in iterable:
+    for pref in vote_list:
         prefs[pref[0]][pref[1]] = pref[2]
+    return prefs
+
+
+def convert_vote_list_to_itemprefs(vote_list):
+    """
+    Return a item-centerd prefernce matrix.
+
+    ``vote_list must be`` composed of (user_id, object_identifier, rating)
+
+    ``object_identifier`` is any string that uniquely identifies the object ie:
+    <app_label>.<model>:<object_id>.
+
+    The ``utils.get_identifier`` method is provided as convenience for creating such identifiers.
+    """
+    prefs = defaultdict(dict)
+    for pref in vote_list:
+        prefs[pref[1]][pref[0]] = pref[2]
     return prefs
 
 

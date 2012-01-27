@@ -13,8 +13,7 @@ if RECOMMENDS_TASK_RUN:
 
         # I know this is weird, but it's faster (tested on CPyhton 2.6.5)
         def _precompute(provider_instance):
-            prefs = provider_instance.prefs()
-            provider_instance.precompute(prefs)
+            provider_instance.precompute()
 
         with filelock('recommends_precompute.lock'):
             [_precompute(provider_instance) for model, provider_instance in recommendation_registry.providers.iteritems()]
