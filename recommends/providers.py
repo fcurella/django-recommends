@@ -123,15 +123,17 @@ class RecommendationProvider(object):
             }
 
         """
-        iterable = []
-        for item in self.get_items():
-            for rating in self.get_ratings(item):
-                user = self.get_rating_user(rating)
-                score = self.get_rating_score(rating)
-                site = self.get_rating_site(rating)
-                identifier = self.storage.get_identifier(item, site)
-                iterable.append((user, identifier, score))
-        self.storage.store_votes(iterable)
+        iterable = self.storage.store_votes()
+        if iterable is None:
+            iterable = []
+            for item in self.get_items():
+                for rating in self.get_ratings(item):
+                    user = self.get_rating_user(rating)
+                    score = self.get_rating_score(rating)
+                    site = self.get_rating_site(rating)
+                    identifier = self.storage.get_identifier(item, site)
+                    iterable.append((user, identifier, score))
+            self.storage.store_votes(iterable)
         return self._convert_iterable_to_prefs(iterable)
 
     def precompute(self, prefs):

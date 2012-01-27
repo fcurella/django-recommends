@@ -35,11 +35,19 @@ class BaseRecommendationStorage(object):
         raise NotImplementedError
 
     def get_votes(self):
+        """
+        Retrieves the vote matrix saved by ``store_votes``.
+
+        You won't usually need to implement this method, because you want to use fresh data.
+        But it might be useful if you want some kind of caching, maybe for testing purposes.
+        """
         raise NotImplementedError
 
     def store_votes(self, iterable):
         """
-        Input schema:
+        Saves the vote matrix.
+
+        The matrix is a list of tuples with the following schema:
 
         ::
 
