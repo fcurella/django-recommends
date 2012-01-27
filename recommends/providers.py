@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.conf import settings
 from .converters import convert_iterable_to_prefs, model_path
 from .similarities import sim_distance
 from .filtering import calculate_similar_items, get_recommended_items
@@ -12,7 +13,7 @@ class RecommendationProviderRegistry(object):
 
     def __init__(self):
         StorageClass = import_from_classname(RECOMMENDS_STORAGE_BACKEND)
-        self.storage = StorageClass()
+        self.storage = StorageClass(settings)
 
     def register(self, model, Provider):
         provider_instance = Provider()
@@ -130,8 +131,8 @@ class RecommendationProvider(object):
                 for rating in self.get_ratings(item):
                     user = self.get_rating_user(rating)
                     score = self.get_rating_score(rating)
-                    site = self.get_rating_site(rating)
-                    identifier = self.storage.get_identifier(item, site)
+                    site_id = self.get_rating_site(rating).id
+                    identifier = self.storage.get_identifier(item, site_id)
                     iterable.append((user, identifier, score))
             self.storage.store_votes(iterable)
         return self._convert_iterable_to_prefs(iterable)

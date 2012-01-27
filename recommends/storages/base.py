@@ -1,4 +1,7 @@
 class BaseRecommendationStorage(object):
+    def __init__(self, settings=None):
+        self.settings = settings
+
     def get_identifier(self, obj, *args, **kwargs):
         """Given an object and optional parameters, returns a string identifying the object uniquely"""
         raise NotImplementedError

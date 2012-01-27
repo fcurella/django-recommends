@@ -1,6 +1,4 @@
 from collections import defaultdict
-from django.conf import settings
-from django.contrib.sites.models import Site
 from django.db import models
 
 
@@ -9,6 +7,8 @@ def model_path(obj):
 
 
 def get_sites(obj):
+    from django.contrib.sites.models import Site
+
     for field in obj._meta.fields:
         if field.rel and field.rel.to == Site:
             return [getattr(obj, field)]
@@ -18,15 +18,11 @@ def get_sites(obj):
     return [Site.objects.get_current()]
 
 
-def get_identifier(obj, site=None):
+def get_identifier(obj, site_id):
     """
     Given a Django Model, returns a string identifier in the format
     <app_label>.<model>:<site_id>:<object_id>.
     """
-    if site is None:
-        site_id = settings.SITE_ID
-    else:
-        site_id = site.id
     return "%s:%s:%s" % (model_path(obj), site_id, obj.id)
 
 
@@ -34,6 +30,8 @@ def resolve_identifier(identifier):
     """
     The opposite of ``get_identifier()``
     """
+    from django.contrib.sites.models import Site
+
     app_module, site_id, object_id = identifier.split(':')
     app_label, model = app_module.split('.')
     site = Site.objects.get(pk=site_id)
