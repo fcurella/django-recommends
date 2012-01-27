@@ -123,7 +123,7 @@ class RecommendationProvider(object):
             }
 
         """
-        iterable = self.storage.store_votes()
+        iterable = self.storage.get_votes()
         if iterable is None:
             iterable = []
             for item in self.get_items():
