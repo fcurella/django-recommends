@@ -109,6 +109,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
 
     'recommends',
+    'recommends.storages.django',
     'example_app',
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',

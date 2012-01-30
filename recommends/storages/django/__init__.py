@@ -1,7 +1,7 @@
-from .base import BaseRecommendationStorage
 import math
-from ..converters import resolve_identifier, get_identifier
-from ..models import Similarity, Recommendation
+from recommends.storages.base import BaseRecommendationStorage
+from recommends.converters import resolve_identifier, get_identifier
+from recommends.storages.django.models import Similarity, Recommendation
 
 
 class DjangoOrmStorage(BaseRecommendationStorage):

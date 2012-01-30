@@ -17,3 +17,9 @@ A storage backend can be any class extending ``recommends.storages.base.Recommen
 * ``store_votes(self, iterable)`` – Optional
 * ``remove_recommendations(self, obj)``
 * ``remove_similarities(self, obj)``
+
+
+DjangoOrmStorage
+~~~~~~~~~~~~~~~~
+
+In order to use this storage, you need to add ``'recommends.storages.django'`` to your ``INSTALLED_APPS``.

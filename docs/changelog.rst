@@ -14,3 +14,6 @@ Changelog
 * v0.0.4
 	* Refactored providers to use lists of votes instead of dictionaries
 	* fixed a critical bug where we ere calling the wrong method with the wrong signature.
+* v0.0.5
+	* Refactored providers registry
+	* Refactored DjangoOrmStorage and moved it to a namespaced module 
