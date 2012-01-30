@@ -39,6 +39,5 @@ def remove_similarities(rated_model, object_id):
     ObjectClass = get_model(*rated_model.split('.'))
     provider_instance = recommendation_registry.get_provider_for_content(ObjectClass)
     obj = ObjectClass.objects.get(pk=object_id)
-    import pudb; pudb.set_trace()
 
     provider_instance.storage.remove_similarities(obj)
