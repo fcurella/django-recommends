@@ -98,8 +98,8 @@ class RecommendationProvider(object):
         """
         This function gets called when a signal in ``self.rate_signals`` is called from the rating model.
         """
-        remove_similarities(rated_model=model_path(sender), object_id=instance.id)
-        remove_suggestions(rated_model=model_path(sender), object_id=instance.id)
+        remove_similarities.delay(rated_model=model_path(sender), object_id=instance.id)
+        remove_suggestions.delay(rated_model=model_path(sender), object_id=instance.id)
 
     def vote_list(self):
         vote_list = self.storage.get_votes()
