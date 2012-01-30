@@ -17,11 +17,11 @@ class DjangoOrmStorage(BaseRecommendationStorage):
 
     def get_similarities_for_object(self, obj, limit):
         object_site_id = self.settings.SITE_ID
-        return Similarity.objects.similar_to(obj, related_object_site__id=object_site_id, score__gt=0).order_by('-score')[:limit]
+        return Similarity.objects.similar_to(obj, related_object_site=object_site_id, score__gt=0).order_by('-score')[:limit]
 
     def get_recommendations_for_user(self, user, limit):
         object_site_id = self.settings.SITE_ID
-        return Recommendation.objects.filter(user=user, object_site__id=object_site_id).order_by('-score')[:limit]
+        return Recommendation.objects.filter(user=user.id, object_site=object_site_id).order_by('-score')[:limit]
 
     def get_votes(self):
         pass
@@ -57,18 +57,9 @@ class DjangoOrmStorage(BaseRecommendationStorage):
                         score=score
                     )
 
-    def remove_recommendation(self, user, obj):
-        app_label = obj._meta.app_label
-        model = obj._meta.object_name.lower()
+    def remove_recommendations(self, obj):
+        Recommendation.objects.filter_for_object(obj=obj).delete()
 
-        try:
-            Recommendation.objects.get(user=user, object_ctype__app_label=app_label, object_ctype__model=model, object_id=obj.id).delete()
-        except Recommendation.DoesNotExist:
-            pass
-
-    def remove_similarity(self, obj):
-        app_label = obj._meta.app_label
-        model = obj._meta.object_name.lower()
-
-        Similarity.objects.filter(object_ctype__app_label=app_label, object_ctype__model=model, object_id=obj.id).delete()
-        Similarity.objects.filter(related_object_ctype__app_label=app_label, related_object_ctype__model=model, related_object_id=obj.id).delete()
+    def remove_similarities(self, obj):
+        Similarity.objects.filter_for_object(obj=obj).delete()
+        Similarity.objects.filter_for_related_object(related_obj=obj).delete()

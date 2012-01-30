@@ -55,4 +55,4 @@ class ProductRecommendationProvider(RecommendationProvider):
     def get_rating_item(self, rating):
         return rating.product
 
-recommendation_registry.register(Vote, ProductRecommendationProvider)
+recommendation_registry.register(Vote, [Product], ProductRecommendationProvider)

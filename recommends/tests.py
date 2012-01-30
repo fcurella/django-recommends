@@ -37,7 +37,7 @@ class RecommendsTestCase(unittest.TestCase):
         # Make sure we didn't get all 0s
         self.assertNotEquals(Recommendation.objects.filter(score=0).count(), Recommendation.objects.count())
 
-        recommended = Recommendation.objects.filter(user=self.user1)
+        recommended = Recommendation.objects.filter(user=self.user1.id)
         self.assertEquals(recommended.count(), 2)
         self.assertEquals(recommended[0].object, self.wine)
 
@@ -86,13 +86,12 @@ class RecommendsListenersTestCase(unittest.TestCase):
         response = self.client.get(reverse('home'))
         steak_url = self.steak.get_absolute_url()
         self.assertTrue(steak_url in response.content)
-        self.assertEqual(1L, Recommendation.objects.filter(user=self.user1, object_id=self.steak.id).count())
-
+        self.assertEqual(1L, Recommendation.objects.filter(user=self.user1.id, object_id=self.steak.id).count())
         self.steak.delete()
 
         response = self.client.get(reverse('home'))
         self.assertFalse(steak_url in response.content)
-        self.assertEqual(0L, Recommendation.objects.filter(user=self.user1, object_id=self.steak.id).count())
+        self.assertEqual(0L, Recommendation.objects.filter(user=self.user1.id, object_id=self.steak.id).count())
 
     def tearDown(self):
         self.vote.delete()

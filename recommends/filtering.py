@@ -82,7 +82,7 @@ def calculate_similar_items(vote_list, similarity=sim_distance, verbose=0):
     for item in itemPrefs:
         # Find the most similar items to this one
         itemMatch[item] = top_matches(itemPrefs, item, similarity=similarity)
-        iteritems = itemMatch.items()
+    iteritems = itemMatch.items()
     return iteritems
 
 

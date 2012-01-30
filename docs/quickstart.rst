@@ -1,7 +1,7 @@
 Usage
 ----
 
-In order to compute and retrieve similarities and recommendations, you must create a ``RecommendationProvider`` and register it with a model that represents the rating.
+In order to compute and retrieve similarities and recommendations, you must create a ``RecommendationProvider`` and register it with the model that represents the rating and a list of the models that will receive the votes.
 
 A ``RecommendationProvider`` is a class that specifies how to retrieve various informations (items, users, votes) necessary for computing recommendation and similarities for a set of objects.
 
@@ -68,4 +68,4 @@ Example::
         def get_rating_item(self, rating):
             return rating.product
 
-    recommendation_registry.register(Vote, ProductRecommendationProvider)
+    recommendation_registry.register(Vote, [Product], ProductRecommendationProvider)

@@ -15,4 +15,5 @@ A storage backend can be any class extending ``recommends.storages.base.Recommen
 * ``store_similarities(self, itemMatch)``
 * ``store_recommendations(self, user, recommendations)``
 * ``store_votes(self, iterable)`` – Optional
-* ``remove_recommendation(self, user, obj)``
+* ``remove_recommendations(self, obj)``
+* ``remove_similarities(self, obj)``

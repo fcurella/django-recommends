@@ -16,32 +16,29 @@ if RECOMMENDS_TASK_RUN:
             provider_instance.precompute()
 
         with filelock('recommends_precompute.lock'):
-            [_precompute(provider_instance) for model, provider_instance in recommendation_registry.providers.iteritems()]
+            [_precompute(provider_instance) for provider_instance in recommendation_registry.get_vote_providers()]
 
 
 @task
-def remove_suggestion(user_id, rating_model, model_path, object_id):
-    from django.contrib.auth.models import User
+def remove_suggestions(rated_model, object_id):
     from django.db.models import get_model
     from recommends.providers import recommendation_registry
 
-    provider_instance = recommendation_registry.providers[rating_model]
-    user = User.objects.get(id=user_id)
-
-    ObjectClass = get_model(*model_path.split('.'))
+    ObjectClass = get_model(*rated_model.split('.'))
+    provider_instance = recommendation_registry.get_provider_for_content(ObjectClass)
     obj = ObjectClass.objects.get(pk=object_id)
 
-    provider_instance.storage.remove_recommendation(user, obj)
+    provider_instance.storage.remove_recommendations(obj)
 
 
 @task
-def remove_similarity(rating_model, model_path, object_id):
+def remove_similarities(rated_model, object_id):
     from django.db.models import get_model
     from recommends.providers import recommendation_registry
 
-    provider_instance = recommendation_registry.providers[rating_model]
-
-    ObjectClass = get_model(*model_path.split('.'))
+    ObjectClass = get_model(*rated_model.split('.'))
+    provider_instance = recommendation_registry.get_provider_for_content(ObjectClass)
     obj = ObjectClass.objects.get(pk=object_id)
+    import pudb; pudb.set_trace()
 
-    provider_instance.storage.remove_similarity(obj)
+    provider_instance.storage.remove_similarities(obj)

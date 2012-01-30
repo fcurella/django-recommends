@@ -4,40 +4,41 @@ from ..converters import model_path
 from ..similarities import sim_distance
 from ..filtering import calculate_similar_items, get_recommended_items
 from ..settings import RECOMMENDS_STORAGE_BACKEND
-from ..tasks import remove_suggestion, remove_similarity
+from ..tasks import remove_suggestions, remove_similarities
 from ..utils import import_from_classname
 
 
 class RecommendationProviderRegistry(object):
-    providers = {}
+    _vote_providers = {}
+    _content_providers = {}
 
     def __init__(self):
         StorageClass = import_from_classname(RECOMMENDS_STORAGE_BACKEND)
         self.storage = StorageClass(settings)
 
-    def register(self, model, Provider):
+    def register(self, vote_model, content_models, Provider):
         provider_instance = Provider()
-        self.providers[model_path(model)] = provider_instance
+        self._vote_providers[model_path(vote_model)] = provider_instance
+        for model in content_models:
+            self._content_providers[model_path(model)] = provider_instance
+
         for signal in provider_instance.rate_signals:
             if isinstance(signal, str):
                 sig_class_name = signal.split('.')[-1]
                 sig_instance = import_from_classname(signal)
-                if getattr(provider_instance, sig_class_name, None) is not None:
-                    sig_instance.connect(getattr(provider_instance, sig_class_name), sender=model)
-                else:
-                    sig_instance.connect(provider_instance.on_signal, sender=model)
-            else:
-                signal.connect(provider_instance.on_signal, sender=model)
+                listener = getattr(provider_instance, sig_class_name, False)
+                if listener:
+                    for model in content_models:
+                        sig_instance.connect(listener, sender=model)
 
-    def provider_for_model(self, model):
-        return self.providers[model_path(model)]
+    def get_provider_for_vote(self, model):
+        return self._vote_providers[model_path(model)]
 
-    def on_signal(self, sender, instance, **kwargs):
-        """
-        This function gets called as a fallback when a signal in ``self.rate_signals`` is fired by the rated object and
-        the provider doesn't have a function of the same name.
-        """
-        raise NotImplementedError
+    def get_provider_for_content(self, model):
+        return self._content_providers[model_path(model)]
+
+    def get_vote_providers(self):
+        return self._vote_providers.values()
 
 
 recommendation_registry = RecommendationProviderRegistry()
@@ -97,11 +98,8 @@ class RecommendationProvider(object):
         """
         This function gets called when a signal in ``self.rate_signals`` is called from the rating model.
         """
-        if self.is_rating_active(instance):
-            user = self.get_rating_user(instance)
-            obj = self.get_rating_item(instance)
-            remove_suggestion.delay(user_id=user.id, rating_model=model_path(sender), model_path=model_path(obj), object_id=obj.id)
-            remove_similarity.delay(rating_model=model_path(sender), model_path=model_path(obj), object_id=obj.id)
+        remove_similarities(rated_model=model_path(sender), object_id=instance.id)
+        remove_suggestions(rated_model=model_path(sender), object_id=instance.id)
 
     def vote_list(self):
         vote_list = self.storage.get_votes()
