@@ -20,7 +20,7 @@ A storage backend can be any class extending ``recommends.storages.base.Recommen
 
 
 DjangoOrmStorage
-~~~~~~~~~~~~~~~~
+----------------
 
 This storage allows you to store results in a database specified by your ``DATABASES`` setting.
 
