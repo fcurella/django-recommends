@@ -1,3 +1,4 @@
+import logging
 import math
 from recommends.storages.base import BaseRecommendationStorage
 from recommends.settings import RECOMMENDS_LOGGER_NAME
