@@ -16,4 +16,6 @@ Changelog
 	* fixed a critical bug where we ere calling the wrong method with the wrong signature.
 * v0.0.5
 	* Refactored providers registry
-	* Refactored DjangoOrmStorage and moved it to a namespaced module 
+	* Renamed recommends.storages.django to recommends.storages.djangoorm to avoid name conflicts
+	* Refactored DjangoOrmStorage and moved it to recommends.storages.djangoorm.storage
+	* Added optional database router

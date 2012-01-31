@@ -10,6 +10,7 @@ ADMINS = (
 )
 
 MANAGERS = ADMINS
+DATABASE_ROUTERS = ['recommends.storages.djangoorm.routers.RecommendsRouter',]
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -109,7 +110,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
 
     'recommends',
-    'recommends.storages.django',
+    'recommends.storages.djangoorm',
     'example_app',
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',

@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 from django.test import Client
 from example_app.models import Product, Vote
 from recommends.tasks import recommends_precompute
-from recommends.storages.django.models import Similarity, Recommendation
+from recommends.storages.djangoorm.models import Similarity, Recommendation
 
 
 class RecommendsTestCase(unittest.TestCase):

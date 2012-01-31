@@ -1,6 +1,6 @@
+from django.conf import settings
 from django.db import models
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.sites.models import Site
 
 
 class RecommendsManager(models.Manager):
@@ -47,8 +47,7 @@ class SimilarityManager(RecommendsManager):
 
     def similar_to(self, obj, site=None, **kwargs):
         if site is None and 'related_object_site' not in kwargs:
-            site = Site.objects.get_current()
-            kwargs['related_object_site'] = site.id
+            kwargs['related_object_site'] = settings.SITE_ID
         return self.filter_for_object(obj).filter(**kwargs)
 
 
