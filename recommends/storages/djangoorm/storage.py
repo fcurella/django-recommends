@@ -1,7 +1,11 @@
 import math
 from recommends.storages.base import BaseRecommendationStorage
+from recommends.settings import RECOMMENDS_LOGGER_NAME
 from recommends.converters import resolve_identifier, get_identifier
 from .models import Similarity, Recommendation
+
+
+logger = logging.getLogger(RECOMMENDS_LOGGER_NAME)
 
 
 class DjangoOrmStorage(BaseRecommendationStorage):
@@ -30,6 +34,7 @@ class DjangoOrmStorage(BaseRecommendationStorage):
         pass
 
     def store_similarities(self, itemMatch):
+        logger.info('saving similarities')
         for object_id, scores in itemMatch:
             object_target, object_target_site = self.resolve_identifier(object_id)
 

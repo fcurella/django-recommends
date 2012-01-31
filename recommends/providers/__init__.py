@@ -1,11 +1,15 @@
+import logging
 from django.contrib.auth.models import User
 from django.conf import settings
 from ..converters import model_path
 from ..similarities import sim_distance
 from ..filtering import calculate_similar_items, get_recommended_items
-from ..settings import RECOMMENDS_STORAGE_BACKEND
+from ..settings import RECOMMENDS_STORAGE_BACKEND, RECOMMENDS_LOGGER_NAME
 from ..tasks import remove_suggestions, remove_similarities
 from ..utils import import_from_classname
+
+
+logger = logging.getLogger(RECOMMENDS_LOGGER_NAME)
 
 
 class RecommendationProviderRegistry(object):
@@ -121,10 +125,14 @@ class RecommendationProvider(object):
         to compile and store the results.
         """
         if vote_list is None:
+            logger.info('fetching votes from the storage...')
             vote_list = self.vote_list()
+        logger.info('calculating similarities...')
         itemMatch = self.calculate_similarities(vote_list)
-        self.storage.store_similarities(itemMatch)
 
+        logger.info('saving similarities...')
+        self.storage.store_similarities(itemMatch)
+        logger.info('saving suggestions...')
         self.storage.store_recommendations(self.calculate_recommendations(vote_list, itemMatch))
 
     def get_users(self):
