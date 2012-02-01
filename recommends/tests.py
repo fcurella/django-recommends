@@ -4,8 +4,8 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.test import Client
 from example_app.models import Product, Vote
+from recommends.providers import recommendation_registry
 from recommends.tasks import recommends_precompute
-from recommends.storages.djangoorm.models import Similarity, Recommendation
 
 
 class RecommendsTestCase(unittest.TestCase):
@@ -16,29 +16,33 @@ class RecommendsTestCase(unittest.TestCase):
         self.wine = Product.objects.get(name='Bottle of Red Wine')
         self.user1 = User.objects.get(username='user1')
 
+        self.provider = recommendation_registry.get_provider_for_content(Product)
+
         recommends_precompute()
 
     def test_similarities(self):
-        self.assertNotEquals(Similarity.objects.count(), 0)
+        similarities = self.provider.storage.get_similarities()
+        self.assertNotEquals(len(similarities), 0)
 
         # Make sure we didn't get all 0s
-        self.assertNotEquals(Similarity.objects.filter(score=0).count(), Similarity.objects.count())
+        zero_scores = filter(lambda x: x.score == 0, similarities)
+        self.assertNotEquals(len(zero_scores), len(similarities))
 
-        # Make sure we didn't get all 1s
-        self.assertNotEquals(Similarity.objects.filter(score=1).count(), Similarity.objects.count())
-
-        similar_to_mug = Similarity.objects.similar_to(self.mug, score__gt=0)
-        self.assertEquals(similar_to_mug.count(), 2)
+        similar_to_mug = self.provider.storage.get_similarities_for_object(self.mug)
+        self.assertEquals(len(similar_to_mug), 2)
         self.assertEquals(similar_to_mug[0].related_object, self.orange_juice)
 
     def test_recommendation(self):
-        self.assertNotEquals(Recommendation.objects.count(), 0)
+        recommendations = self.provider.storage.get_recommendations()
+
+        self.assertNotEquals(len(recommendations), 0)
 
         # Make sure we didn't get all 0s
-        self.assertNotEquals(Recommendation.objects.filter(score=0).count(), Recommendation.objects.count())
+        zero_scores = filter(lambda x: x.score == 0, recommendations)
+        self.assertNotEquals(len(zero_scores), len(recommendations))
 
-        recommended = Recommendation.objects.filter(user=self.user1.id)
-        self.assertEquals(recommended.count(), 2)
+        recommended = self.provider.storage.get_recommendations_for_user(self.user1)
+        self.assertEquals(len(recommended), 2)
         self.assertEquals(recommended[0].object, self.wine)
 
         # Make sure we don't recommend item that the user already have
@@ -70,6 +74,8 @@ class RecommendsListenersTestCase(unittest.TestCase):
         self.steak = Product.objects.get(name='1lb Tenderloin Steak')
         self.user1 = User.objects.get(username='user1')
 
+        self.provider = recommendation_registry.get_provider_for_content(Product)
+
         recommends_precompute()
 
     def test_listeners(self):
@@ -86,12 +92,16 @@ class RecommendsListenersTestCase(unittest.TestCase):
         response = self.client.get(reverse('home'))
         steak_url = self.steak.get_absolute_url()
         self.assertTrue(steak_url in response.content)
-        self.assertEqual(1L, Recommendation.objects.filter(user=self.user1.id, object_id=self.steak.id).count())
+        recommendations = self.provider.storage.get_recommendations_for_user(self.user1)
+        steak_recs = filter(lambda x: x.object_id == self.steak.id, recommendations)
+        self.assertEqual(1L, len(steak_recs))
         self.steak.delete()
 
         response = self.client.get(reverse('home'))
         self.assertFalse(steak_url in response.content)
-        self.assertEqual(0L, Recommendation.objects.filter(user=self.user1.id, object_id=self.steak.id).count())
+        recommendations = self.provider.storage.get_recommendations_for_user(self.user1)
+        steak_recs = filter(lambda x: x.object_id == self.steak.id, recommendations)
+        self.assertEqual(0L, len(steak_recs))
 
     def tearDown(self):
         self.vote.delete()
