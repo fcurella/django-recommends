@@ -1,7 +1,8 @@
 import logging
 import math
+from django.db import transaction
 from recommends.storages.base import BaseRecommendationStorage
-from recommends.settings import RECOMMENDS_LOGGER_NAME
+from recommends.settings import RECOMMENDS_LOGGER_NAME, RECOMMENDS_STORAGE_COMMIT_THRESHOLD
 from recommends.converters import resolve_identifier, get_identifier
 from .models import Similarity, Recommendation
 
@@ -34,34 +35,55 @@ class DjangoOrmStorage(BaseRecommendationStorage):
     def store_votes(self, iterable):
         pass
 
+    @transaction.commit_manually
     def store_similarities(self, itemMatch):
-        logger.info('saving similarities')
-        for object_id, scores in itemMatch:
-            object_target, object_target_site = self.resolve_identifier(object_id)
+        try:
+            logger.info('saving similarities')
+            count = 0
+            for object_id, scores in itemMatch:
+                object_target, object_target_site = self.resolve_identifier(object_id)
 
-            for related_object_id, score in scores:
-                if not math.isnan(score):
-                    object_related, object_related_site = self.resolve_identifier(related_object_id)
-                    if object_target != object_related:
-                        Similarity.objects.set_score_for_objects(
-                            object_target=object_target,
-                            object_target_site=object_target_site,
-                            object_related=object_related,
-                            object_related_site=object_related_site,
+                for related_object_id, score in scores:
+                    if not math.isnan(score) and score > 0:
+                        object_related, object_related_site = self.resolve_identifier(related_object_id)
+                        if object_target != object_related:
+                            count = count + 1
+                            Similarity.objects.set_score_for_objects(
+                                object_target=object_target,
+                                object_target_site=object_target_site,
+                                object_related=object_related,
+                                object_related_site=object_related_site,
+                                score=score
+                            )
+                            if count % RECOMMENDS_STORAGE_COMMIT_THRESHOLD == 0:
+                                logger.info('saved %s similarities...' % count)
+                                transaction.commit()
+        finally:
+            logger.info('saved %s similarities...' % count)
+            transaction.commit()
+
+    @transaction.commit_manually
+    def store_recommendations(self, recommendations):
+        try:
+            logger.info('saving suggestions')
+            count = 0
+            for (user, rankings) in recommendations:
+                for object_id, score in rankings:
+                    if not math.isnan(score) and score > 0:
+                        count = count + 1
+                        object_recommended, site = self.resolve_identifier(object_id)
+                        Recommendation.objects.set_score_for_object(
+                            user=user,
+                            object_recommended=object_recommended,
+                            object_site=site,
                             score=score
                         )
-
-    def store_recommendations(self, recommendations):
-        for (user, rankings) in recommendations:
-            for object_id, score in rankings:
-                if not math.isnan(score):
-                    object_recommended, site = self.resolve_identifier(object_id)
-                    Recommendation.objects.set_score_for_object(
-                        user=user,
-                        object_recommended=object_recommended,
-                        object_site=site,
-                        score=score
-                    )
+                        if count % RECOMMENDS_STORAGE_COMMIT_THRESHOLD == 0:
+                            logger.info('saved %s suggestions...' % count)
+                            transaction.commit()
+        finally:
+            logger.info('saved %s suggestions...' % count)
+            transaction.commit()
 
     def remove_recommendations(self, obj):
         Recommendation.objects.filter_for_object(obj=obj).delete()
