@@ -125,7 +125,7 @@ class RecommendationProvider(object):
         to compile and store the results.
         """
         if vote_list is None:
-            logger.info('fetching votes from the storage...')
+            logger.info('fetching votes from the provider...')
             vote_list = self.vote_list()
         logger.info('calculating similarities...')
         itemMatch = self.calculate_similarities(vote_list)
