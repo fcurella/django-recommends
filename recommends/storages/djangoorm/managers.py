@@ -30,8 +30,8 @@ class RecommendsManager(models.Manager):
 
 class SimilarityManager(RecommendsManager):
     def filter_for_related_model(self, related_model):
-        ctype = ContentType.objects.get_for_model(related_model)
-        return self.filter(related_object_ctype=ctype.id)
+        ctype_id = self.get_ctype_id_for_obj(related_model)
+        return self.filter(related_object_ctype=ctype_id)
 
     def filter_for_related_object(self, related_obj):
         return self.filter_for_related_model(related_obj).filter(related_object_id=related_obj.id)
