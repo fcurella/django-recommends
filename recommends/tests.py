@@ -14,6 +14,10 @@ class RecommendsTestCase(unittest.TestCase):
         self.mug = Product.objects.get(name='Coffee Mug')
         self.orange_juice = Product.objects.get(name='Orange Juice')
         self.wine = Product.objects.get(name='Bottle of Red Wine')
+        try:
+            Product.objects.get(name='1lb Tenderloin Steak').delete()
+        except Product.DoesNotExist:
+            pass
         self.user1 = User.objects.get(username='user1')
 
         self.provider = recommendation_registry.get_provider_for_content(Product)
@@ -30,7 +34,7 @@ class RecommendsTestCase(unittest.TestCase):
 
         similar_to_mug = self.provider.storage.get_similarities_for_object(self.mug)
         self.assertEquals(len(similar_to_mug), 2)
-        self.assertEquals(similar_to_mug[0].related_object, self.orange_juice)
+        self.assertTrue(self.wine in [s.related_object for s in similar_to_mug])
 
     def test_recommendation(self):
         recommendations = self.provider.storage.get_recommendations()
@@ -43,7 +47,7 @@ class RecommendsTestCase(unittest.TestCase):
 
         recommended = self.provider.storage.get_recommendations_for_user(self.user1)
         self.assertEquals(len(recommended), 2)
-        self.assertEquals(recommended[0].object, self.wine)
+        self.assertTrue(self.wine in [s.object for s in recommended])
 
         # Make sure we don't recommend item that the user already have
         self.assertFalse(self.mug in [v.product for v in Vote.objects.filter(user=self.user1)])
