@@ -36,6 +36,14 @@ class SimilarityManager(RecommendsManager):
     def filter_for_related_object(self, related_obj):
         return self.filter_for_related_model(related_obj).filter(related_object_id=related_obj.id)
 
+    def filter_by_couple(self, target_object, related_obj):
+        related_ctype_id = self.get_ctype_id_for_obj(related_obj)
+
+        return self.filter_for_object(target_object).filter(
+            related_object_ctype=related_ctype_id,
+            related_object_id=related_obj.id
+        )
+
     def get_query_set(self):
         return super(SimilarityManager, self).get_query_set().filter(score__isnull=False)
 
@@ -56,6 +64,13 @@ class SimilarityManager(RecommendsManager):
         )
 
     def set_score_for_objects(self, object_target, object_target_site, object_related, object_related_site, score):
+        if score == 0:
+            self.filter_by_couple(object_target, object_related).filter(
+                object_site=object_target_site.id,
+                related_object_site=object_related_site.id
+            ).delete()
+            return None
+
         result, created = self.get_or_create_for_objects(object_target, object_target_site, object_related, object_related_site)
         result.score = score
         result.save()
@@ -83,6 +98,10 @@ class RecommendationManager(RecommendsManager):
         )
 
     def set_score_for_object(self, user, object_recommended, object_site, score):
+        if score == 0:
+            self.filter_for_object(object_recommended).filter(user=user.id).delete()
+            return None
+
         result, created = self.get_or_create_for_object(user, object_recommended, object_site)
         result.score = score
         result.save()
