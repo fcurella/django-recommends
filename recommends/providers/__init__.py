@@ -15,6 +15,7 @@ logger = logging.getLogger(RECOMMENDS_LOGGER_NAME)
 class RecommendationProviderRegistry(object):
     _vote_providers = {}
     _content_providers = {}
+    providers = set()
 
     def __init__(self):
         StorageClass = import_from_classname(RECOMMENDS_STORAGE_BACKEND)
@@ -25,6 +26,8 @@ class RecommendationProviderRegistry(object):
         self._vote_providers[model_path(vote_model)] = provider_instance
         for model in content_models:
             self._content_providers[model_path(model)] = provider_instance
+
+        self.providers.add(provider_instance)
 
         for signal in provider_instance.rate_signals:
             if isinstance(signal, str):
@@ -43,7 +46,6 @@ class RecommendationProviderRegistry(object):
 
     def get_vote_providers(self):
         return self._vote_providers.values()
-
 
 recommendation_registry = RecommendationProviderRegistry()
 
