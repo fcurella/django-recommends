@@ -24,7 +24,8 @@ def similarities(obj, limit=5):
         cache_key = 'recommends:similarities:%s:%s.%s:%s' % (settings.SITE_ID, obj._meta.app_label, obj._meta.object_name.lower(), limit)
         similarities = cache.get(cache_key)
         if similarities is None:
-            similarities = recommendation_registry.storage.get_similarities_for_object(obj, int(limit))
+            provider = recommendation_registry.get_provider_for_content(obj)
+            similarities = provider.storage.get_similarities_for_object(obj, int(limit))
             cache.set(cache_key, similarities, RECOMMENDS_CACHE_TEMPLATETAGS_TIMEOUT)
         return similarities
 
@@ -40,7 +41,9 @@ class SuggestionNode(template.Node):
             cache_key = 'recommends:recommendations:%s:%s:%s' % (settings.SITE_ID, user.id, self.limit)
             suggestions = cache.get(cache_key)
             if suggestions is None:
-                suggestions = recommendation_registry.storage.get_recommendations_for_user(user, int(self.limit))
+                suggestions = set()
+                for provider in recommendation_registry.providers:
+                    suggestions.update(provider.storage.get_recommendations_for_user(user, int(self.limit)))
                 cache.set(cache_key, suggestions, RECOMMENDS_CACHE_TEMPLATETAGS_TIMEOUT)
             context[self.varname] = suggestions
         return ''
