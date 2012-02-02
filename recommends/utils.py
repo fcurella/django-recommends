@@ -12,6 +12,15 @@ def import_from_classname(class_name_str):
     return Class
 
 
+def ctypes_dict():
+    from django.contrib.contenttypes.models import ContentType
+
+    values = ContentType.objects.values_list('app_label', 'model', 'id')
+    ctypes = {}
+    [ctypes.update({"%s.%s" % x[:2]: x[2]}) for x in values]
+    return ctypes
+
+
 @contextlib.contextmanager
 def filelock(name, wait_delay=.1):
     path = os.path.join(tempfile.gettempdir(), name)

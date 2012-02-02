@@ -1,25 +1,9 @@
 from django.conf import settings
 from django.db import models
-from django.contrib.contenttypes.models import ContentType
+from recommends.managers import CachedContentTypesMixin
 
 
-class RecommendsManager(models.Manager):
-    _ctypes = None
-
-    @property
-    def ctypes(self):
-        if self._ctypes is None:
-            values = ContentType.objects.values_list('app_label', 'model', 'id')
-            ctypes = {}
-            [ctypes.update({"%s.%s" % x[:2]: x[2]}) for x in values]
-            self._ctypes = ctypes
-        return self._ctypes
-
-    def get_ctype_id_for_obj(self, obj):
-        app_label = obj._meta.app_label
-        module_name = obj._meta.module_name
-        return self.ctypes["%s.%s" % (app_label, module_name)]
-
+class RecommendsManager(models.Manager, CachedContentTypesMixin):
     def filter_for_model(self, model):
         ctype_id = self.get_ctype_id_for_obj(model)
         return self.filter(object_ctype=ctype_id)
