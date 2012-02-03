@@ -3,7 +3,6 @@ import math
 from django.db import transaction
 from recommends.storages.base import BaseRecommendationStorage
 from recommends.settings import RECOMMENDS_LOGGER_NAME, RECOMMENDS_STORAGE_COMMIT_THRESHOLD
-from recommends.converters import resolve_identifier, get_identifier
 from .models import Similarity, Recommendation
 
 
@@ -11,16 +10,6 @@ logger = logging.getLogger(RECOMMENDS_LOGGER_NAME)
 
 
 class DjangoOrmStorage(BaseRecommendationStorage):
-    def get_identifier(self, obj, site_id=None, rating=None, *args, **kwargs):
-        if rating is not None:
-            site_id = self.get_rating_site(rating).id
-        if site_id is None:
-            site_id = self.settings.SITE_ID
-        return get_identifier(obj, site_id)
-
-    def resolve_identifier(self, identifier):
-        return resolve_identifier(identifier)
-
     def get_similarities(self, limit=10):
         object_site_id = self.settings.SITE_ID
         return Similarity.objects.filter(object_site=object_site_id, related_object_site=object_site_id, score__gt=0).order_by('-score')[:limit]

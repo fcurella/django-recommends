@@ -1,14 +1,22 @@
+from recommends.converters import IdentifierManager
+
+
 class BaseRecommendationStorage(object):
     def __init__(self, settings=None):
+        self.identifier_manager = IdentifierManager()
         self.settings = settings
 
-    def get_identifier(self, obj, *args, **kwargs):
+    def get_identifier(self, obj, site_id=None, rating=None, *args, **kwargs):
         """Given an object and optional parameters, returns a string identifying the object uniquely"""
-        raise NotImplementedError
+        if rating is not None:
+            site_id = self.get_rating_site(rating).id
+        if site_id is None:
+            site_id = self.settings.SITE_ID
+        return self.identifier_manager.get_identifier(obj, site_id)
 
     def resolve_identifier(self, identifier):
         """Returns an object corresponding to an identifier in the format returned by ``get_identifier``"""
-        raise NotImplementedError
+        return self.identifier_manager.resolve_identifier(identifier)
 
     def get_similarities(self, limit):
         raise NotImplementedError

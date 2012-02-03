@@ -6,38 +6,34 @@ def model_path(obj):
     return '%s.%s' % (obj._meta.app_label, obj._meta.object_name.lower())
 
 
-def get_sites(obj):
-    from django.contrib.sites.models import Site
+class IdentifierManager(object):
+    _sites = None
 
-    for field in obj._meta.fields:
-        if field.rel and field.rel.to == Site:
-            return [getattr(obj, field)]
-    for field in obj._meta.many_to_many:
-        if field.rel and field.rel.to == Site:
-            return getattr(obj, field).all()
-    return [Site.objects.get_current()]
+    @property
+    def sites(self):
+        if self._sites is None:
+            from django.contrib.sites.models import Site
 
+            self._sites = dict([(s.id, s) for s in Site.objects.all()])
+        return self._sites
 
-def get_identifier(obj, site_id):
-    """
-    Given a Django Model, returns a string identifier in the format
-    <app_label>.<model>:<site_id>:<object_id>.
-    """
-    return "%s:%s:%s" % (model_path(obj), site_id, obj.id)
+    def resolve_identifier(self, identifier):
+        """
+        The opposite of ``get_identifier()``
+        """
+        app_module, site_id, object_id = identifier.split(':')
+        app_label, model = app_module.split('.')
+        site = self.sites[int(site_id)]
+        ModelClass = models.get_model(app_label, model)
+        model = ModelClass.objects.get(pk=object_id)
+        return model, site
 
-
-def resolve_identifier(identifier):
-    """
-    The opposite of ``get_identifier()``
-    """
-    from django.contrib.sites.models import Site
-
-    app_module, site_id, object_id = identifier.split(':')
-    app_label, model = app_module.split('.')
-    site = Site.objects.get(pk=site_id)
-    ModelClass = models.get_model(app_label, model)
-    model = ModelClass.objects.get(pk=object_id)
-    return model, site
+    def get_identifier(self, obj, site_id):
+        """
+        Given a Django Model, returns a string identifier in the format
+        <app_label>.<model>:<site_id>:<object_id>.
+        """
+        return "%s:%s:%s" % (model_path(obj), site_id, obj.id)
 
 
 def convert_vote_list_to_userprefs(vote_list):
