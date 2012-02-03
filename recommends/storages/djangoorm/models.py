@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.contenttypes import generic
-from recommends.converters import get_identifier
 from .managers import RecommendsManager, SimilarityManager, RecommendationManager
 
 
@@ -19,13 +18,6 @@ class RecommendsBaseModel(models.Model):
 
     def __unicode__(self):
         return u"RecommendsBaseModel"
-
-    def _object_identifier(self, ctype, object_id):
-        obj = ctype.get_object_for_this_type(pk=object_id)
-        return get_identifier(obj)
-
-    def object_identifier(self):
-        return self._object_identifier(self.object_ctype, self.object_id)
 
 
 class Similarity(RecommendsBaseModel):
@@ -47,9 +39,6 @@ class Similarity(RecommendsBaseModel):
 
     def __unicode__(self):
         return u"Similarity between %s and %s" % (self.object, self.related_object)
-
-    def related_object_identifier(self):
-        return self._object_identifier(self.related_object_ctype, self.related_object_id)
 
 
 class Recommendation(RecommendsBaseModel):
