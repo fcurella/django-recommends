@@ -1,6 +1,6 @@
 from collections import defaultdict
 import math
-from recommends.similarities import sim_pearson
+from recommends.similarities import sim_distance
 from recommends.converters import convert_vote_list_to_userprefs, convert_vote_list_to_itemprefs
 from .base import BaseAlgorithm
 
@@ -8,14 +8,14 @@ from .base import BaseAlgorithm
 class GhettoAlgorithm(BaseAlgorithm):
     """
     """
-    similarity = sim_pearson
+    similarity = sim_distance
 
     def top_matches(self, prefs, p1):
         """
         Returns the best matches for p1 from the prefs dictionary.
         """
-
         return [(p2, self.similarity(prefs[p1], prefs[p2])) for p2 in prefs if p2 != p1]
+
 
     def calculate_similarities(self, vote_list, verbose=0):
         """
@@ -50,7 +50,6 @@ class GhettoAlgorithm(BaseAlgorithm):
         # Invert the preference matrix to be item-centric
         itemPrefs = convert_vote_list_to_itemprefs(vote_list)
         itemMatch = {}
-        #[itemMatch.set(item, top_matches(itemPrefs, item, similarity=similarity)) for item in itemPrefs]
         for item in itemPrefs:
             # Find the most similar items to this one
             itemMatch[item] = self.top_matches(itemPrefs, item)
@@ -71,12 +70,12 @@ class GhettoAlgorithm(BaseAlgorithm):
             ]
         """
         prefs = convert_vote_list_to_userprefs(vote_list)
+        itemMatch = dict(itemMatch)
 
         if user in prefs:
             userRatings = prefs[user]
             scores = defaultdict(int)
             totalSim = defaultdict(int)
-            itemMatch = dict(itemMatch)
 
             # Loop over items rated by this user
             for (item, rating) in userRatings.iteritems():
@@ -116,7 +115,8 @@ class GhettoAlgorithm(BaseAlgorithm):
 
         """
         recommendations = []
-        for user in self.get_users():
+        users = set(map(lambda x: x[0], vote_list))
+        for user in users:
             rankings = self.get_recommended_items(vote_list, itemMatch, user)
             recommendations.append((user, rankings))
         return recommendations
