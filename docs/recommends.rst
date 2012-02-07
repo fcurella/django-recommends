@@ -17,14 +17,6 @@ recommends Package
     :undoc-members:
     :show-inheritance:
 
-:mod:`filtering` Module
------------------------
-
-.. automodule:: recommends.filtering
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 :mod:`listeners` Module
 -----------------------
 
@@ -94,6 +86,7 @@ Subpackages
 
 .. toctree::
 
+    recommends.algorithms
     recommends.management
     recommends.providers
     recommends.storages

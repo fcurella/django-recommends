@@ -2,11 +2,10 @@ import logging
 from django.contrib.auth.models import User
 from django.conf import settings
 from ..converters import model_path
-from ..similarities import sim_distance
-from ..filtering import calculate_similar_items, get_recommended_items
 from ..settings import RECOMMENDS_STORAGE_BACKEND, RECOMMENDS_LOGGER_NAME
 from ..tasks import remove_suggestions, remove_similarities
 from ..utils import import_from_classname
+from ..algorithms.ghetto import GhettoAlgorithm
 
 
 logger = logging.getLogger(RECOMMENDS_LOGGER_NAME)
@@ -66,7 +65,7 @@ class RecommendationProvider(object):
     its score, and user.
     """
     rate_signals = ['django.db.models.signals.pre_delete']
-    similarity = sim_distance
+    algorithm = GhettoAlgorithm()
 
     def __init__(self):
         if not getattr(self, 'storage', False):
@@ -130,70 +129,13 @@ class RecommendationProvider(object):
             logger.info('fetching votes from the provider...')
             vote_list = self.vote_list()
         logger.info('calculating similarities...')
-        itemMatch = self.calculate_similarities(vote_list)
+        itemMatch = self.algorithm.calculate_similarities(vote_list)
 
         logger.info('saving similarities...')
         self.storage.store_similarities(itemMatch)
         logger.info('saving suggestions...')
-        self.storage.store_recommendations(self.calculate_recommendations(vote_list, itemMatch))
+        self.storage.store_recommendations(self.algorithm.calculate_recommendations(vote_list, itemMatch))
 
     def get_users(self):
         """Returns all users who have voted something"""
         return User.objects.filter(is_active=True)
-
-    def calculate_similarities(self, vote_list):
-        """
-        Must return an dict of similarities for every object:
-
-        Accepts a vote matrix representing votes with the following schema:
-
-        ::
-
-            [
-                ("<user1>", "<object_identifier1>", <score>),
-                ("<user1>", "<object_identifier2>", <score>),
-            ]
-
-        Output must be a dictionary with the following schema:
-
-        ::
-
-            [
-                ("<object_identifier1>", [
-                                (<related_object_identifier2>, <score>),
-                                (<related_object_identifier3>, <score>),
-                ]),
-                ("<object_identifier2>", [
-                                (<related_object_identifier2>, <score>),
-                                (<related_object_identifier3>, <score>),
-                ]),
-            ]
-
-        """
-        return calculate_similar_items(vote_list, similarity=self.similarity)
-
-    def calculate_recommendations(self, vote_list, itemMatch):
-        """
-        ``itemMatch`` is supposed to be the result of ``calculate_similarities()``
-
-        Returns a list of recommendations:
-
-        ::
-
-            [
-                (<user1>, [
-                    ("<object_identifier1>", <score>),
-                    ("<object_identifier2>", <score>),
-                ]),
-                (<user2>, [
-                    ("<object_identifier1>", <score>),
-                    ("<object_identifier2>", <score>),
-                ]),
-            ]
-
-        """
-        recommendations = []
-        for user in self.get_users():
-            rankings = get_recommended_items(vote_list, itemMatch, user)
-            recommendations.append((user, rankings))
-        return recommendations

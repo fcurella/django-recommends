@@ -1,0 +1,122 @@
+from collections import defaultdict
+import math
+from recommends.similarities import sim_pearson
+from recommends.converters import convert_vote_list_to_userprefs, convert_vote_list_to_itemprefs
+from .base import BaseAlgorithm
+
+
+class GhettoAlgorithm(BaseAlgorithm):
+    """
+    """
+    similarity = sim_pearson
+
+    def top_matches(self, prefs, p1):
+        """
+        Returns the best matches for p1 from the prefs dictionary.
+        """
+
+        return [(p2, self.similarity(prefs[p1], prefs[p2])) for p2 in prefs if p2 != p1]
+
+    def calculate_similarities(self, vote_list, verbose=0):
+        """
+        Must return an dict of similarities for every object:
+
+        Accepts a vote matrix representing votes with the following schema:
+
+        ::
+
+            [
+                ("<user1>", "<object_identifier1>", <score>),
+                ("<user1>", "<object_identifier2>", <score>),
+            ]
+
+        Output must be a dictionary with the following schema:
+
+        ::
+
+            [
+                ("<object_identifier1>", [
+                                (<related_object_identifier2>, <score>),
+                                (<related_object_identifier3>, <score>),
+                ]),
+                ("<object_identifier2>", [
+                                (<related_object_identifier2>, <score>),
+                                (<related_object_identifier3>, <score>),
+                ]),
+            ]
+
+        """
+
+        # Invert the preference matrix to be item-centric
+        itemPrefs = convert_vote_list_to_itemprefs(vote_list)
+        itemMatch = {}
+        #[itemMatch.set(item, top_matches(itemPrefs, item, similarity=similarity)) for item in itemPrefs]
+        for item in itemPrefs:
+            # Find the most similar items to this one
+            itemMatch[item] = self.top_matches(itemPrefs, item)
+        iteritems = itemMatch.items()
+        return iteritems
+
+    def get_recommended_items(self, vote_list, itemMatch, user):
+        """
+        ``itemMatch`` is supposed to be the result of ``calculate_similar_items()``
+
+        Output:
+
+        ::
+
+            [
+                ('<object_id>', <score>),
+                ('<object_id>', <score>),
+            ]
+        """
+        prefs = convert_vote_list_to_userprefs(vote_list)
+
+        if user in prefs:
+            userRatings = prefs[user]
+            scores = defaultdict(int)
+            totalSim = defaultdict(int)
+            itemMatch = dict(itemMatch)
+
+            # Loop over items rated by this user
+            for (item, rating) in userRatings.iteritems():
+                    # Loop over items similar to this one
+                for (item2, similarity) in itemMatch[item]:
+                    # Ignore if this user has already rated this item
+                    if not math.isnan(similarity) and item2 not in userRatings:
+                        # Weighted sum of rating times similarity
+                        scores[item2] += similarity * rating
+
+                        # Sum of all the similarities
+                        totalSim[item2] += similarity
+
+            # Divide each total score by total weighting to get an average
+            rankings = ((item, (score / totalSim[item])) for item, score in scores.iteritems() if totalSim[item] != 0)
+            return rankings
+        return []
+
+    def calculate_recommendations(self, vote_list, itemMatch):
+        """
+        ``itemMatch`` is supposed to be the result of ``calculate_similarities()``
+
+        Returns a list of recommendations:
+
+        ::
+
+            [
+                (<user1>, [
+                    ("<object_identifier1>", <score>),
+                    ("<object_identifier2>", <score>),
+                ]),
+                (<user2>, [
+                    ("<object_identifier1>", <score>),
+                    ("<object_identifier2>", <score>),
+                ]),
+            ]
+
+        """
+        recommendations = []
+        for user in self.get_users():
+            rankings = self.get_recommended_items(vote_list, itemMatch, user)
+            recommendations.append((user, rankings))
+        return recommendations

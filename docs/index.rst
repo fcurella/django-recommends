@@ -13,8 +13,9 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
-   providers
    quickstart
+   providers
+   algorithms
    storages
    signals
    templatetags
