@@ -22,4 +22,4 @@ Changelog
 * v0.0.6
 	* added logging
 	* DjangoOrmStorage now saves Similarities and Suggestions in batches, according to the new ``RECOMMENDS_STORAGE_COMMIT_THRESHOLD`` setting.
-	* Decoupled Alogrithms from Providers
+	* Decoupled Algorithms from Providers
