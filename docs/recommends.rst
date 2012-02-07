@@ -9,26 +9,10 @@ recommends Package
     :undoc-members:
     :show-inheritance:
 
-:mod:`admin` Module
--------------------
-
-.. automodule:: recommends.admin
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 :mod:`converters` Module
 ------------------------
 
 .. automodule:: recommends.converters
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`distances` Module
------------------------
-
-.. automodule:: recommends.distances
     :members:
     :undoc-members:
     :show-inheritance:
@@ -65,14 +49,6 @@ recommends Package
     :undoc-members:
     :show-inheritance:
 
-:mod:`providers` Module
------------------------
-
-.. automodule:: recommends.providers
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 :mod:`settings` Module
 ----------------------
 
@@ -81,10 +57,10 @@ recommends Package
     :undoc-members:
     :show-inheritance:
 
-:mod:`storages` Module
-----------------------
+:mod:`similarities` Module
+--------------------------
 
-.. automodule:: recommends.storages
+.. automodule:: recommends.similarities
     :members:
     :undoc-members:
     :show-inheritance:
@@ -105,11 +81,21 @@ recommends Package
     :undoc-members:
     :show-inheritance:
 
+:mod:`utils` Module
+-------------------
+
+.. automodule:: recommends.utils
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 Subpackages
 -----------
 
 .. toctree::
 
     recommends.management
+    recommends.providers
+    recommends.storages
     recommends.templatetags
 

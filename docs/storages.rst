@@ -32,5 +32,4 @@ To minimize disk I/O from the database, Similiarities and Suggestions will be co
 
 If you want to store similarities and suggestions in a database different than 'default', you'll need to add ``recommends.storage.djangoorm.routers.RecommendsRouter`` to your settings' ``DATABASE_ROUTERS``, and assing the name of the database to the ``RECOMMENDS_STORAGE_DATABASE_NAME`` setting variable.
 
-Using the router requires at least Django 1.3 rev16869 (which includes fixes not present in Django 1.3.1). You can install Django 1.3 rev16869 with ``pip install svn+http://code.djangoproject.com/svn/django/branches/releases/1.3.X#egg=Django``.
-
+Using the router requires at least Django 1.3 rev16869 (which includes fixes not present in Django 1.3.1). You can install Django 1.3-svn running ``pip install svn+http://code.djangoproject.com/svn/django/branches/releases/1.3.X#egg=Django``.
