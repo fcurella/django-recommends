@@ -3,19 +3,9 @@
 Recommendation Algorithms
 ========================
 
-Properties
-----------
-    
-    * ``similarity``
-        
-        A callable that determines the similiarity between two elements.
+A Recommendation Algorithm is a subclass of ``recommends.algorithms.base.BaseAlgorithm`` that implements methods for calculating similarities and recommendations.
 
-        Functions for Euclidean Distance and Pearson Correlation are provided for convenience at ``recommends.similarities.sim_distance`` and ``recommends.similarities.sim_pearson``.
-
-        Defaults to ``recommends.similarities.sim_distance``
-
-Methods
--------
+Subclasses must implement this methods:
 
     * ``calculate_similarities(self, vote_list)``
         
@@ -63,3 +53,19 @@ Methods
                     ("<object_identifier2>", <score>),
                 ]),
             ]
+
+GhettoAlgorithm
+---------------
+
+This class implement a basic algorithm (adapted from: Segaran, T: Programming Collective Intelligence) that doesn't require any dependency at the expenses of performances.
+
+Properties
+~~~~~~~~~~
+    
+    * ``similarity``
+        
+        A callable that determines the similiarity between two elements.
+
+        Functions for Euclidean Distance and Pearson Correlation are provided for convenience at ``recommends.similarities.sim_distance`` and ``recommends.similarities.sim_pearson``.
+
+        Defaults to ``recommends.similarities.sim_pearson``

@@ -1,15 +1,6 @@
-from django.core.exceptions import ImproperlyConfigured
-
-
 class BaseAlgorithm(object):
     """
     """
-    similarity = None
-
-    def __init__(self):
-        if self.similarity is None:
-            raise ImproperlyConfigured
-
     def calculate_similarities(self, vote_list, verbose=0):
         """
         Must return an dict of similarities for every object:

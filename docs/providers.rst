@@ -9,7 +9,9 @@ A ``RecommendationProvider`` is a class that specifies how to retrieve various i
 
 Subclasses override properties amd methods in order to determine what constitutes rated items, a rating, its score, and user.
 
-A basic algorithm to calculate similarities and recommendations is provided by default, but subclasses can use their own by overriding the ``calculate_similarities`` and ``calculate_recommendations`` methods.
+The algorithm to use for computing is specified by the ``algorithm`` property.
+
+A basic algorithm class is provided for convenience at ``recommends.algorithms.ghetto.GhettoAlgorithm``, but users can implement their own solutions. See :doc:`algorithms`.
 
 Example::
 
