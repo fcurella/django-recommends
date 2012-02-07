@@ -25,9 +25,9 @@ Storage backend
 
 ``RECOMMENDS_STORAGE_DATABASE_NAME`` is used by ``DjangoOrmStorage`` as the database where similarities and suggestions will be stored. Note that you will have to add ``recommends.storage.djangoorm.routers.RecommendsRouter`` to your settings' ``DATABASE_ROUTERS`` if you want to use something else than the default database. Default value is set to ``'recommends'``.
 
-To minimize disk I/O from the database, Similiarities and Suggestions will be committed in batches. The ``RECOMMENDS_STORAGE_COMMIT_THRESHOLD`` setting set how many record should be committed in each batch. Defaults to ``1000``.
+To minimize disk I/O from the database, Similiarities and Suggestions will be committed in batches. The ``RECOMMENDS_STORAGE_COMMIT_THRESHOLD`` setting sets how many record should be committed in each batch. Defaults to ``1000``.
 
-Using the router requires at least Django 1.3 rev16869 (which includes fixes not present in Django 1.3.1). You can install Django 1.3-svn with ``pip install svn+http://code.djangoproject.com/svn/django/branches/releases/1.3.X#egg=Django``.
+Using the router requires at least Django 1.3 rev16869 (which includes fixes not present in Django 1.3.1). You can install Django 1.3 with ``pip install svn+http://code.djangoproject.com/svn/django/branches/releases/1.3.X#egg=Django``.
 
  
 
