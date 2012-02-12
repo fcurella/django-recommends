@@ -18,35 +18,6 @@ class GhettoAlgorithm(BaseAlgorithm):
 
 
     def calculate_similarities(self, vote_list, verbose=0):
-        """
-        Must return an dict of similarities for every object:
-
-        Accepts a vote matrix representing votes with the following schema:
-
-        ::
-
-            [
-                ("<user1>", "<object_identifier1>", <score>),
-                ("<user1>", "<object_identifier2>", <score>),
-            ]
-
-        Output must be a dictionary with the following schema:
-
-        ::
-
-            [
-                ("<object_identifier1>", [
-                                (<related_object_identifier2>, <score>),
-                                (<related_object_identifier3>, <score>),
-                ]),
-                ("<object_identifier2>", [
-                                (<related_object_identifier2>, <score>),
-                                (<related_object_identifier3>, <score>),
-                ]),
-            ]
-
-        """
-
         # Invert the preference matrix to be item-centric
         itemPrefs = convert_vote_list_to_itemprefs(vote_list)
         itemMatch = {}
@@ -57,18 +28,6 @@ class GhettoAlgorithm(BaseAlgorithm):
         return iteritems
 
     def get_recommended_items(self, vote_list, itemMatch, user):
-        """
-        ``itemMatch`` is supposed to be the result of ``calculate_similar_items()``
-
-        Output:
-
-        ::
-
-            [
-                ('<object_id>', <score>),
-                ('<object_id>', <score>),
-            ]
-        """
         prefs = convert_vote_list_to_userprefs(vote_list)
         itemMatch = dict(itemMatch)
 
