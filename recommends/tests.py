@@ -21,11 +21,10 @@ class RecommendsTestCase(unittest.TestCase):
         self.user1 = User.objects.get(username='user1')
 
         self.provider = recommendation_registry.get_provider_for_content(Product)
-
         recommends_precompute()
 
     def test_similarities(self):
-        similarities = self.provider.storage.get_similarities()
+        similarities = self.provider.storage.get_similarities_for_object(self.mug)
         self.assertNotEquals(len(similarities), 0)
 
         # Make sure we didn't get all 0s
@@ -37,7 +36,7 @@ class RecommendsTestCase(unittest.TestCase):
         self.assertTrue(self.wine in [s.related_object for s in similar_to_mug])
 
     def test_recommendation(self):
-        recommendations = self.provider.storage.get_recommendations()
+        recommendations = self.provider.storage.get_recommendations_for_user(self.user1)
 
         self.assertNotEquals(len(recommendations), 0)
 
@@ -99,6 +98,7 @@ class RecommendsListenersTestCase(unittest.TestCase):
         recommendations = self.provider.storage.get_recommendations_for_user(self.user1)
         steak_recs = filter(lambda x: x.object_id == self.steak.id, recommendations)
         self.assertEqual(1L, len(steak_recs))
+
         self.steak.delete()
 
         response = self.client.get(reverse('home'))
