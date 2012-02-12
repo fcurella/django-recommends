@@ -3,7 +3,7 @@ import math
 import pymongo
 from recommends.models import MockModel, MockSimilarity
 from recommends.storages.base import BaseRecommendationStorage
-from recommends.settings import RECOMMENDS_LOGGER_NAME, RECOMMENDS_STORAGE_COMMIT_THRESHOLD
+from recommends.settings import RECOMMENDS_LOGGER_NAME, RECOMMENDS_STORAGE_LOGGING_THRESHOLD
 from .settings import RECOMMENDS_STORAGE_MONGODB_DATABASE, RECOMMENDS_STORAGE_MONGODB_SIMILARITY_COLLECTION, RECOMMENDS_STORAGE_MONGODB_RECOMMENDATION_COLLECTION
 from .managers import MongoStorageManager
 
@@ -60,7 +60,7 @@ class MongoStorage(BaseRecommendationStorage):
                         collection.update(spec, {'$set': {'score': score}}, upsert=True)
                         count = count + 1
 
-                        if count % RECOMMENDS_STORAGE_COMMIT_THRESHOLD == 0:
+                        if count % RECOMMENDS_STORAGE_LOGGING_THRESHOLD == 0:
                             logger.info('saved %s similarities...' % count)
 
         logger.info('saved %s similarities...' % count)
@@ -85,7 +85,7 @@ class MongoStorage(BaseRecommendationStorage):
                     )
                     collection.update(spec, {'$set': {'score': score}}, upsert=True)
 
-                    if count % RECOMMENDS_STORAGE_COMMIT_THRESHOLD == 0:
+                    if count % RECOMMENDS_STORAGE_LOGGING_THRESHOLD == 0:
                         logger.info('saved %s recommendations...' % count)
         logger.info('saved %s recommendation...' % count)
 

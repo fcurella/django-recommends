@@ -2,7 +2,8 @@ import logging
 import math
 from django.db import transaction
 from recommends.storages.base import BaseRecommendationStorage
-from recommends.settings import RECOMMENDS_LOGGER_NAME, RECOMMENDS_STORAGE_COMMIT_THRESHOLD
+from recommends.settings import RECOMMENDS_LOGGER_NAME
+from .settings import RECOMMENDS_STORAGE_COMMIT_THRESHOLD
 from .models import Similarity, Recommendation
 
 

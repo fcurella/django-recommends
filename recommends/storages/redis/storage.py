@@ -3,8 +3,8 @@ import math
 import redis
 from recommends.models import MockModel, MockSimilarity
 from recommends.storages.base import BaseRecommendationStorage
-from recommends.settings import RECOMMENDS_LOGGER_NAME, RECOMMENDS_STORAGE_COMMIT_THRESHOLD
-from .settings import RECOMMENDS_REDIS_HOST, RECOMMENDS_REDIS_PORT, RECOMMENDS_REDIS_DB
+from recommends.settings import RECOMMENDS_LOGGER_NAME, RECOMMENDS_STORAGE_LOGGING_THRESHOLD
+from .settings import RECOMMENDS_STORAGE_REDIS_DATABASE
 from .managers import RedisStorageManager
 
 
@@ -19,7 +19,7 @@ class RedisStorage(BaseRecommendationStorage):
     @property
     def redis(self):
         if self._redis is None:
-            self._redis = redis.StrictRedis(host=RECOMMENDS_REDIS_HOST, port=RECOMMENDS_REDIS_PORT, db=RECOMMENDS_REDIS_DB)
+            self._redis = redis.StrictRedis(host=RECOMMENDS_STORAGE_REDIS_DATABASE['HOST'], port=RECOMMENDS_STORAGE_REDIS_DATABASE['PORT'], db=RECOMMENDS_STORAGE_REDIS_DATABASE['NAME'])
         return self._redis
 
     def _get_mock_models(self, dicts, mock_class=MockModel):
@@ -77,7 +77,7 @@ class RedisStorage(BaseRecommendationStorage):
 
                         count = count + 1
 
-                        if count % RECOMMENDS_STORAGE_COMMIT_THRESHOLD == 0:
+                        if count % RECOMMENDS_STORAGE_LOGGING_THRESHOLD == 0:
                             logger.info('saved %s similarities...' % count)
         logger.info('saved %s similarities...' % count)
 
@@ -100,7 +100,7 @@ class RedisStorage(BaseRecommendationStorage):
                     r.sadd(index_key, object_id)
 
                     count = count + 1
-                    if count % RECOMMENDS_STORAGE_COMMIT_THRESHOLD == 0:
+                    if count % RECOMMENDS_STORAGE_LOGGING_THRESHOLD == 0:
                         logger.info('saved %s recommendations...' % count)
         logger.info('saved %s recommendation...' % count)
 

@@ -38,8 +38,37 @@ To minimize disk I/O from the database, Similiarities and Suggestions will be co
 Using the router requires at least Django 1.3 rev16869 (which includes fixes not present in Django 1.3.1). You can install Django 1.3-svn running ``pip install svn+http://code.djangoproject.com/svn/django/branches/releases/1.3.X#egg=Django``.
 
 MongoStorage
-----------------
+------------
+
+Settings
+~~~~~~~~
+
+``RECOMMENDS_STORAGE_REDIS_DATABASE``: A dictionary representing how to connect to the mongodb server. Defaults to:
+
+::
+
+	{
+	    'HOST': 'localhost',
+	    'PORT': 27017,
+	    'NAME': 'recommends'
+
+	}
 
 RedisStorage
 ------------
 
+This storage allows you to store results in Redis.
+
+Settings
+~~~~~~~~
+
+``RECOMMENDS_STORAGE_REDIS_DATABASE``: A dictionary representing how to connect to the redis server. Defaults to:
+
+::
+
+	{
+	    'HOST': 'localhost',
+	    'PORT': 6379,
+	    'NAME': 0
+
+	}
