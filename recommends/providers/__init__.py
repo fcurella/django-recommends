@@ -129,11 +129,12 @@ class RecommendationProvider(object):
             logger.info('fetching votes from the provider...')
             vote_list = self.vote_list()
         logger.info('calculating similarities...')
+        self.algorithm.clear_cache()
         itemMatch = self.algorithm.calculate_similarities(vote_list)
 
         logger.info('saving similarities...')
         self.storage.store_similarities(itemMatch)
-        logger.info('saving suggestions...')
+        logger.info('saving recommendations...')
         self.storage.store_recommendations(self.algorithm.calculate_recommendations(vote_list, itemMatch))
 
     def get_users(self):
