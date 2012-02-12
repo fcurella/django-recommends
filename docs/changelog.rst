@@ -3,6 +3,8 @@
 Changelog
 =========
 
+* v0.0.7
+    * added MongodbStorage
 * v0.0.6
 	* added logging
 	* DjangoOrmStorage now saves Similarities and Suggestions in batches, according to the new ``RECOMMENDS_STORAGE_COMMIT_THRESHOLD`` setting.
