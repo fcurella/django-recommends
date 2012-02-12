@@ -18,13 +18,7 @@ class BaseRecommendationStorage(object):
         """Returns an object corresponding to an identifier in the format returned by ``get_identifier``"""
         return self.identifier_manager.resolve_identifier(identifier)
 
-    def get_similarities(self, limit):
-        raise NotImplementedError
-
     def get_similarities_for_object(self, obj, limit):
-        raise NotImplementedError
-
-    def get_recommendations(self, limit):
         raise NotImplementedError
 
     def get_recommendations_for_user(self, user, limit):
