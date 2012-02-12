@@ -14,3 +14,32 @@ class CachedContentTypesMixin():
         app_label = obj._meta.app_label
         module_name = obj._meta.module_name
         return self.ctypes["%s.%s" % (app_label, module_name)]
+
+
+class DictStorageManager(object, CachedContentTypesMixin):
+    def similarity_for_objects(self, object_target, object_target_site, object_related, object_related_site):
+        object_ctype_id = self.get_ctype_id_for_obj(object_target)
+        object_id = object_target.id
+
+        related_object_ctype_id = self.get_ctype_id_for_obj(object_related)
+        related_object_id = object_related.id
+
+        return dict(
+            object_ctype=object_ctype_id,
+            object_id=object_id,
+            object_site=object_target_site.id,
+            related_object_ctype=related_object_ctype_id,
+            related_object_id=related_object_id,
+            related_object_site=object_related_site.id,
+        )
+
+    def suggestion_for_object(self, user, object_recommended, object_site):
+        object_ctype_id = self.get_ctype_id_for_obj(object_recommended)
+        object_id = object_recommended.id
+
+        return dict(
+            object_ctype=object_ctype_id,
+            object_id=object_id,
+            object_site=object_site.id,
+            user=user.id,
+        )

@@ -8,6 +8,7 @@ def model_path(obj):
 
 class IdentifierManager(object):
     _sites = None
+    _ctypes = None
 
     @property
     def sites(self):
@@ -16,6 +17,14 @@ class IdentifierManager(object):
 
             self._sites = dict([(s.id, s) for s in Site.objects.all()])
         return self._sites
+
+    @property
+    def ctypes(self):
+        if self._ctypes is None:
+            from django.contrib.contenttypes.models import ContentType
+
+            self._ctypes = dict([("%s.%s" % (c.app_label, c.model), c) for c in ContentType.objects.all()])
+        return self._ctypes
 
     def resolve_identifier(self, identifier):
         """
@@ -27,6 +36,30 @@ class IdentifierManager(object):
         ModelClass = models.get_model(app_label, model)
         model = ModelClass.objects.get(pk=object_id)
         return model, site
+
+    def identifier_to_dict(self, identifier, score=None, related=False):
+        """
+        The opposite of ``get_identifier()``
+        """
+        app_module, site_id, object_id = identifier.split(':')
+        ctype = self.ctypes[app_module]
+
+        if related:
+            spec = {
+                'related_object_ctype': ctype.id,
+                'related_object_id': int(object_id),
+                'related_object_site': int(site_id)
+            }
+        else:
+            spec = {
+                'object_ctype': ctype.id,
+                'object_id': int(object_id),
+                'object_site': int(site_id)
+            }
+        if score is not None:
+            spec['score'] = score
+
+        return spec
 
     def get_identifier(self, obj, site_id):
         """
