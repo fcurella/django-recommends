@@ -33,6 +33,14 @@ djangoorm Package
     :undoc-members:
     :show-inheritance:
 
+:mod:`settings` Module
+----------------------
+
+.. automodule:: recommends.storages.djangoorm.settings
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 :mod:`storage` Module
 ---------------------
 
