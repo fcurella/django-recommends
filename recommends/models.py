@@ -7,6 +7,9 @@ class MockModel(object):
     def __init__(self, **kwargs):
         self.__dict__ = kwargs
 
+    def __unicode__(self):
+        return u"Mock for content object %s" % self.object
+
     def __repr__(self):
         return "<%s>" % self.__unicode__()
 
