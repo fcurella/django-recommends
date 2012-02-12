@@ -16,4 +16,5 @@ Subpackages
 
     recommends.storages.djangoorm
     recommends.storages.mongodb
+    recommends.storages.redis
 
