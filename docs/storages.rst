@@ -51,7 +51,6 @@ Settings
 	    'HOST': 'localhost',
 	    'PORT': 27017,
 	    'NAME': 'recommends'
-
 	}
 
 RedisStorage
@@ -70,5 +69,4 @@ Settings
 	    'HOST': 'localhost',
 	    'PORT': 6379,
 	    'NAME': 0
-
 	}
