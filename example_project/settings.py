@@ -111,7 +111,8 @@ INSTALLED_APPS = (
 
     'recommends',
     'recommends.storages.djangoorm',
-    'example_app',
+    #'example_app',
+    'movielens',
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
     'djcelery',
@@ -128,11 +129,21 @@ INSTALLED_APPS = (
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'simple': {
+            'format': '[%(asctime)s] %(message)s',
+        },
+    },
     'handlers': {
         'mail_admins': {
             'level': 'ERROR',
             'class': 'django.utils.log.AdminEmailHandler'
-        }
+        },
+        'console':{
+            'level':'INFO',
+            'class':'logging.StreamHandler',
+            'formatter': 'simple',
+        },
     },
     'loggers': {
         'django.request': {
@@ -140,12 +151,24 @@ LOGGING = {
             'level': 'ERROR',
             'propagate': True,
         },
+        'recommends': {
+            'handlers':['console'],
+            'propagate': True,
+            'level':'INFO',
+        },
+        'django': {
+            'handlers':['console'],
+            'propagate': True,
+            'level':'DEBUG',
+        },
     }
 }
 
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+#        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
     }
 }
 

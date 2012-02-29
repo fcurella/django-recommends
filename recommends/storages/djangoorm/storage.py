@@ -27,9 +27,13 @@ class DjangoOrmStorage(BaseRecommendationStorage):
 
     @transaction.commit_manually
     def store_similarities(self, itemMatch):
+        import time
+
+        count = 0
+        t1 = time.clock()
         try:
             logger.info('saving similarities')
-            count = 0
+            tt = time.clock()
             for object_id, scores in itemMatch:
                 object_target, object_target_site = self.resolve_identifier(object_id)
 
@@ -46,11 +50,19 @@ class DjangoOrmStorage(BaseRecommendationStorage):
                                 score=score
                             )
                             if count % RECOMMENDS_STORAGE_COMMIT_THRESHOLD == 0:
-                                logger.info('saved %s similarities...' % count)
                                 transaction.commit()
+                                logger.info('saved %s similarities...' % count)
+                                t2 = time.clock()
+                                logger.info('time partial %s' % (t2 - tt))
+                                logger.info('time total %s' % (t2 - t1))
+                                tt = time.clock()
         finally:
-            logger.info('saved %s similarities...' % count)
             transaction.commit()
+            logger.info('saved %s similarities...' % count)
+            t2 = time.clock()
+            logger.info('time %s' % (t2 - t1))
+            logger.info('flipping table...')
+            Similarity.objects.flip()
 
     @transaction.commit_manually
     def store_recommendations(self, recommendations):
@@ -74,6 +86,8 @@ class DjangoOrmStorage(BaseRecommendationStorage):
         finally:
             logger.info('saved %s recommendations...' % count)
             transaction.commit()
+            logger.info('flipping table...')
+            Recommendation.objects.flip()
 
     def remove_recommendations(self, obj):
         Recommendation.objects.filter_for_object(obj=obj).delete()
