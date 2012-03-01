@@ -5,7 +5,9 @@ from recommends.converters import convert_vote_list_to_itemprefs
 
 
 class RecSysAlgorithm(BaseAlgorithm):
-    k = 20
+    def __init__(self, k=100, *args, **kwargs):
+        self.k = k
+        super(RecSysAlgorithm, self).__init__(*args, **kwargs)
 
     @property
     def svd(self):
@@ -22,7 +24,7 @@ class RecSysAlgorithm(BaseAlgorithm):
                 value = float(vote[2])
                 data.add_tuple((value, item_id, user_id))  # Tuple format is: <value, row, column>
             self.cache['svd'].set_data(data)
-            self.cache['svd'].compute(k=self.k)
+            self.cache['svd'].compute(k=self.k, min_values=1)
         return self.svd
 
     def calculate_similarities(self, vote_list, verbose=0):
@@ -41,6 +43,9 @@ class RecSysAlgorithm(BaseAlgorithm):
         recommendations = []
         users = set(map(lambda x: x[0], vote_list))
         for user in users:
-            rankings = svd.recommend(user.id)
-            recommendations.append((user, rankings))
+            try:
+                rankings = svd.recommend(user.id, only_unknowns=True, is_row=False)
+                recommendations.append((user, rankings))
+            except KeyError:
+                pass
         return recommendations
