@@ -19,8 +19,28 @@ A storage backend can be any class extending ``recommends.storages.base.Recommen
 * ``remove_similarities(self, obj)``
 
 
+RedisStorage
+------------
+
+This storage allows you to store results in Redis. This is the recommended storage backend, but it is not the default because it requires you to install redis-server.
+
+Settings
+~~~~~~~~
+
+``RECOMMENDS_STORAGE_REDIS_DATABASE``: A dictionary representing how to connect to the redis server. Defaults to:
+
+::
+
+	{
+	    'HOST': 'localhost',
+	    'PORT': 6379,
+	    'NAME': 0
+	}
+
 DjangoOrmStorage
 ----------------
+
+This is the default storage. It requires minimal installation, but it's also the less performant.
 
 This storage allows you to store results in a database specified by your ``DATABASES`` setting.
 
@@ -51,22 +71,4 @@ Settings
 	    'HOST': 'localhost',
 	    'PORT': 27017,
 	    'NAME': 'recommends'
-	}
-
-RedisStorage
-------------
-
-This storage allows you to store results in Redis.
-
-Settings
-~~~~~~~~
-
-``RECOMMENDS_STORAGE_REDIS_DATABASE``: A dictionary representing how to connect to the redis server. Defaults to:
-
-::
-
-	{
-	    'HOST': 'localhost',
-	    'PORT': 6379,
-	    'NAME': 0
 	}
