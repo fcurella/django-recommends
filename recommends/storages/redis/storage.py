@@ -78,7 +78,7 @@ class RedisStorage(BaseRecommendationStorage):
                         count = count + 1
 
                         if count % RECOMMENDS_STORAGE_LOGGING_THRESHOLD == 0:
-                            logger.info('saved %s similarities...' % count)
+                            logger.debug('saved %s similarities...' % count)
         logger.info('saved %s similarities...' % count)
 
     def store_recommendations(self, recommendations):
@@ -101,7 +101,7 @@ class RedisStorage(BaseRecommendationStorage):
 
                     count = count + 1
                     if count % RECOMMENDS_STORAGE_LOGGING_THRESHOLD == 0:
-                        logger.info('saved %s recommendations...' % count)
+                        logger.debug('saved %s recommendations...' % count)
         logger.info('saved %s recommendation...' % count)
 
     def remove_similarities(self, obj):
