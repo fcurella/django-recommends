@@ -51,7 +51,7 @@ class DjangoOrmStorage(BaseRecommendationStorage):
                             )
                             if count % RECOMMENDS_STORAGE_COMMIT_THRESHOLD == 0:
                                 transaction.commit()
-                                logger.info('saved %s similarities...' % count)
+                                logger.debug('saved %s similarities...' % count)
                                 t2 = time.clock()
                                 logger.info('time partial %s' % (t2 - tt))
                                 logger.info('time total %s' % (t2 - t1))
@@ -81,7 +81,7 @@ class DjangoOrmStorage(BaseRecommendationStorage):
                             score=score
                         )
                         if count % RECOMMENDS_STORAGE_COMMIT_THRESHOLD == 0:
-                            logger.info('saved %s recommendations...' % count)
+                            logger.debug('saved %s recommendations...' % count)
                             transaction.commit()
         finally:
             logger.info('saved %s recommendations...' % count)

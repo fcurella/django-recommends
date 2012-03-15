@@ -65,14 +65,6 @@ recommends Package
     :undoc-members:
     :show-inheritance:
 
-:mod:`tests` Module
--------------------
-
-.. automodule:: recommends.tests
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 :mod:`utils` Module
 -------------------
 
@@ -91,4 +83,5 @@ Subpackages
     recommends.providers
     recommends.storages
     recommends.templatetags
+    recommends.tests
 

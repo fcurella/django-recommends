@@ -5,7 +5,8 @@ Changelog
 
 * v0.0.7
     * added Mongodb storage
-    * added redis storage
+    * added Redis storage
+    * added ``unregister`` method to the registry
 * v0.0.6
 	* added logging
 	* DjangoOrmStorage now saves Similarities and Suggestions in batches, according to the new ``RECOMMENDS_STORAGE_COMMIT_THRESHOLD`` setting.

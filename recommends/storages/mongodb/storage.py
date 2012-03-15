@@ -61,7 +61,7 @@ class MongoStorage(BaseRecommendationStorage):
                         count = count + 1
 
                         if count % RECOMMENDS_STORAGE_LOGGING_THRESHOLD == 0:
-                            logger.info('saved %s similarities...' % count)
+                            logger.debug('saved %s similarities...' % count)
 
         logger.info('saved %s similarities...' % count)
 
@@ -86,7 +86,7 @@ class MongoStorage(BaseRecommendationStorage):
                     collection.update(spec, {'$set': {'score': score}}, upsert=True)
 
                     if count % RECOMMENDS_STORAGE_LOGGING_THRESHOLD == 0:
-                        logger.info('saved %s recommendations...' % count)
+                        logger.debug('saved %s recommendations...' % count)
         logger.info('saved %s recommendation...' % count)
 
     def remove_recommendations(self, obj):

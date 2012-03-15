@@ -110,3 +110,5 @@ class RecommendsListenersTestCase(unittest.TestCase):
     def tearDown(self):
         self.vote.delete()
         recommends_precompute()
+
+

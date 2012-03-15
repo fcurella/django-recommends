@@ -7,7 +7,9 @@ class BaseRecommendationStorage(object):
         self.settings = settings
 
     def get_identifier(self, obj, site_id=None, rating=None, *args, **kwargs):
-        """Given an object and optional parameters, returns a string identifying the object uniquely"""
+        """
+        Given an object and optional parameters, returns a string identifying the object uniquely.
+        """
         if rating is not None:
             site_id = self.get_rating_site(rating).id
         if site_id is None:
@@ -15,13 +17,22 @@ class BaseRecommendationStorage(object):
         return self.identifier_manager.get_identifier(obj, site_id)
 
     def resolve_identifier(self, identifier):
-        """Returns an object corresponding to an identifier in the format returned by ``get_identifier``"""
+        """
+        This method is the opposite of ``get_identifier``.
+        It resolve the object's identifier to an actual model.
+        """
         return self.identifier_manager.resolve_identifier(identifier)
 
     def get_similarities_for_object(self, obj, limit):
+        """
+        Returns a list of ``Similarity`` objects for ``obj``, ordered by score.
+        """
         raise NotImplementedError
 
     def get_recommendations_for_user(self, user, limit):
+        """
+        Returns a list of ``Recommendation`` objects for the user, order by score.
+        """
         raise NotImplementedError
 
     def store_similarities(self, itemMatch):
@@ -29,6 +40,8 @@ class BaseRecommendationStorage(object):
 
     def store_recommendations(self, recommendations):
         """
+        Stores all the recommendations.
+
         ``recommendations`` is an iterable with the following schema:
 
         ::
@@ -47,18 +60,25 @@ class BaseRecommendationStorage(object):
 
     def get_votes(self):
         """
+        Optional.
+
         Retrieves the vote matrix saved by ``store_votes``.
 
         You won't usually need to implement this method, because you want to use fresh data.
-        But it might be useful if you want some kind of caching, maybe for testing purposes.
+        But it might be useful if you want some kind of heavy caching, maybe for testing purposes.
         """
         raise NotImplementedError
 
     def store_votes(self, iterable):
         """
+        Optional.
+
         Saves the vote matrix.
 
-        The matrix is a list of tuples with the following schema:
+        You won't usually need to implement this method, because you want to use fresh data.
+        But it might be useful if you want to dump the votes on somewhere, maybe for testing purposes.
+
+        ``iterable`` is the vote matrix, expressed as a list of tuples with the following schema:
 
         ::
 
@@ -71,8 +91,14 @@ class BaseRecommendationStorage(object):
         """
         raise NotImplementedError
 
-    def remove_recommendation(self, user, obj):
+    def remove_recommendation(self, obj):
+        """
+        Deletes all recommendations for object ``obj``.
+        """
         raise NotImplementedError
 
     def remove_similarity(self, obj):
+        """
+        Deletes all similarities that have object ``obj`` as source or target.
+        """
         raise NotImplementedError
