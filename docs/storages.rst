@@ -9,11 +9,11 @@ A storage backend can be any class extending ``recommends.storages.base.Recommen
 
 .. method:: get_identifier(self, obj, *args, **kwargs)
 
-    This method serializes the object to a string.
+    Given an object and optional parameters, returns a string identifying the object uniquely.
 
 .. method:: resolve_identifier(self, identifier)
 
-    This method is the opposite of ``get_identifier``. It resolve the serialized to object to an actual model.
+    This method is the opposite of ``get_identifier``. It resolve the object's identifier to an actual model.
 
 .. method:: get_similarities_for_object(self, obj, limit)
 
@@ -25,20 +25,60 @@ A storage backend can be any class extending ``recommends.storages.base.Recommen
 
 .. method:: get_votes(self)
 
-    Optional
+    Optional.
+
+    Retrieves the vote matrix saved by ``store_votes``.
+
+    You won't usually need to implement this method, because you want to use fresh data.
+    But it might be useful if you want some kind of heavy caching, maybe for testing purposes.
 
 .. method:: store_similarities(self, itemMatch)
 
 .. method:: store_recommendations(self, user, recommendations)
 
+    Stores all the recommendations.
+
+    ``recommendations`` is an iterable with the following schema:
+
+    ::
+
+        (
+            (
+                <user>,
+                (
+                    (<object_identifier>, <score>),
+                    (<object_identifier>, <score>)
+                ),
+            )
+        )
+
 .. method:: store_votes(self, iterable)
 
-    Optional
+    Optional.
+
+    Saves the vote matrix.
+
+    You won't usually need to implement this method, because you want to use fresh data.
+    But it might be useful if you want to dump the votes on somewhere, maybe for testing purposes.
+
+    ``iterable`` is the vote matrix, expressed as a list of tuples with the following schema:
+
+    ::
+
+        [
+            ("<user_id1>", "<object_identifier1>", <score>),
+            ("<user_id1>", "<object_identifier2>", <score>),
+            ("<user_id2>", "<object_identifier1>", <score>),
+            ("<user_id2>", "<object_identifier2>", <score>),
+        ]
 
 .. method:: remove_recommendations(self, obj)
 
+    Deletes all recommendations for object ``obj``.
+
 .. method:: remove_similarities(self, obj)
 
+    Deletes all similarities that have object ``obj`` as source or target.
 
 RedisStorage
 ------------
