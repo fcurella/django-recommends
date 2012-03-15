@@ -17,7 +17,7 @@ setup(
     version = ".".join(map(str, VERSION)),
     description = "A django app that builds item-based suggestions for users",
     long_description = read('README.rst'),
-    url = 'https://github.com/fcurella/django-recommends',
+    url = 'https://github.com/python-recsys/django-recommends',
     license = 'MIT',
     author = 'Flavio Curella',
     author_email = 'flavio.curella@gmail.com',
