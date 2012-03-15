@@ -2,7 +2,8 @@ import logging
 import math
 from django.db import transaction
 from recommends.storages.base import BaseRecommendationStorage
-from recommends.settings import RECOMMENDS_LOGGER_NAME, RECOMMENDS_STORAGE_COMMIT_THRESHOLD
+from recommends.settings import RECOMMENDS_LOGGER_NAME
+from .settings import RECOMMENDS_STORAGE_COMMIT_THRESHOLD
 from .models import Similarity, Recommendation
 
 
@@ -10,17 +11,9 @@ logger = logging.getLogger(RECOMMENDS_LOGGER_NAME)
 
 
 class DjangoOrmStorage(BaseRecommendationStorage):
-    def get_similarities(self, limit=10):
-        object_site_id = self.settings.SITE_ID
-        return Similarity.objects.filter(object_site=object_site_id, related_object_site=object_site_id, score__gt=0).order_by('-score')[:limit]
-
     def get_similarities_for_object(self, obj, limit=10):
         object_site_id = self.settings.SITE_ID
         return Similarity.objects.similar_to(obj, related_object_site=object_site_id, score__gt=0).order_by('-score')[:limit]
-
-    def get_recommendations(self, limit=10):
-        object_site_id = self.settings.SITE_ID
-        return Recommendation.objects.filter(object_site=object_site_id).order_by('-score')[:limit]
 
     def get_recommendations_for_user(self, user, limit=10):
         object_site_id = self.settings.SITE_ID
@@ -53,7 +46,7 @@ class DjangoOrmStorage(BaseRecommendationStorage):
                                 score=score
                             )
                             if count % RECOMMENDS_STORAGE_COMMIT_THRESHOLD == 0:
-                                logger.info('saved %s similarities...' % count)
+                                logger.debug('saved %s similarities...' % count)
                                 transaction.commit()
         finally:
             logger.info('saved %s similarities...' % count)
@@ -76,7 +69,7 @@ class DjangoOrmStorage(BaseRecommendationStorage):
                             score=score
                         )
                         if count % RECOMMENDS_STORAGE_COMMIT_THRESHOLD == 0:
-                            logger.info('saved %s recommendations...' % count)
+                            logger.debug('saved %s recommendations...' % count)
                             transaction.commit()
         finally:
             logger.info('saved %s recommendations...' % count)

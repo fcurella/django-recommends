@@ -1,6 +1,16 @@
 class BaseAlgorithm(object):
     """
     """
+
+    _cache = {}
+
+    def clear_cache(self):
+        self._cache = {}
+
+    @property
+    def cache(self):
+        return self._cache
+
     def calculate_similarities(self, vote_list, verbose=0):
         """
         Must return an dict of similarities for every object:
@@ -10,8 +20,8 @@ class BaseAlgorithm(object):
         ::
 
             [
-                ("<user1>", "<object_identifier1>", <score>),
-                ("<user1>", "<object_identifier2>", <score>),
+                (<user1>, "<object_identifier1>", <score>),
+                (<user1>, "<object_identifier2>", <score>),
             ]
 
         Output must be a dictionary with the following schema:
@@ -20,12 +30,12 @@ class BaseAlgorithm(object):
 
             [
                 ("<object_identifier1>", [
-                                (<related_object_identifier2>, <score>),
-                                (<related_object_identifier3>, <score>),
+                                ("<related_object_identifier2>", <score>),
+                                ("<related_object_identifier3>", <score>),
                 ]),
                 ("<object_identifier2>", [
-                                (<related_object_identifier2>, <score>),
-                                (<related_object_identifier3>, <score>),
+                                ("<related_object_identifier1>", <score>),
+                                ("<related_object_identifier3>", <score>),
                 ]),
             ]
 

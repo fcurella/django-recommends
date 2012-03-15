@@ -7,29 +7,129 @@ Results of the computation are stored according to the storage backend defined i
 
 A storage backend can be any class extending ``recommends.storages.base.RecommendationStorage`` that implements the following methods:
 
-* ``get_identifier(self, obj, *args, **kwargs)``
-* ``resolve_identifier(self, identifier)``
-* ``get_similarities(self, limit)`` 
-* ``get_similarities_for_object(self, obj, limit)`` 
-* ``get_recommendations(self, limit)``
-* ``get_recommendations_for_user(self, user, limit)``
-* ``get_votes(self)`` – Optional
-* ``store_similarities(self, itemMatch)``
-* ``store_recommendations(self, user, recommendations)``
-* ``store_votes(self, iterable)`` – Optional
-* ``remove_recommendations(self, obj)``
-* ``remove_similarities(self, obj)``
+.. method:: get_identifier(self, obj, *args, **kwargs)
 
+    Given an object and optional parameters, returns a string identifying the object uniquely.
+
+.. method:: resolve_identifier(self, identifier)
+
+    This method is the opposite of ``get_identifier``. It resolve the object's identifier to an actual model.
+
+.. method:: get_similarities_for_object(self, obj, limit)
+
+    Returns a list of :doc:`Similarity <models>` objects for ``obj``, ordered by score.
+
+.. method:: get_recommendations_for_user(self, user, limit)
+
+    Returns a list of :doc:`Recommendation <models>` objects for the user, order by score.
+
+.. method:: get_votes(self)
+
+    Optional.
+
+    Retrieves the vote matrix saved by ``store_votes``.
+
+    You won't usually need to implement this method, because you want to use fresh data.
+    But it might be useful if you want some kind of heavy caching, maybe for testing purposes.
+
+.. method:: store_similarities(self, itemMatch)
+
+.. method:: store_recommendations(self, user, recommendations)
+
+    Stores all the recommendations.
+
+    ``recommendations`` is an iterable with the following schema:
+
+    ::
+
+        (
+            (
+                <user>,
+                (
+                    (<object_identifier>, <score>),
+                    (<object_identifier>, <score>)
+                ),
+            )
+        )
+
+.. method:: store_votes(self, iterable)
+
+    Optional.
+
+    Saves the vote matrix.
+
+    You won't usually need to implement this method, because you want to use fresh data.
+    But it might be useful if you want to dump the votes on somewhere, maybe for testing purposes.
+
+    ``iterable`` is the vote matrix, expressed as a list of tuples with the following schema:
+
+    ::
+
+        [
+            ("<user_id1>", "<object_identifier1>", <score>),
+            ("<user_id1>", "<object_identifier2>", <score>),
+            ("<user_id2>", "<object_identifier1>", <score>),
+            ("<user_id2>", "<object_identifier2>", <score>),
+        ]
+
+.. method:: remove_recommendations(self, obj)
+
+    Deletes all recommendations for object ``obj``.
+
+.. method:: remove_similarities(self, obj)
+
+    Deletes all similarities that have object ``obj`` as source or target.
+
+RedisStorage
+------------
+
+This storage allows you to store results in Redis. This is the recommended storage backend, but it is not the default because it requires you to install redis-server.
+
+Settings
+~~~~~~~~
+
+``RECOMMENDS_STORAGE_REDIS_DATABASE``: A dictionary representing how to connect to the redis server. Defaults to:
+
+::
+
+	{
+	    'HOST': 'localhost',
+	    'PORT': 6379,
+	    'NAME': 0
+	}
 
 DjangoOrmStorage
 ----------------
+
+This is the default storage. It requires minimal installation, but it's also the less performant.
 
 This storage allows you to store results in a database specified by your ``DATABASES`` setting.
 
 In order to use this storage, you'll also need to add ``'recommends.storages.djangoorm'`` to your ``INSTALLED_APPS``.
 
+Settings
+~~~~~~~~
+
 To minimize disk I/O from the database, Similiarities and Suggestions will be committed in batches. The ``RECOMMENDS_STORAGE_COMMIT_THRESHOLD`` setting set how many record should be committed in each batch. Defaults to ``1000``.
 
-If you want to store similarities and suggestions in a database different than 'default', you'll need to add ``recommends.storage.djangoorm.routers.RecommendsRouter`` to your settings' ``DATABASE_ROUTERS``, and assing the name of the database to the ``RECOMMENDS_STORAGE_DATABASE_NAME`` setting variable.
+``RECOMMENDS_STORAGE_DATABASE_ALIAS`` is used as the database where similarities and suggestions will be stored. Note that you will have to add ``recommends.storage.djangoorm.routers.RecommendsRouter`` to your settings' ``DATABASE_ROUTERS`` if you want to use something else than the default database. Default value is set to ``'recommends'``.
+
+To minimize disk I/O from the database, Similiarities and Suggestions will be committed in batches. The ``RECOMMENDS_STORAGE_COMMIT_THRESHOLD`` setting sets how many record should be committed in each batch. Defaults to ``1000``.
 
 Using the router requires at least Django 1.3 rev16869 (which includes fixes not present in Django 1.3.1). You can install Django 1.3-svn running ``pip install svn+http://code.djangoproject.com/svn/django/branches/releases/1.3.X#egg=Django``.
+
+MongoStorage
+------------
+
+Settings
+~~~~~~~~
+
+``RECOMMENDS_STORAGE_REDIS_DATABASE``: A dictionary representing how to connect to the mongodb server. Defaults to:
+
+::
+
+	{
+	    'HOST': 'localhost',
+	    'PORT': 27017,
+	    'NAME': 'recommends'
+	}

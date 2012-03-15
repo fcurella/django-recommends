@@ -37,6 +37,25 @@ class RecommendationProviderRegistry(object):
                     for model in content_models:
                         sig_instance.connect(listener, sender=model)
 
+    def unregister(self, vote_model, content_models, Provider):
+        provider_instance = Provider()
+
+        for signal in provider_instance.rate_signals:
+            if isinstance(signal, str):
+                sig_class_name = signal.split('.')[-1]
+                sig_instance = import_from_classname(signal)
+                listener = getattr(provider_instance, sig_class_name, False)
+                if listener:
+                    for model in content_models:
+                        sig_instance.disconnect(listener, sender=model)
+
+        new_set = [i for i in self.providers if not isinstance(i, Provider)]
+        self.providers = set(new_set)
+
+        for model in content_models:
+            del self._content_providers[model_path(model)]
+        del self._vote_providers[model_path(vote_model)]
+
     def get_provider_for_vote(self, model):
         return self._vote_providers[model_path(model)]
 
@@ -129,11 +148,12 @@ class RecommendationProvider(object):
             logger.info('fetching votes from the provider...')
             vote_list = self.vote_list()
         logger.info('calculating similarities...')
+        self.algorithm.clear_cache()
         itemMatch = self.algorithm.calculate_similarities(vote_list)
 
         logger.info('saving similarities...')
         self.storage.store_similarities(itemMatch)
-        logger.info('saving suggestions...')
+        logger.info('saving recommendations...')
         self.storage.store_recommendations(self.algorithm.calculate_recommendations(vote_list, itemMatch))
 
     def get_users(self):
