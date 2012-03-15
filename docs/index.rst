@@ -16,6 +16,7 @@ Contents:
    quickstart
    providers
    algorithms
+   models
    storages
    signals
    templatetags

@@ -59,5 +59,3 @@ if getattr(settings, 'RECOMMENDS_TEST_MONGO', False):
             recommendation_registry.unregister(Vote, [Product], ProductRecommendationProvider)
             recommendation_registry.register(Vote, [Product], MongoRecommendationProvider)
             super(RecommendsMongoStorageTestCase, self).setUp()
-
-

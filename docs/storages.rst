@@ -7,16 +7,37 @@ Results of the computation are stored according to the storage backend defined i
 
 A storage backend can be any class extending ``recommends.storages.base.RecommendationStorage`` that implements the following methods:
 
-* ``get_identifier(self, obj, *args, **kwargs)``
-* ``resolve_identifier(self, identifier)``
-* ``get_similarities_for_object(self, obj, limit)`` 
-* ``get_recommendations_for_user(self, user, limit)``
-* ``get_votes(self)`` – Optional
-* ``store_similarities(self, itemMatch)``
-* ``store_recommendations(self, user, recommendations)``
-* ``store_votes(self, iterable)`` – Optional
-* ``remove_recommendations(self, obj)``
-* ``remove_similarities(self, obj)``
+.. method:: get_identifier(self, obj, *args, **kwargs)
+
+    This method serializes the object to a string.
+
+.. method:: resolve_identifier(self, identifier)
+
+    This method is the opposite of ``get_identifier``. It resolve the serialized to object to an actual model.
+
+.. method:: get_similarities_for_object(self, obj, limit)
+
+    Returns a list of :doc:`Similarity <models>` objects for ``obj``, ordered by score.
+
+.. method:: get_recommendations_for_user(self, user, limit)
+
+    Returns a list of :doc:`Recommendation <models>` objects for the user, order by score.
+
+.. method:: get_votes(self)
+
+    Optional
+
+.. method:: store_similarities(self, itemMatch)
+
+.. method:: store_recommendations(self, user, recommendations)
+
+.. method:: store_votes(self, iterable)
+
+    Optional
+
+.. method:: remove_recommendations(self, obj)
+
+.. method:: remove_similarities(self, obj)
 
 
 RedisStorage
