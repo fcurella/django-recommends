@@ -91,7 +91,7 @@ Methods
 
     * ``get_items(self)``
 
-        This method must returb items that have been voted
+        This method must return items that have been voted
 
     * ``get_ratings(self, obj)``
 
@@ -116,6 +116,12 @@ Methods
     * ``is_rating_active(self, rating)``
 
         Returns if the rating is active
+
+    * ``pre_store_similarities(self, itemMatch)``
+
+        Optional. This method will get called right before passing the similarities to the storage.
+
+        For example, you can override this method to do some stats or visualize the data.
 
     * ``pre_delete(self, sender, instance, **kwargs)``
 

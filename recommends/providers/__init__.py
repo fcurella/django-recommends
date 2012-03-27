@@ -152,6 +152,7 @@ class RecommendationProvider(object):
         itemMatch = self.algorithm.calculate_similarities(vote_list)
 
         logger.info('saving similarities...')
+        self.pre_store_similarities(itemMatch)
         self.storage.store_similarities(itemMatch)
         logger.info('saving recommendations...')
         self.storage.store_recommendations(self.algorithm.calculate_recommendations(vote_list, itemMatch))
@@ -159,3 +160,11 @@ class RecommendationProvider(object):
     def get_users(self):
         """Returns all users who have voted something"""
         return User.objects.filter(is_active=True)
+
+    def pre_store_similarities(self, itemMatch):
+        """
+        Optional. This method will get called right before passing the
+        similarities to the storage. For example, you can override this method
+        to do some stats or visualize the data.
+        """
+        pass

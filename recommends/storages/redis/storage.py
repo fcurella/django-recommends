@@ -63,9 +63,9 @@ class RedisStorage(BaseRecommendationStorage):
             object_target, object_target_site = self.resolve_identifier(object_id)
 
             for related_object_id, score in scores:
-                if not math.isnan(score):
+                if not math.isnan(score) and score > self.threshold_similarities:
                     object_related, object_related_site = self.resolve_identifier(related_object_id)
-                    if object_target != object_related and score > 0:
+                    if object_target != object_related:
                         key = 'recommends:similarity:%s' % object_id
                         r.zadd(key, score, related_object_id)
 
@@ -89,7 +89,7 @@ class RedisStorage(BaseRecommendationStorage):
 
         for (user, rankings) in recommendations:
             for object_id, score in rankings:
-                if not math.isnan(score) and score > 0:
+                if not math.isnan(score) and score > self.threshold_recommendations:
                     key = 'recommends:recommendation:%s' % user.id
                     r.zadd(key, score, object_id)
 
