@@ -3,6 +3,8 @@
 Changelog
 =========
 
+* v0.0.8
+    * Added ``threshold_similarities`` and ``threshold_recommnedations`` to the storage backends.
 * v0.0.7
     * added Mongodb storage
     * added Redis storage

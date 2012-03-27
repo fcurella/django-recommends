@@ -34,7 +34,7 @@ class DjangoOrmStorage(BaseRecommendationStorage):
                 object_target, object_target_site = self.resolve_identifier(object_id)
 
                 for related_object_id, score in scores:
-                    if not math.isnan(score):
+                    if not math.isnan(score) and score > self.threshold_similarities:
                         object_related, object_related_site = self.resolve_identifier(related_object_id)
                         if object_target != object_related:
                             count = count + 1
@@ -59,7 +59,7 @@ class DjangoOrmStorage(BaseRecommendationStorage):
             count = 0
             for (user, rankings) in recommendations:
                 for object_id, score in rankings:
-                    if not math.isnan(score):
+                    if not math.isnan(score) and score > self.threshold_recommendations:
                         count = count + 1
                         object_recommended, site = self.resolve_identifier(object_id)
                         Recommendation.objects.set_score_for_object(

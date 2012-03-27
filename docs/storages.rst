@@ -85,6 +85,13 @@ RedisStorage
 
 This storage allows you to store results in Redis. This is the recommended storage backend, but it is not the default because it requires you to install redis-server.
 
+Options
+~~~~~~~
+
+``threshold_similarities`` Defaults to ``0``. Only similarities with score greater than ``threshold similarities`` will be persisted.
+
+``threshold_recommendations`` Defaults to ``0``. Only recommendations with score greater than ``threshold similarities`` will be persisted.
+
 Settings
 ~~~~~~~~
 
@@ -107,6 +114,13 @@ This storage allows you to store results in a database specified by your ``DATAB
 
 In order to use this storage, you'll also need to add ``'recommends.storages.djangoorm'`` to your ``INSTALLED_APPS``.
 
+Options
+~~~~~~~
+
+``threshold_similarities`` Defaults to ``0``. Only similarities with score greater than ``threshold similarities`` will be persisted.
+
+``threshold_recommendations`` Defaults to ``0``. Only recommendations with score greater than ``threshold similarities`` will be persisted.
+
 Settings
 ~~~~~~~~
 
@@ -120,6 +134,13 @@ Using the router requires at least Django 1.3 rev16869 (which includes fixes not
 
 MongoStorage
 ------------
+
+Options
+~~~~~~~
+
+``threshold_similarities`` Defaults to ``0``. Only similarities with score greater than ``threshold similarities`` will be persisted.
+
+``threshold_recommendations`` Defaults to ``0``. Only recommendations with score greater than ``threshold similarities`` will be persisted.
 
 Settings
 ~~~~~~~~

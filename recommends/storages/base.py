@@ -2,6 +2,9 @@ from recommends.converters import IdentifierManager
 
 
 class BaseRecommendationStorage(object):
+    threshold_similarities = 0
+    threshold_recommendations = 0
+
     def __init__(self, settings=None):
         self.identifier_manager = IdentifierManager()
         self.settings = settings
