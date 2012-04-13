@@ -1,5 +1,4 @@
 from django.conf import settings
-from django.utils import unittest
 from django.contrib.auth.models import User
 from recommends.providers import RecommendationProvider
 from recommends.providers import recommendation_registry
@@ -14,8 +13,6 @@ except ImportError:
 
 from recommends.tests.tests import RecommendsTestCase
 from recommends.tests.models import  RecProduct, RecVote
-from django.db import models
-from django.contrib.sites.models import Site
 
 
 class ProductRecommendationProvider(RecommendationProvider):
@@ -48,10 +45,10 @@ class GhettoRecommendationProvider(RecommendationProvider):
         return User.objects.filter(is_active=True, rec_votes__isnull=False).distinct()
 
     def get_items(self):
-        return Product.objects.all()
+        return RecProduct.objects.all()
 
     def get_ratings(self, obj):
-        return Vote.objects.filter(product=obj)
+        return RecVote.objects.filter(product=obj)
 
     def get_rating_score(self, rating):
         return rating.score
@@ -66,15 +63,14 @@ class GhettoRecommendationProvider(RecommendationProvider):
         return rating.product
 
 
-
 if RedisStorage is not None and getattr(settings, 'RECOMMENDS_TEST_REDIS', False):
     class RedisRecommendationProvider(GhettoRecommendationProvider):
         storage = RedisStorage(settings=settings)
 
     class RecommendsRedisStorageTestCase(RecommendsTestCase):
         def setUp(self):
-            recommendation_registry.unregister(Vote, [Product], ProductRecommendationProvider)
-            recommendation_registry.register(Vote, [Product], RedisRecommendationProvider)
+            recommendation_registry.unregister(RecVote, [RecProduct], ProductRecommendationProvider)
+            recommendation_registry.register(RecVote, [RecProduct], RedisRecommendationProvider)
             super(RecommendsRedisStorageTestCase, self).setUp()
 
 
@@ -84,6 +80,6 @@ if MongoStorage is not None and getattr(settings, 'RECOMMENDS_TEST_MONGO', False
 
     class RecommendsMongoStorageTestCase(RecommendsTestCase):
         def setUp(self):
-            recommendation_registry.unregister(Vote, [Product], ProductRecommendationProvider)
-            recommendation_registry.register(Vote, [Product], MongoRecommendationProvider)
+            recommendation_registry.unregister(RecVote, [RecProduct], ProductRecommendationProvider)
+            recommendation_registry.register(RecVote, [RecProduct], MongoRecommendationProvider)
             super(RecommendsMongoStorageTestCase, self).setUp()

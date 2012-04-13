@@ -9,6 +9,7 @@ from .models import RecProduct, RecVote
 from django.test.utils import override_settings
 import os
 
+
 @override_settings(CELERY_DB_REUSE_MAX=200, LANGUAGES=(
     ('en', 'English'),
     ),
@@ -34,6 +35,7 @@ class RecommendsTestCase(TestCase):
 
         self.provider = recommendation_registry.get_provider_for_content(RecProduct)
         recommends_precompute()
+
 
     def tearDown(self):
         from django.template import loader
@@ -88,13 +90,13 @@ class RecommendsTestCase(TestCase):
 class RecommendsListenersTestCase(TestCase):
     def setUp(self):
         self.client = Client()
-        self.mug = Product.objects.get(name='Coffee Mug')
-        self.orange_juice = Product.objects.get(name='Orange Juice')
-        self.wine = Product.objects.get(name='Bottle of Red Wine')
-        self.steak = Product.objects.get(name='1lb Tenderloin Steak')
+        self.mug = RecProduct.objects.get(name='Coffee Mug')
+        self.orange_juice = RecProduct.objects.get(name='Orange Juice')
+        self.wine = RecProduct.objects.get(name='Bottle of Red Wine')
+        self.steak = RecProduct.objects.get(name='1lb Tenderloin Steak')
         self.user1 = User.objects.get(username='user1')
 
-        self.provider = recommendation_registry.get_provider_for_content(Product)
+        self.provider = recommendation_registry.get_provider_for_content(RecProduct)
 
         recommends_precompute()
 
@@ -102,7 +104,7 @@ class RecommendsListenersTestCase(TestCase):
         self.client.login(username='user1', password='user1')
         response = self.client.get(reverse('home'))
 
-        self.vote = Vote.objects.create(
+        self.vote = RecVote.objects.create(
             user=self.user1,
             product=self.steak,
             site_id=1,
@@ -127,5 +129,3 @@ class RecommendsListenersTestCase(TestCase):
     def tearDown(self):
         self.vote.delete()
         recommends_precompute()
-
-
