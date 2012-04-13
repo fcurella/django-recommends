@@ -1,6 +1,6 @@
 [
     {
-        "pk": 3, 
+        "pk": 3,
         "model": "auth.user", 
         "fields": {
             "username": "user2", 
@@ -55,7 +55,7 @@
     },
     {
         "pk": 1, 
-        "model": "example_app.product", 
+        "model": "recommends.recproduct",
         "fields": {
             "name": "Dozen Red Roses", 
             "sites": [
@@ -65,7 +65,7 @@
     }, 
     {
         "pk": 2, 
-        "model": "example_app.product", 
+        "model": "recommends.recproduct", 
         "fields": {
             "name": "Orange Juice", 
             "sites": [
@@ -75,7 +75,7 @@
     }, 
     {
         "pk": 3, 
-        "model": "example_app.product", 
+        "model": "recommends.recproduct",
         "fields": {
             "name": "Coffee Mug", 
             "sites": [
@@ -85,7 +85,7 @@
     }, 
     {
         "pk": 4, 
-        "model": "example_app.product", 
+        "model": "recommends.recproduct",
         "fields": {
             "name": "Batteries", 
             "sites": [
@@ -95,7 +95,7 @@
     }, 
     {
         "pk": 5, 
-        "model": "example_app.product", 
+        "model": "recommends.recproduct",
         "fields": {
             "name": "Bottle of Red Wine", 
             "sites": [
@@ -105,7 +105,7 @@
     }, 
     {
         "pk": 6, 
-        "model": "example_app.product", 
+        "model": "recommends.recproduct", 
         "fields": {
             "name": "Red Sofa", 
             "sites": [
@@ -115,7 +115,7 @@
     }, 
     {
         "pk": 7, 
-        "model": "example_app.product", 
+        "model": "recommends.recproduct",
         "fields": {
             "name": "30\" Cinema Display", 
             "sites": [
@@ -125,7 +125,7 @@
     }, 
     {
         "pk": 8, 
-        "model": "example_app.product", 
+        "model": "recommends.recproduct",
         "fields": {
             "name": "Standing Desk", 
             "sites": [
@@ -135,7 +135,7 @@
     }, 
     {
         "pk": 9, 
-        "model": "example_app.product", 
+        "model": "recommends.recproduct",
         "fields": {
             "name": "Pots & Pans", 
             "sites": [
@@ -145,7 +145,7 @@
     }, 
     {
         "pk": 10, 
-        "model": "example_app.product", 
+        "model": "recommends.recproduct",
         "fields": {
             "name": "Sunflower Seeds", 
             "sites": [
@@ -155,7 +155,7 @@
     }, 
     {
         "pk": 11, 
-        "model": "example_app.product", 
+        "model": "recommends.recproduct",
         "fields": {
             "name": "1lb Tenderloin Steak", 
             "sites": [
@@ -165,7 +165,7 @@
     }, 
     {
         "pk": 1, 
-        "model": "example_app.vote", 
+        "model": "recommends.recvote",
         "fields": {
             "product": 1, 
             "score": 1.0, 
@@ -175,7 +175,7 @@
     }, 
     {
         "pk": 2, 
-        "model": "example_app.vote", 
+        "model": "recommends.recvote",
         "fields": {
             "product": 2, 
             "score": 1.0, 
@@ -185,7 +185,7 @@
     }, 
     {
         "pk": 3, 
-        "model": "example_app.vote", 
+        "model": "recommends.recvote",
         "fields": {
             "product": 2, 
             "score": 1.0, 
@@ -195,7 +195,7 @@
     }, 
     {
         "pk": 4, 
-        "model": "example_app.vote", 
+        "model": "recommends.recvote",
         "fields": {
             "product": 3, 
             "score": 1.0, 
@@ -205,7 +205,7 @@
     }, 
     {
         "pk": 5, 
-        "model": "example_app.vote", 
+        "model": "recommends.recvote",
         "fields": {
             "product": 4, 
             "score": 1.0, 
@@ -215,7 +215,7 @@
     }, 
     {
         "pk": 6, 
-        "model": "example_app.vote", 
+        "model": "recommends.recvote",
         "fields": {
             "product": 9, 
             "score": 1.0, 
@@ -225,7 +225,7 @@
     }, 
     {
         "pk": 7, 
-        "model": "example_app.vote", 
+        "model": "recommends.recvote",
         "fields": {
             "product": 10, 
             "score": 1.0, 
@@ -235,7 +235,7 @@
     }, 
     {
         "pk": 8, 
-        "model": "example_app.vote", 
+        "model": "recommends.recvote",
         "fields": {
             "product": 5, 
             "score": 1.0, 
@@ -245,7 +245,7 @@
     }, 
     {
         "pk": 9, 
-        "model": "example_app.vote", 
+        "model": "recommends.recvote",
         "fields": {
             "product": 5, 
             "score": 1.0, 
@@ -255,7 +255,7 @@
     }, 
     {
         "pk": 10, 
-        "model": "example_app.vote", 
+        "model": "recommends.recvote",
         "fields": {
             "product": 7, 
             "score": 1.0, 
@@ -265,7 +265,7 @@
     },
     {
         "pk": 11, 
-        "model": "example_app.vote", 
+        "model": "recommends.recvote",
         "fields": {
             "product": 11, 
             "score": 1.0, 

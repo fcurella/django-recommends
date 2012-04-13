@@ -93,6 +93,13 @@ Methods
 
         This method must return items that have been voted
 
+    * ``items_ignored(self)``
+
+        Returns user ignored items.
+        User can delete items from the list of recommended.
+
+        See recommends.converters.IdentifierManager.get_identifier for help.
+
     * ``get_ratings(self, obj)``
 
         Returns all ratings for given item

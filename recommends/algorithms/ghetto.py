@@ -27,7 +27,7 @@ class GhettoAlgorithm(BaseAlgorithm):
         iteritems = itemMatch.items()
         return iteritems
 
-    def get_recommended_items(self, vote_list, itemMatch, user):
+    def get_recommended_items(self, vote_list, itemMatch, itemIgnored, user):
         prefs = convert_vote_list_to_userprefs(vote_list)
         itemMatch = dict(itemMatch)
 
@@ -38,8 +38,11 @@ class GhettoAlgorithm(BaseAlgorithm):
 
             # Loop over items rated by this user
             for (item, rating) in userRatings.iteritems():
-                    # Loop over items similar to this one
+                # Loop over items similar to this one
                 for (item2, similarity) in itemMatch[item]:
+                    # Skip ignored items
+                    if user.pk in itemIgnored and item2 in itemIgnored[user.pk]:
+                        continue
                     # Ignore if this user has already rated this item
                     if not math.isnan(similarity) and item2 not in userRatings:
                         # Weighted sum of rating times similarity
@@ -53,7 +56,7 @@ class GhettoAlgorithm(BaseAlgorithm):
             return rankings
         return []
 
-    def calculate_recommendations(self, vote_list, itemMatch):
+    def calculate_recommendations(self, vote_list, itemMatch, itemIgnored):
         """
         ``itemMatch`` is supposed to be the result of ``calculate_similarities()``
 
@@ -76,6 +79,6 @@ class GhettoAlgorithm(BaseAlgorithm):
         recommendations = []
         users = set(map(lambda x: x[0], vote_list))
         for user in users:
-            rankings = self.get_recommended_items(vote_list, itemMatch, user)
+            rankings = self.get_recommended_items(vote_list, itemMatch, itemIgnored, user)
             recommendations.append((user, rankings))
         return recommendations
