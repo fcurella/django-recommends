@@ -1,18 +1,44 @@
 from django.conf import settings
 from django.utils import unittest
 from django.contrib.auth.models import User
-from example_project.example_app.models import Product, Vote, ProductRecommendationProvider
 from recommends.providers import RecommendationProvider
 from recommends.providers import recommendation_registry
 from recommends.storages.mongodb.storage import MongoStorage
 from recommends.storages.redis.storage import RedisStorage
-from recommends.algorithms.pyrecsys import RecSysAlgorithm
 from recommends.tests.tests import RecommendsTestCase
+from recommends.tests.models import  RecProduct, RecVote
+from django.db import models
+from django.contrib.sites.models import Site
+
+
+class ProductRecommendationProvider(RecommendationProvider):
+    def get_users(self):
+        return User.objects.filter(is_active=True, rec_votes__isnull=False).distinct()
+
+    def get_items(self):
+        return RecProduct.objects.all()
+
+    def get_ratings(self, obj):
+        return RecVote.objects.filter(product=obj)
+
+    def get_rating_score(self, rating):
+        return rating.score
+
+    def get_rating_site(self, rating):
+        return rating.site
+
+    def get_rating_user(self, rating):
+        return rating.user
+
+    def get_rating_item(self, rating):
+        return rating.product
+
+recommendation_registry.register(RecVote, [RecProduct], ProductRecommendationProvider)
 
 
 class GhettoRecommendationProvider(RecommendationProvider):
     def get_users(self):
-        return User.objects.filter(is_active=True, votes__isnull=False).distinct()
+        return User.objects.filter(is_active=True, rec_votes__isnull=False).distinct()
 
     def get_items(self):
         return Product.objects.all()
@@ -32,9 +58,6 @@ class GhettoRecommendationProvider(RecommendationProvider):
     def get_rating_item(self, rating):
         return rating.product
 
-
-class RecSysRecommendationProvider(GhettoRecommendationProvider):
-    algorithm = RecSysAlgorithm(k=100)
 
 
 class RedisRecommendationProvider(GhettoRecommendationProvider):

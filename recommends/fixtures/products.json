@@ -1,0 +1,276 @@
+[
+    {
+        "pk": 3,
+        "model": "auth.user", 
+        "fields": {
+            "username": "user2", 
+            "first_name": "", 
+            "last_name": "", 
+            "is_active": true, 
+            "is_superuser": false, 
+            "is_staff": false, 
+            "last_login": "2011-11-15 10:17:18", 
+            "groups": [], 
+            "user_permissions": [], 
+            "password": "sha1$a8e03$88047fa210ac5b8d2e9be0776ec85ea0638e92ab", 
+            "email": "", 
+            "date_joined": "2011-11-15 10:17:18"
+        }
+    }, 
+    {
+        "pk": 4, 
+        "model": "auth.user", 
+        "fields": {
+            "username": "user3", 
+            "first_name": "", 
+            "last_name": "", 
+            "is_active": true, 
+            "is_superuser": false, 
+            "is_staff": false, 
+            "last_login": "2011-11-15 10:17:25", 
+            "groups": [], 
+            "user_permissions": [], 
+            "password": "sha1$2a104$45128db593d5f0ffc11a683eb749b640eaa905f2", 
+            "email": "", 
+            "date_joined": "2011-11-15 10:17:25"
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "auth.user", 
+        "fields": {
+            "username": "user1", 
+            "first_name": "", 
+            "last_name": "", 
+            "is_active": true, 
+            "is_superuser": false, 
+            "is_staff": false, 
+            "last_login": "2011-11-16 12:27:08", 
+            "groups": [], 
+            "user_permissions": [], 
+            "password": "sha1$13453$94ec7d255ccb076a5ca57f29573ed112c79e6aa5", 
+            "email": "", 
+            "date_joined": "2011-11-15 10:17:10"
+        }
+    },
+    {
+        "pk": 1, 
+        "model": "recommends.recproduct",
+        "fields": {
+            "name": "Dozen Red Roses", 
+            "sites": [
+                1
+            ]
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "recommends.recproduct", 
+        "fields": {
+            "name": "Orange Juice", 
+            "sites": [
+                1
+            ]
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "recommends.recproduct",
+        "fields": {
+            "name": "Coffee Mug", 
+            "sites": [
+                1
+            ]
+        }
+    }, 
+    {
+        "pk": 4, 
+        "model": "recommends.recproduct",
+        "fields": {
+            "name": "Batteries", 
+            "sites": [
+                1
+            ]
+        }
+    }, 
+    {
+        "pk": 5, 
+        "model": "recommends.recproduct",
+        "fields": {
+            "name": "Bottle of Red Wine", 
+            "sites": [
+                1
+            ]
+        }
+    }, 
+    {
+        "pk": 6, 
+        "model": "recommends.recproduct", 
+        "fields": {
+            "name": "Red Sofa", 
+            "sites": [
+                1
+            ]
+        }
+    }, 
+    {
+        "pk": 7, 
+        "model": "recommends.recproduct",
+        "fields": {
+            "name": "30\" Cinema Display", 
+            "sites": [
+                1
+            ]
+        }
+    }, 
+    {
+        "pk": 8, 
+        "model": "recommends.recproduct",
+        "fields": {
+            "name": "Standing Desk", 
+            "sites": [
+                1
+            ]
+        }
+    }, 
+    {
+        "pk": 9, 
+        "model": "recommends.recproduct",
+        "fields": {
+            "name": "Pots & Pans", 
+            "sites": [
+                1
+            ]
+        }
+    }, 
+    {
+        "pk": 10, 
+        "model": "recommends.recproduct",
+        "fields": {
+            "name": "Sunflower Seeds", 
+            "sites": [
+                1
+            ]
+        }
+    }, 
+    {
+        "pk": 11, 
+        "model": "recommends.recproduct",
+        "fields": {
+            "name": "1lb Tenderloin Steak", 
+            "sites": [
+                1
+            ]
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "recommends.recvote",
+        "fields": {
+            "product": 1, 
+            "score": 1.0, 
+            "user": 2, 
+            "site": 1
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "recommends.recvote",
+        "fields": {
+            "product": 2, 
+            "score": 1.0, 
+            "user": 2, 
+            "site": 1
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "recommends.recvote",
+        "fields": {
+            "product": 2, 
+            "score": 1.0, 
+            "user": 3, 
+            "site": 1
+        }
+    }, 
+    {
+        "pk": 4, 
+        "model": "recommends.recvote",
+        "fields": {
+            "product": 3, 
+            "score": 1.0, 
+            "user": 3, 
+            "site": 1
+        }
+    }, 
+    {
+        "pk": 5, 
+        "model": "recommends.recvote",
+        "fields": {
+            "product": 4, 
+            "score": 1.0, 
+            "user": 4, 
+            "site": 1
+        }
+    }, 
+    {
+        "pk": 6, 
+        "model": "recommends.recvote",
+        "fields": {
+            "product": 9, 
+            "score": 1.0, 
+            "user": 4, 
+            "site": 1
+        }
+    }, 
+    {
+        "pk": 7, 
+        "model": "recommends.recvote",
+        "fields": {
+            "product": 10, 
+            "score": 1.0, 
+            "user": 4, 
+            "site": 1
+        }
+    }, 
+    {
+        "pk": 8, 
+        "model": "recommends.recvote",
+        "fields": {
+            "product": 5, 
+            "score": 1.0, 
+            "user": 3, 
+            "site": 1
+        }
+    }, 
+    {
+        "pk": 9, 
+        "model": "recommends.recvote",
+        "fields": {
+            "product": 5, 
+            "score": 1.0, 
+            "user": 4, 
+            "site": 1
+        }
+    }, 
+    {
+        "pk": 10, 
+        "model": "recommends.recvote",
+        "fields": {
+            "product": 7, 
+            "score": 1.0, 
+            "user": 2, 
+            "site": 1
+        }
+    },
+    {
+        "pk": 11, 
+        "model": "recommends.recvote",
+        "fields": {
+            "product": 11, 
+            "score": 1.0, 
+            "user": 3, 
+            "site": 1
+        }
+    }
+]

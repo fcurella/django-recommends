@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load recommends %}
+
+{% block content %}
+<h1>{{object.name}}</h1>
+{% with object|similarities as similarities %}
+{% if similarities %}
+<ul>
+	{% for similarity in similarities %}
+	<li><a href="{{similarity.related_object.get_absolute_url}}">{{similarity.related_object}}</a></li>
+	{% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+{% endblock %}
