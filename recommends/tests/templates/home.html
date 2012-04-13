@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load recommends %}
+
+{% block content %}
+    {% suggested as suggestions limit 5  %}
+	{% if user.is_authenticated %}
+    {% if suggestions %}
+	<h3>Suggestions for you:</h3>
+	<ul>
+	{% for suggestion in suggestions %}
+		<li><a href="{{suggestion.object.get_absolute_url}}">{{suggestion.object}}</a></li>
+	{% endfor %}
+	</ul>
+
+	{% endif %}
+	{% endif %}
+{% endblock %}

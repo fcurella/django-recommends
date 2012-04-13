@@ -139,6 +139,17 @@ class RecommendationProvider(object):
             self.storage.store_votes(vote_list)
         return vote_list
 
+    def item_ignored(self):
+        """
+        Returns user ignored items.
+        User can delete item from the list of recommended.
+        See recommends.converters.IdentifierManager.get_identifier for help
+        ::
+
+            {<user1>: ["object_identifier1",..., "object_identifierN"], ..}
+        """
+        return {}
+
     def precompute(self, vote_list=None):
         """
         This function will be called by the task manager in order
@@ -154,8 +165,14 @@ class RecommendationProvider(object):
         logger.info('saving similarities...')
         self.pre_store_similarities(itemMatch)
         self.storage.store_similarities(itemMatch)
+
+        logger.info('fetching ignored items...')
+        itemIgnored = self.item_ignored()
+
         logger.info('saving recommendations...')
-        self.storage.store_recommendations(self.algorithm.calculate_recommendations(vote_list, itemMatch))
+        self.storage.store_recommendations(self.algorithm.calculate_recommendations(
+            vote_list, itemMatch, itemIgnored)
+        )
 
     def get_users(self):
         """Returns all users who have voted something"""

@@ -1,27 +1,44 @@
 import timeit
-from django.utils import unittest
+from django.test import TestCase
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.test import Client
-from example_app.models import Product, Vote
 from recommends.providers import recommendation_registry
 from recommends.tasks import recommends_precompute
+from .models import RecProduct, RecVote
+from django.test.utils import override_settings
+import os
 
+@override_settings(CELERY_DB_REUSE_MAX=200, LANGUAGES=(
+    ('en', 'English'),
+    ),
+    LANGUAGE_CODE='en',
+    TEMPLATE_DIRS=(
+        os.path.join(os.path.dirname(__file__), 'templates'),
+        ),
+    TEMPLATE_LOADERS=('django.template.loaders.filesystem.Loader',),
+    USE_TZ=False, )
+class RecommendsTestCase(TestCase):
+    fixtures = ['products.json']
+    urls = 'recommends.tests.urls'
 
-class RecommendsTestCase(unittest.TestCase):
     def setUp(self):
         self.client = Client()
-        self.mug = Product.objects.get(name='Coffee Mug')
-        self.orange_juice = Product.objects.get(name='Orange Juice')
-        self.wine = Product.objects.get(name='Bottle of Red Wine')
-        try:
-            Product.objects.get(name='1lb Tenderloin Steak').delete()
-        except Product.DoesNotExist:
-            pass
+        self.mug = RecProduct.objects.get(name='Coffee Mug')
+        self.orange_juice = RecProduct.objects.get(name='Orange Juice')
+        self.wine = RecProduct.objects.get(name='Bottle of Red Wine')
+        RecProduct.objects.get(name='1lb Tenderloin Steak').delete()
         self.user1 = User.objects.get(username='user1')
+        from django.template import loader
+        loader.template_source_loaders = None
 
-        self.provider = recommendation_registry.get_provider_for_content(Product)
+        self.provider = recommendation_registry.get_provider_for_content(RecProduct)
         recommends_precompute()
+
+    def tearDown(self):
+        from django.template import loader
+        loader.template_source_loaders = None
+        super(RecommendsTestCase, self).tearDown()
 
     def test_similarities(self):
         similarities = self.provider.storage.get_similarities_for_object(self.mug)
@@ -49,7 +66,7 @@ class RecommendsTestCase(unittest.TestCase):
         self.assertTrue(self.wine in [s.object for s in recommended])
 
         # Make sure we don't recommend item that the user already have
-        self.assertFalse(self.mug in [v.product for v in Vote.objects.filter(user=self.user1)])
+        self.assertFalse(self.mug in [v.product for v in RecVote.objects.filter(user=self.user1)])
 
     def test_views(self):
         self.client.login(username='user1', password='user1')
@@ -68,7 +85,7 @@ class RecommendsTestCase(unittest.TestCase):
         print times
 
 
-class RecommendsListenersTestCase(unittest.TestCase):
+class RecommendsListenersTestCase(TestCase):
     def setUp(self):
         self.client = Client()
         self.mug = Product.objects.get(name='Coffee Mug')
