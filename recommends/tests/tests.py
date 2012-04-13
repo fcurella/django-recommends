@@ -35,6 +35,11 @@ class RecommendsTestCase(TestCase):
         self.provider = recommendation_registry.get_provider_for_content(RecProduct)
         recommends_precompute()
 
+    def tearDown(self):
+        from django.template import loader
+        loader.template_source_loaders = None
+        super(RecommendsTestCase, self).tearDown()
+
     def test_similarities(self):
         similarities = self.provider.storage.get_similarities_for_object(self.mug)
         self.assertNotEquals(len(similarities), 0)
