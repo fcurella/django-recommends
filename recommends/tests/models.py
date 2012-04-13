@@ -1,10 +1,15 @@
 from django.db import models
 from django.contrib.sites.models import Site
 from django.contrib.auth import models as auth_models
+
+
 class RecProduct(models.Model):
     """A generic Product"""
     name = models.CharField(blank=True, max_length=100)
     sites = models.ManyToManyField(Site)
+
+    class Meta:
+        app_label = 'recommends'
 
     def __unicode__(self):
         return self.name
@@ -15,10 +20,7 @@ class RecProduct(models.Model):
 
     def sites_str(self):
         return u', '.join([s.name for s in self.sites.all()])
-
     sites_str.short_description = 'sites'
-    class Meta:
-        app_label = 'recommends'
 
 
 class RecVote(models.Model):
@@ -28,7 +30,8 @@ class RecVote(models.Model):
     site = models.ForeignKey(Site)
     score = models.FloatField()
 
-    def __unicode__(self):
-        return u"Vote"
     class Meta:
         app_label = 'recommends'
+
+    def __unicode__(self):
+        return u"Vote"
