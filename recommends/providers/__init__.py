@@ -139,11 +139,12 @@ class RecommendationProvider(object):
             self.storage.store_votes(vote_list)
         return vote_list
 
-    def item_ignored(self):
+    def items_ignored(self):
         """
         Returns user ignored items.
-        User can delete item from the list of recommended.
-        See recommends.converters.IdentifierManager.get_identifier for help
+        User can delete items from the list of recommended.
+
+        See recommends.converters.IdentifierManager.get_identifier for help.
         ::
 
             {<user1>: ["object_identifier1",..., "object_identifierN"], ..}
@@ -167,7 +168,7 @@ class RecommendationProvider(object):
         self.storage.store_similarities(itemMatch)
 
         logger.info('fetching ignored items...')
-        itemIgnored = self.item_ignored()
+        itemIgnored = self.items_ignored()
 
         logger.info('saving recommendations...')
         self.storage.store_recommendations(self.algorithm.calculate_recommendations(
