@@ -3,8 +3,15 @@ from django.utils import unittest
 from django.contrib.auth.models import User
 from recommends.providers import RecommendationProvider
 from recommends.providers import recommendation_registry
-from recommends.storages.mongodb.storage import MongoStorage
-from recommends.storages.redis.storage import RedisStorage
+try:
+    from recommends.storages.mongodb.storage import MongoStorage
+except ImportError:
+    MongoStorage = None
+try:
+    from recommends.storages.redis.storage import RedisStorage
+except ImportError:
+    RedisStorage = None
+
 from recommends.tests.tests import RecommendsTestCase
 from recommends.tests.models import  RecProduct, RecVote
 from django.db import models
@@ -60,15 +67,10 @@ class GhettoRecommendationProvider(RecommendationProvider):
 
 
 
-class RedisRecommendationProvider(GhettoRecommendationProvider):
-    storage = RedisStorage(settings=settings)
+if RedisStorage is not None and getattr(settings, 'RECOMMENDS_TEST_REDIS', False):
+    class RedisRecommendationProvider(GhettoRecommendationProvider):
+        storage = RedisStorage(settings=settings)
 
-
-class MongoRecommendationProvider(GhettoRecommendationProvider):
-    storage = MongoStorage(settings=settings)
-
-
-if getattr(settings, 'RECOMMENDS_TEST_REDIS', False):
     class RecommendsRedisStorageTestCase(RecommendsTestCase):
         def setUp(self):
             recommendation_registry.unregister(Vote, [Product], ProductRecommendationProvider)
@@ -76,7 +78,10 @@ if getattr(settings, 'RECOMMENDS_TEST_REDIS', False):
             super(RecommendsRedisStorageTestCase, self).setUp()
 
 
-if getattr(settings, 'RECOMMENDS_TEST_MONGO', False):
+if MongoStorage is not None and getattr(settings, 'RECOMMENDS_TEST_MONGO', False):
+    class MongoRecommendationProvider(GhettoRecommendationProvider):
+        storage = MongoStorage(settings=settings)
+
     class RecommendsMongoStorageTestCase(RecommendsTestCase):
         def setUp(self):
             recommendation_registry.unregister(Vote, [Product], ProductRecommendationProvider)
