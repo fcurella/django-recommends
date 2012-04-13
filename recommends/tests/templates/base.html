@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>Django Recommends</title>
+</head>
+<body>
+	{% if user.is_anonymous %}
+	<form action="{% url login %}" method="post" id="login-form">{% csrf_token %}
+	  <div class="form-row">
+	    
+	    <label for="id_username" class="required">Username:</label> <input id="id_username" type="text" name="username" maxlength="30">
+	  </div>
+	  <div class="form-row">
+	    
+	    <label for="id_password" class="required">Password:</label> <input type="password" name="password" id="id_password">
+	  </div>
+	  <div class="submit-row">
+	    <label>&nbsp;</label><input type="submit" value="Log in">
+	  </div>
+	</form>
+	{% else %}
+	<p>Welcome, {{user.username}}. <a href="{% url admin:logout %}">Logout</a>.</p>
+	{% endif %}
+	{% block content %}{% endblock %}
+</body>
+</html>
