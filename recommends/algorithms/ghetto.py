@@ -16,7 +16,6 @@ class GhettoAlgorithm(BaseAlgorithm):
         """
         return [(p2, self.similarity(prefs[p1], prefs[p2])) for p2 in prefs if p2 != p1]
 
-
     def calculate_similarities(self, vote_list, verbose=0):
         # Invert the preference matrix to be item-centric
         itemPrefs = convert_vote_list_to_itemprefs(vote_list)

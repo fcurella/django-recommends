@@ -35,12 +35,12 @@ class RecommendsTestCase(TestCase):
         self.wine = RecProduct.objects.get(name='Bottle of Red Wine')
         RecProduct.objects.get(name='1lb Tenderloin Steak').delete()
         self.user1 = User.objects.get(username='user1')
+
         from django.template import loader
         loader.template_source_loaders = None
 
         self.provider = recommendation_registry.get_provider_for_content(RecProduct)
         recommends_precompute()
-
 
     def tearDown(self):
         from django.template import loader
