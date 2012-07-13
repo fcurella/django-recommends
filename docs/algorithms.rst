@@ -69,3 +69,10 @@ Properties
         Functions for Euclidean Distance and Pearson Correlation are provided for convenience at ``recommends.similarities.sim_distance`` and ``recommends.similarities.sim_pearson``.
 
         Defaults to ``recommends.similarities.sim_distance``
+
+RecSysAlgorithm
+----------------
+
+This class implement a SVD algorithm. Requires ``python-recsys`` (available at https://github.com/ocelma/python-recsys).
+
+``python-recsys`` in turn requires ``SciPy``, ``NumPy``, and other python libraries.

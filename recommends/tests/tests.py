@@ -23,6 +23,11 @@ class RecommendsTestCase(TestCase):
     fixtures = ['products.json']
     urls = 'recommends.tests.urls'
 
+    results = {
+        'len_recommended': 2,
+        'len_similar_to_mug': 2
+    }
+
     def setUp(self):
         self.client = Client()
         self.mug = RecProduct.objects.get(name='Coffee Mug')
@@ -30,12 +35,12 @@ class RecommendsTestCase(TestCase):
         self.wine = RecProduct.objects.get(name='Bottle of Red Wine')
         RecProduct.objects.get(name='1lb Tenderloin Steak').delete()
         self.user1 = User.objects.get(username='user1')
+
         from django.template import loader
         loader.template_source_loaders = None
 
         self.provider = recommendation_registry.get_provider_for_content(RecProduct)
         recommends_precompute()
-
 
     def tearDown(self):
         from django.template import loader
@@ -51,7 +56,7 @@ class RecommendsTestCase(TestCase):
         self.assertNotEquals(len(zero_scores), len(similarities))
 
         similar_to_mug = self.provider.storage.get_similarities_for_object(self.mug)
-        self.assertEquals(len(similar_to_mug), 2)
+        self.assertEquals(len(similar_to_mug), self.results['len_similar_to_mug'])
         self.assertTrue(self.wine in [s.related_object for s in similar_to_mug])
 
     def test_recommendation(self):
@@ -64,7 +69,7 @@ class RecommendsTestCase(TestCase):
         self.assertNotEquals(len(zero_scores), len(recommendations))
 
         recommended = self.provider.storage.get_recommendations_for_user(self.user1)
-        self.assertEquals(len(recommended), 2)
+        self.assertEquals(len(recommended), self.results['len_recommended'])
         self.assertTrue(self.wine in [s.object for s in recommended])
 
         # Make sure we don't recommend item that the user already have
@@ -72,9 +77,6 @@ class RecommendsTestCase(TestCase):
 
     def test_views(self):
         self.client.login(username='user1', password='user1')
-
-        response = self.client.get(reverse('home'))
-        self.assertTrue(self.mug.get_absolute_url() in response.content)
 
         response = self.client.get(self.mug.get_absolute_url())
         self.assertTrue(self.orange_juice.get_absolute_url() in response.content)
