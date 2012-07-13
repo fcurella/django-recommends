@@ -10,6 +10,10 @@ try:
     from recommends.storages.redis.storage import RedisStorage
 except ImportError:
     RedisStorage = None
+try:
+    from recommends.algorithms.pyrecsys import RecSysAlgorithm
+except ImportError:
+    RecSysAlgorithm = None
 
 from recommends.tests.tests import RecommendsTestCase
 from recommends.tests.models import  RecProduct, RecVote
@@ -63,6 +67,26 @@ class GhettoRecommendationProvider(RecommendationProvider):
         return rating.product
 
 
+if RecSysAlgorithm is not None and getattr(settings, 'RECOMMENDS_TEST_RECSYS', False):
+    class RecSysRecommendationProvider(ProductRecommendationProvider):
+        algorithm = RecSysAlgorithm()
+
+    class RecSysAlgoTestCase(RecommendsTestCase):
+        results = {
+            'len_recommended': 4,
+            'len_similar_to_mug': 5
+        }
+
+        def setUp(self):
+            recommendation_registry.unregister(RecVote, [RecProduct], ProductRecommendationProvider)
+            recommendation_registry.register(RecVote, [RecProduct], RecSysRecommendationProvider)
+            super(RecSysAlgoTestCase, self).setUp()
+
+        def tearDown(self):
+            super(RecSysAlgoTestCase, self).tearDown()
+            recommendation_registry.unregister(RecVote, [RecProduct], RecSysRecommendationProvider)
+            recommendation_registry.register(RecVote, [RecProduct], ProductRecommendationProvider)
+
 if RedisStorage is not None and getattr(settings, 'RECOMMENDS_TEST_REDIS', False):
     class RedisRecommendationProvider(GhettoRecommendationProvider):
         storage = RedisStorage(settings=settings)
@@ -73,6 +97,10 @@ if RedisStorage is not None and getattr(settings, 'RECOMMENDS_TEST_REDIS', False
             recommendation_registry.register(RecVote, [RecProduct], RedisRecommendationProvider)
             super(RecommendsRedisStorageTestCase, self).setUp()
 
+        def tearDown(self):
+            super(RecommendsRedisStorageTestCase, self).tearDown()
+            recommendation_registry.unregister(RecVote, [RecProduct], RedisRecommendationProvider)
+            recommendation_registry.register(RecVote, [RecProduct], ProductRecommendationProvider)
 
 if MongoStorage is not None and getattr(settings, 'RECOMMENDS_TEST_MONGO', False):
     class MongoRecommendationProvider(GhettoRecommendationProvider):
@@ -83,3 +111,8 @@ if MongoStorage is not None and getattr(settings, 'RECOMMENDS_TEST_MONGO', False
             recommendation_registry.unregister(RecVote, [RecProduct], ProductRecommendationProvider)
             recommendation_registry.register(RecVote, [RecProduct], MongoRecommendationProvider)
             super(RecommendsMongoStorageTestCase, self).setUp()
+
+        def tearDown(self):
+            super(RecommendsMongoStorageTestCase, self).tearDown()
+            recommendation_registry.unregister(RecVote, [RecProduct], MongoRecommendationProvider)
+            recommendation_registry.register(RecVote, [RecProduct], ProductRecommendationProvider)
