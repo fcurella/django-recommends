@@ -78,9 +78,13 @@ Properties
 ----------
     * ``signals``
 
-        This property define to hat signals connect the ``on_signal`` function.
+        This property define to which signals the provider should listen to.
+        A method of the same name will be called on the provider when the 
+        corresponding signal is fired from one of the rated model.
 
-        Defaults to ``['django.db.models.post_save', 'django.db.models.pre_delete']``
+        See :doc:`signals`.
+
+        Defaults to ``['django.db.models.pre_delete']``
     
     * ``algorithm``
         
@@ -132,8 +136,10 @@ Methods
 
     * ``pre_delete(self, sender, instance, **kwargs)``
 
-        This function gets called when a signal a pre_delete is fired from one of the rated models.
+        This function gets called when a signal in ``self.rate_signals`` is
+        fired from one of the rated models.
 
-        Overriding this method is optional. The default method removes the suggestion for the rated instance for the user that just rated, via a celery task.
+        Overriding this method is optional. The default method removes the
+        suggestions for the deleted objected.
         
         See :doc:`signals`.
