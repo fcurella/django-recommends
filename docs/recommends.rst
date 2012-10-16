@@ -25,6 +25,14 @@ recommends Package
     :undoc-members:
     :show-inheritance:
 
+:mod:`local_settings` Module
+----------------------------
+
+.. automodule:: recommends.local_settings
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 :mod:`managers` Module
 ----------------------
 

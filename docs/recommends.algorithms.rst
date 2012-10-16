@@ -17,3 +17,11 @@ algorithms Package
     :undoc-members:
     :show-inheritance:
 
+:mod:`pyrecsys` Module
+----------------------
+
+.. automodule:: recommends.algorithms.pyrecsys
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
