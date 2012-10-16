@@ -112,7 +112,7 @@ class RecommendationProvider(object):
 
     def get_rating_site(self, rating):
         """Returns the site of the rating"""
-        return None
+        return settings.SITE_ID
 
     def is_rating_active(self, rating):
         """Returns if the rating is active"""
@@ -133,7 +133,11 @@ class RecommendationProvider(object):
                 for rating in self.get_ratings(item):
                     user = self.get_rating_user(rating)
                     score = self.get_rating_score(rating)
-                    site_id = self.get_rating_site(rating).id
+                    site = self.get_rating_site(rating)
+                    if isinstance(site, int):
+                        site_id = site
+                    else:
+                        site_id = site.id
                     identifier = self.storage.get_identifier(item, site_id)
                     vote_list.append((user, identifier, score))
             self.storage.store_votes(vote_list)

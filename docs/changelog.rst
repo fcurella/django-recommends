@@ -2,7 +2,8 @@
 
 Changelog
 =========
-
+* v0.0.11
+    * ``get_rating_site`` provider method now defaults to ``settings.SITE_ID`` instead of ``None``.
 * v0.0.10
     * Added ``RecSysAlgorithm``.
 * v0.0.9

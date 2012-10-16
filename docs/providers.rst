@@ -91,7 +91,7 @@ Methods
 
     * ``get_items(self)``
 
-        This method must return items that have been voted
+        This method must return items that have been voted.
 
     * ``items_ignored(self)``
 
@@ -102,27 +102,27 @@ Methods
 
     * ``get_ratings(self, obj)``
 
-        Returns all ratings for given item
+        Returns all ratings for given item.
 
     * ``get_rating_user(self, rating)``
 
-        Returns the user who performed the rating
+        Returns the user who performed the rating.
 
     * ``get_rating_score(self, rating)``
 
-        Returns the score of the rating
+        Returns the score of the rating.
 
     * ``get_rating_item(self, rating)``
 
-        Returns the rated object
+        Returns the rated object.
 
     * ``get_rating_site(self, rating)``
 
-        Returns the site of the rating
+        Returns the site of the rating. Defaults to ``settings.SITE_ID``.
 
     * ``is_rating_active(self, rating)``
 
-        Returns if the rating is active
+        Returns if the rating is active.
 
     * ``pre_store_similarities(self, itemMatch)``
 
