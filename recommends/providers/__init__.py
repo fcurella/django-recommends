@@ -1,5 +1,6 @@
 import logging
 from django.contrib.auth.models import User
+from django.contrib.sites.models import Site
 from django.conf import settings
 from ..converters import model_path
 from ..settings import RECOMMENDS_STORAGE_BACKEND, RECOMMENDS_LOGGER_NAME
@@ -111,8 +112,7 @@ class RecommendationProvider(object):
         raise NotImplementedError
 
     def get_rating_site(self, rating):
-        """Returns the site of the rating. Can be a ``Site`` object or an
-        integer representing its ID.
+        """Returns the site of the rating. Can be a ``Site`` object or its ID.
 
         Defaults to ``settings.SITE_ID``."""
         return settings.SITE_ID
@@ -143,10 +143,10 @@ class RecommendationProvider(object):
                     user = self.get_rating_user(rating)
                     score = self.get_rating_score(rating)
                     site = self.get_rating_site(rating)
-                    if isinstance(site, int):
-                        site_id = site
-                    else:
+                    if isinstance(site, Site):
                         site_id = site.id
+                    else:
+                        site_id = site
                     identifier = self.storage.get_identifier(item, site_id)
                     vote_list.append((user, identifier, score))
             self.storage.store_votes(vote_list)

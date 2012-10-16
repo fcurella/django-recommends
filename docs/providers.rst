@@ -122,8 +122,7 @@ Methods
 
     * ``get_rating_site(self, rating)``
 
-        Returns the site of the rating. Can be a ``Site`` object or an integer
-        representing its ID.
+        Returns the site of the rating. Can be a ``Site`` object or its ID.
 
         Defaults to ``settings.SITE_ID``.
 
