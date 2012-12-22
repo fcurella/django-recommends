@@ -78,9 +78,13 @@ Properties
 ----------
     * ``signals``
 
-        This property define to hat signals connect the ``on_signal`` function.
+        This property define to which signals the provider should listen to.
+        A method of the same name will be called on the provider when the 
+        corresponding signal is fired from one of the rated model.
 
-        Defaults to ``['django.db.models.post_save', 'django.db.models.pre_delete']``
+        See :doc:`signals`.
+
+        Defaults to ``['django.db.models.pre_delete']``
     
     * ``algorithm``
         
@@ -91,7 +95,7 @@ Methods
 
     * ``get_items(self)``
 
-        This method must return items that have been voted
+        This method must return items that have been voted.
 
     * ``items_ignored(self)``
 
@@ -102,27 +106,29 @@ Methods
 
     * ``get_ratings(self, obj)``
 
-        Returns all ratings for given item
+        Returns all ratings for given item.
 
     * ``get_rating_user(self, rating)``
 
-        Returns the user who performed the rating
+        Returns the user who performed the rating.
 
     * ``get_rating_score(self, rating)``
 
-        Returns the score of the rating
+        Returns the score of the rating.
 
     * ``get_rating_item(self, rating)``
 
-        Returns the rated object
+        Returns the rated object.
 
     * ``get_rating_site(self, rating)``
 
-        Returns the site of the rating
+        Returns the site of the rating. Can be a ``Site`` object or its ID.
+
+        Defaults to ``settings.SITE_ID``.
 
     * ``is_rating_active(self, rating)``
 
-        Returns if the rating is active
+        Returns if the rating is active.
 
     * ``pre_store_similarities(self, itemMatch)``
 
@@ -132,8 +138,10 @@ Methods
 
     * ``pre_delete(self, sender, instance, **kwargs)``
 
-        This function gets called when a signal a pre_delete is fired from one of the rated models.
+        This function gets called when a signal in ``self.rate_signals`` is
+        fired from one of the rated models.
 
-        Overriding this method is optional. The default method removes the suggestion for the rated instance for the user that just rated, via a celery task.
+        Overriding this method is optional. The default method removes the
+        suggestions for the deleted objected.
         
         See :doc:`signals`.

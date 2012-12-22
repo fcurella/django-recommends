@@ -15,7 +15,7 @@ If you don’t want to run this task (maybe because you want to write your own),
 Template tags and filters cache timeout
 ---------------------------------------
 
-RECOMMENDS_CACHE_TEMPLATETAGS_TIMEOUT controls how long tample tags and fitlers cache their results. Default is 60 seconds.
+RECOMMENDS_CACHE_TEMPLATETAGS_TIMEOUT controls how long template tags and fitlers cache their results. Default is 60 seconds.
 
 
 Storage backend

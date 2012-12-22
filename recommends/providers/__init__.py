@@ -1,5 +1,6 @@
 import logging
 from django.contrib.auth.models import User
+from django.contrib.sites.models import Site
 from django.conf import settings
 from ..converters import model_path
 from ..settings import RECOMMENDS_STORAGE_BACKEND, RECOMMENDS_LOGGER_NAME
@@ -91,36 +92,44 @@ class RecommendationProvider(object):
             self.storage = recommendation_registry.storage
 
     def get_items(self):
-        """Return items that have been voted"""
+        """Return items that have been voted."""
         raise NotImplementedError
 
     def get_ratings(self, obj):
-        """Returns all ratings for given item"""
+        """Returns all ratings for given item."""
         raise NotImplementedError
 
     def get_rating_user(self, rating):
-        """Returns the user who performed the rating"""
+        """Returns the user who performed the rating."""
         raise NotImplementedError
 
     def get_rating_score(self, rating):
-        """Returns the score of the rating"""
+        """Returns the score of the rating."""
         raise NotImplementedError
 
     def get_rating_item(self, rating):
-        """Returns the rated object"""
+        """Returns the rated object."""
         raise NotImplementedError
 
     def get_rating_site(self, rating):
-        """Returns the site of the rating"""
-        return None
+        """Returns the site of the rating. Can be a ``Site`` object or its ID.
+
+        Defaults to ``settings.SITE_ID``."""
+        return settings.SITE_ID
 
     def is_rating_active(self, rating):
-        """Returns if the rating is active"""
+        """Returns if the rating is active."""
         return True
 
     def pre_delete(self, sender, instance, **kwargs):
         """
-        This function gets called when a signal in ``self.rate_signals`` is called from the rating model.
+        This function gets called when a signal in ``self.rate_signals`` is
+        fired from one of the rated model.
+
+        Overriding this method is optional. The default method removes the
+        suggestions for the deleted objected.
+
+        See :doc:`signals`.
         """
         remove_similarities.delay(rated_model=model_path(sender), object_id=instance.id)
         remove_suggestions.delay(rated_model=model_path(sender), object_id=instance.id)
@@ -133,7 +142,11 @@ class RecommendationProvider(object):
                 for rating in self.get_ratings(item):
                     user = self.get_rating_user(rating)
                     score = self.get_rating_score(rating)
-                    site_id = self.get_rating_site(rating).id
+                    site = self.get_rating_site(rating)
+                    if isinstance(site, Site):
+                        site_id = site.id
+                    else:
+                        site_id = site
                     identifier = self.storage.get_identifier(item, site_id)
                     vote_list.append((user, identifier, score))
             self.storage.store_votes(vote_list)
@@ -176,7 +189,7 @@ class RecommendationProvider(object):
         )
 
     def get_users(self):
-        """Returns all users who have voted something"""
+        """Returns all users who have voted something."""
         return User.objects.filter(is_active=True)
 
     def pre_store_similarities(self, itemMatch):

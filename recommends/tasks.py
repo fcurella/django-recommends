@@ -7,7 +7,7 @@ from .settings import RECOMMENDS_TASK_RUN, RECOMMENDS_TASK_CRONTAB
 
 if RECOMMENDS_TASK_RUN:
 
-    @periodic_task(run_every=crontab(**RECOMMENDS_TASK_CRONTAB))
+    @periodic_task(name='recommends_precompute', run_every=crontab(**RECOMMENDS_TASK_CRONTAB))
     def recommends_precompute():
         from .providers import recommendation_registry
 
@@ -19,7 +19,7 @@ if RECOMMENDS_TASK_RUN:
             [_precompute(provider_instance) for provider_instance in recommendation_registry.get_vote_providers()]
 
 
-@task
+@task(name='remove_suggestions')
 def remove_suggestions(rated_model, object_id):
     from django.db.models import get_model
     from recommends.providers import recommendation_registry
@@ -31,7 +31,7 @@ def remove_suggestions(rated_model, object_id):
     provider_instance.storage.remove_recommendations(obj)
 
 
-@task
+@task(name='remove_similarities')
 def remove_similarities(rated_model, object_id):
     from django.db.models import get_model
     from recommends.providers import recommendation_registry
