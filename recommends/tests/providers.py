@@ -14,8 +14,14 @@ try:
     from recommends.algorithms.pyrecsys import RecSysAlgorithm
 except ImportError:
     RecSysAlgorithm = None
+try:
+    from recommends.tasks import recommends_precompute
+except ImportError:
+    recommends_precompute = None
 
-from recommends.tests.tests import RecommendsTestCase
+if recommends_precompute is not None:
+    from recommends.tests.tests import RecommendsTestCase
+
 from recommends.tests.models import  RecProduct, RecVote
 
 
@@ -67,7 +73,7 @@ class GhettoRecommendationProvider(RecommendationProvider):
         return rating.product
 
 
-if RecSysAlgorithm is not None and getattr(settings, 'RECOMMENDS_TEST_RECSYS', False):
+if recommends_precompute is not None and RecSysAlgorithm is not None and getattr(settings, 'RECOMMENDS_TEST_RECSYS', False):
     class RecSysRecommendationProvider(ProductRecommendationProvider):
         algorithm = RecSysAlgorithm()
 
@@ -87,7 +93,7 @@ if RecSysAlgorithm is not None and getattr(settings, 'RECOMMENDS_TEST_RECSYS', F
             recommendation_registry.unregister(RecVote, [RecProduct], RecSysRecommendationProvider)
             recommendation_registry.register(RecVote, [RecProduct], ProductRecommendationProvider)
 
-if RedisStorage is not None and getattr(settings, 'RECOMMENDS_TEST_REDIS', False):
+if recommends_precompute is not None and RedisStorage is not None and getattr(settings, 'RECOMMENDS_TEST_REDIS', False):
     class RedisRecommendationProvider(GhettoRecommendationProvider):
         storage = RedisStorage(settings=settings)
 
@@ -102,7 +108,7 @@ if RedisStorage is not None and getattr(settings, 'RECOMMENDS_TEST_REDIS', False
             recommendation_registry.unregister(RecVote, [RecProduct], RedisRecommendationProvider)
             recommendation_registry.register(RecVote, [RecProduct], ProductRecommendationProvider)
 
-if MongoStorage is not None and getattr(settings, 'RECOMMENDS_TEST_MONGO', False):
+if recommends_precompute is not None and MongoStorage is not None and getattr(settings, 'RECOMMENDS_TEST_MONGO', False):
     class MongoRecommendationProvider(GhettoRecommendationProvider):
         storage = MongoStorage(settings=settings)
 
