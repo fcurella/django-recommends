@@ -2,8 +2,12 @@
 
 Changelog
 =========
+
 * v0.0.11
     * ``get_rating_site`` provider method now defaults to ``settings.SITE_ID`` instead of ``None``.
+    * ``similarities`` templatetag result is now cached per object
+    * fixed tests if ``recommends_precompute`` is None.
+    * explicitly named celery tasks.
 * v0.0.10
     * Added ``RecSysAlgorithm``.
 * v0.0.9
