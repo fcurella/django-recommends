@@ -21,7 +21,7 @@ def similarities(obj, limit=5):
         {% endfor %}
     """
     if isinstance(obj, models.Model):
-        cache_key = 'recommends:similarities:%s:%s.%s:%s' % (settings.SITE_ID, obj._meta.app_label, obj._meta.object_name.lower(), limit)
+        cache_key = 'recommends:similarities:%s:%s.%s:%s:%s' % (settings.SITE_ID, obj._meta.app_label, obj._meta.object_name.lower(), obj.id, limit)
         similarities = cache.get(cache_key)
         if similarities is None:
             provider = recommendation_registry.get_provider_for_content(obj)
