@@ -91,7 +91,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
 )
 
-ROOT_URLCONF = 'example_project.urls'
+ROOT_URLCONF = 'recommends.tests.urls'
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
@@ -110,7 +110,7 @@ INSTALLED_APPS = (
 
     'recommends',
     'recommends.storages.djangoorm',
-    'example_app',
+    'recommends.tests',
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
     'djcelery',
@@ -149,6 +149,7 @@ CACHES = {
 }
 
 CELERY_ALWAYS_EAGER = True
+ALLOWED_HOSTS = ['*']
 
 try:
     from local_settings import *

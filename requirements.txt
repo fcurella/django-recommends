@@ -1,4 +1,4 @@
-Django>=1.3.1
+Django>=1.4
 celery>=2.3.3
 django-celery>=2.3.3
 django-kombu>=0.9.4
