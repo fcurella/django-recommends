@@ -16,8 +16,7 @@ def ctypes_dict():
     from django.contrib.contenttypes.models import ContentType
 
     values = ContentType.objects.values_list('app_label', 'model', 'id')
-    ctypes = {}
-    [ctypes.update({"%s.%s" % x[:2]: x[2]}) for x in values]
+    ctypes = {"%s.%s" % x[:2]: x[2] for x in values}
     return ctypes
 
 
