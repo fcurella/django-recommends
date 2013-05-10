@@ -1,20 +1,20 @@
+from __future__ import unicode_literals
 from django.contrib.contenttypes.models import ContentType
+from django.utils.encoding import python_2_unicode_compatible
 
 
+@python_2_unicode_compatible
 class MockModel(object):
     _object = None
 
     def __init__(self, **kwargs):
         self.__dict__ = kwargs
 
-    def __unicode__(self):
-        return u"Mock for content object %s" % self.object
+    def __str__(self):
+        return "Mock for content object %s" % self.object
 
     def __repr__(self):
-        return "<%s>" % self.__unicode__()
-
-    def __str__(self):
-        return self.__unicode__().encode('utf-8')
+        return "<%s>" % self.__str__()
 
     @property
     def object(self):
@@ -24,6 +24,7 @@ class MockModel(object):
         return self._object
 
 
+@python_2_unicode_compatible
 class MockSimilarity(MockModel):
     _related_object = None
 
@@ -34,5 +35,5 @@ class MockSimilarity(MockModel):
             self._related_object = ModelClass.objects.get(pk=self.related_object_id)
         return self._related_object
 
-    def __unicode__(self):
-        return u"Similarity between %s and %s" % (self.object, self.related_object)
+    def __str__(self):
+        return "Similarity between %s and %s" % (self.object, self.related_object)

@@ -1,3 +1,4 @@
+{% load url from future %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -6,7 +7,7 @@
 </head>
 <body>
 	{% if user.is_anonymous %}
-	<form action="{% url login %}" method="post" id="login-form">{% csrf_token %}
+	<form action="{% url 'login' %}" method="post" id="login-form">{% csrf_token %}
 	  <div class="form-row">
 	    
 	    <label for="id_username" class="required">Username:</label> <input id="id_username" type="text" name="username" maxlength="30">
@@ -20,7 +21,7 @@
 	  </div>
 	</form>
 	{% else %}
-	<p>Welcome, {{user.username}}. <a href="{% url admin:logout %}">Logout</a>.</p>
+	<p>Welcome, {{user.username}}. <a href="{% url 'admin:logout' %}">Logout</a>.</p>
 	{% endif %}
 	{% block content %}{% endblock %}
 </body>

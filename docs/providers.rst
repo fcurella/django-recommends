@@ -16,18 +16,21 @@ A basic algorithm class is provided for convenience at ``recommends.algorithms.g
 Example::
 
     # models.py
+    from __future__ import unicode_literals
     from django.db import models
     from django.contrib.auth.models import User
     from django.contrib.sites.models import Site
+    from django.utils.encoding import python_2_unicode_compatible
     from recommends.providers import recommendation_registry, RecommendationProvider
 
 
+    @python_2_unicode_compatible
     class Product(models.Model):
         """A generic Product"""
         name = models.CharField(blank=True, max_length=100)
         sites = models.ManyToManyField(Site)
 
-        def __unicode__(self):
+        def __str__(self):
             return self.name
 
         @models.permalink
@@ -35,10 +38,11 @@ Example::
             return ('product_detail', [self.id])
 
         def sites_str(self):
-            return u', '.join([s.name for s in self.sites.all()])
+            return ', '.join([s.name for s in self.sites.all()])
         sites_str.short_description = 'sites'
 
 
+    @python_2_unicode_compatible
     class Vote(models.Model):
         """A Vote on a Product"""
         user = models.ForeignKey(User, related_name='votes')
@@ -46,8 +50,8 @@ Example::
         site = models.ForeignKey(Site)
         score = models.FloatField()
 
-        def __unicode__(self):
-            return u"Vote"
+        def __str__(self):
+            return "Vote"
 
 
     class ProductRecommendationProvider(RecommendationProvider):

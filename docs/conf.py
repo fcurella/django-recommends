@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 # -*- coding: utf-8 -*-
 #
 # django-recommends documentation build configuration file, created by
@@ -42,8 +43,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'django-recommends'
-copyright = u'2011, Flavio Curella'
+project = 'django-recommends'
+copyright = '2011, Flavio Curella'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -187,8 +188,8 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'django-recommends.tex', u'django-recommends Documentation',
-   u'Flavio Curella', 'manual'),
+  ('index', 'django-recommends.tex', 'django-recommends Documentation',
+   'Flavio Curella', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -218,7 +219,7 @@ latex_documents = [
 # (source start file, name, description, authors, manual section).
 man_pages = [
     ('index', 'django-recommends', u'django-recommends Documentation',
-     [u'Flavio Curella'], 1)
+     ['Flavio Curella'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -231,8 +232,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'django-recommends', u'django-recommends Documentation',
-   u'Flavio Curella', 'django-recommends', 'One line description of project.',
+  ('index', 'django-recommends', 'django-recommends Documentation',
+   'Flavio Curella', 'django-recommends', 'One line description of project.',
    'Miscellaneous'),
 ]
 
@@ -249,10 +250,10 @@ texinfo_documents = [
 # -- Options for Epub output ---------------------------------------------------
 
 # Bibliographic Dublin Core info.
-epub_title = u'django-recommends'
-epub_author = u'Flavio Curella'
-epub_publisher = u'Flavio Curella'
-epub_copyright = u'2011, Flavio Curella'
+epub_title = 'django-recommends'
+epub_author = 'Flavio Curella'
+epub_publisher = 'Flavio Curella'
+epub_copyright = '2011, Flavio Curella'
 
 # The language of the text. It defaults to the language option
 # or en if the language is not set.
