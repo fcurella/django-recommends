@@ -32,6 +32,10 @@ Requirements
 * celery>=2.3.3
 * django-celery>=2.3.3
 
+Optional
+--------
+* python-recsys
+
 Indices and tables
 ==================
 
