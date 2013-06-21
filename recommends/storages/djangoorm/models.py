@@ -1,8 +1,11 @@
+from __future__ import unicode_literals
 from django.db import models
 from django.contrib.contenttypes import generic
 from .managers import RecommendsManager, SimilarityManager, RecommendationManager
+from django.utils.encoding import python_2_unicode_compatible
 
 
+@python_2_unicode_compatible
 class RecommendsBaseModel(models.Model):
     """(RecommendsBaseModel description)"""
     object_ctype = models.PositiveIntegerField()
@@ -16,10 +19,11 @@ class RecommendsBaseModel(models.Model):
         abstract = True
         unique_together = ('object_ctype', 'object_id', 'object_site')
 
-    def __unicode__(self):
-        return u"RecommendsBaseModel"
+    def __str__(self):
+        return "RecommendsBaseModel"
 
 
+@python_2_unicode_compatible
 class Similarity(RecommendsBaseModel):
     """How much an object is similar to another"""
 
@@ -37,10 +41,11 @@ class Similarity(RecommendsBaseModel):
         unique_together = ('object_ctype', 'object_id', 'object_site', 'related_object_ctype', 'related_object_id', 'related_object_site')
         ordering = ['-score']
 
-    def __unicode__(self):
-        return u"Similarity between %s and %s" % (self.object, self.related_object)
+    def __str__(self):
+        return "Similarity between %s and %s" % (self.object, self.related_object)
 
 
+@python_2_unicode_compatible
 class Recommendation(RecommendsBaseModel):
     """Recommended an object for a particular user"""
     user = models.PositiveIntegerField()
@@ -52,5 +57,5 @@ class Recommendation(RecommendsBaseModel):
         unique_together = ('object_ctype', 'object_id', 'user')
         ordering = ['-score']
 
-    def __unicode__(self):
-        return u"Recommendation for user %s" % (self.user)
+    def __str__(self):
+        return "Recommendation for user %s" % (self.user)

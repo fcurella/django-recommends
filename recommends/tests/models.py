@@ -1,8 +1,11 @@
+from __future__ import unicode_literals
 from django.db import models
 from django.contrib.sites.models import Site
 from django.contrib.auth import models as auth_models
+from django.utils.encoding import python_2_unicode_compatible
 
 
+@python_2_unicode_compatible
 class RecProduct(models.Model):
     """A generic Product"""
     name = models.CharField(blank=True, max_length=100)
@@ -11,7 +14,7 @@ class RecProduct(models.Model):
     class Meta:
         app_label = 'recommends'
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     @models.permalink
@@ -19,10 +22,11 @@ class RecProduct(models.Model):
         return ('product_detail', [self.id])
 
     def sites_str(self):
-        return u', '.join([s.name for s in self.sites.all()])
+        return ', '.join([s.name for s in self.sites.all()])
     sites_str.short_description = 'sites'
 
 
+@python_2_unicode_compatible
 class RecVote(models.Model):
     """A Vote on a Product"""
     user = models.ForeignKey(auth_models.User, related_name='rec_votes')
@@ -33,5 +37,5 @@ class RecVote(models.Model):
     class Meta:
         app_label = 'recommends'
 
-    def __unicode__(self):
-        return u"Vote"
+    def __str__(self):
+        return "Vote"
