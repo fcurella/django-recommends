@@ -151,7 +151,9 @@ CACHES = {
 CELERY_ALWAYS_EAGER = True
 ALLOWED_HOSTS = ['*']
 
+BROKER_URL = 'redis://localhost:6379/0'
+
 try:
-    from local_settings import *
+    from .local_settings import *
 except ImportError:
     pass
