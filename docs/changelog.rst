@@ -4,7 +4,6 @@ Changelog
 =========
 * v0.0.12
     * python 3.3 and Django 1.5 compatibility
-    * replaced some calls to ``dict()`` with dictionary generators
 * v0.0.11
     * ``get_rating_site`` provider method now defaults to ``settings.SITE_ID`` instead of ``None``.
     * ``similarities`` templatetag result is now cached per object
