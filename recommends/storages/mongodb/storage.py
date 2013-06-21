@@ -30,7 +30,7 @@ class MongoStorage(BaseRecommendationStorage):
         return self._get_mock_models(spec, collection_name, limit, mock_class=MockSimilarity)
 
     def get_recommendations_for_user(self, user, limit=10):
-        spec = {'user': user.id, 'object_site': self.settings.SITE_ID}
+        spec = dict(user=user.id, object_site=self.settings.SITE_ID)
         collection_name = RECOMMENDS_STORAGE_MONGODB_RECOMMENDATION_COLLECTION
 
         return self._get_mock_models(spec, collection_name, limit)
