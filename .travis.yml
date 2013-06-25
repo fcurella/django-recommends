@@ -1,0 +1,14 @@
+language: python
+python:
+  - "2.6"
+  - "2.7"
+services:
+  - redis-server
+  - mongodb
+install:
+  - pip install -q Django==$DJANGO_VERSION
+  - pip install -r requirements.txt --use-mirrors
+env:
+  - DJANGO_VERSION=1.4.5
+  - DJANGO_VERSION=1.5.1
+script: django-admin.py test recommends --settings=recommends.tests.settings

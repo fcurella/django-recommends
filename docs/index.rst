@@ -28,9 +28,14 @@ Contents:
 Requirements
 ============
 
+* Python 2.7, Python 3.3
 * Django>=1.3.1
 * celery>=2.3.3
 * django-celery>=2.3.3
+
+Optional
+--------
+* python-recsys
 
 Indices and tables
 ==================
