@@ -8,7 +8,7 @@ install:
   - sudo apt-get build-dep python-scipy
   - pip install -q $DJANGO
   - pip install -r requirements.txt --use-mirrors
-  - pip install -r test-requirements.txt --use-mirrors
+  - pip install -q -r test-requirements.txt --use-mirrors
 before_script:
   - export PYTHONPATH=$TRAVIS_BUILD_DIR:$PYTHONPATH
 python:
