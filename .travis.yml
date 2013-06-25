@@ -4,8 +4,8 @@ services:
   - mongodb
   - rabbitmq
 install:
-  - sudo apt-get update
-  - sudo apt-get build-dep python-scipy
+  - sudo apt-get -q update
+  - sudo apt-get -q build-dep python-scipy
   - pip install -q $DJANGO
   - pip install -r requirements.txt --use-mirrors
   - pip install -q -r test-requirements.txt --use-mirrors
