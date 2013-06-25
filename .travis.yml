@@ -5,7 +5,7 @@ services:
   - rabbitmq
 install:
   - sudo apt-get update
-  - sudo apt-get install python-numpy python-scipy
+  - sudo apt-get install libblas-dev
   - pip install -q $DJANGO
   - pip install -r requirements.txt --use-mirrors
   - pip install -r test-requirements.txt --use-mirrors
