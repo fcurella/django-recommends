@@ -1,7 +1,7 @@
 django-recommends
 ======================================
 
-.. image:: https://travis-ci.org/fcurella/django-recommends.png?branch=develop
+.. image:: https://travis-ci.org/fcurella/django-recommends.png?branch=master
 
 A django app that builds item-based suggestions for users.
 
