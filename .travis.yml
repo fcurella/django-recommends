@@ -10,6 +10,8 @@ python:
   - "2.6"
   - "2.7"
 env:
-  - DJANGO_VERSION=1.4.5
-  - DJANGO_VERSION=1.5.1
+  - DJANGO_VERSION>=1.4,<1.5
+  - DJANGO_VERSION>=1.5,<1.6
+global:
+  - PYTHONPATH=$TRAVIS_BUILD_DIR
 script: python recommends/tests/runtests.py
