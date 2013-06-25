@@ -8,7 +8,6 @@ before_install:
   - sudo apt-get -q build-dep python-scipy
   - sudo apt-get install -qq python-scipy
 install:
-  - ln -s /usr/lib/python``$TRAVIS_PYTHON_VERSION``/dist-packages/scipy ~/virtualenv/python``$TRAVIS_PYTHON_VERSION``_with_system_site_packages/lib/python``$TRAVIS_PYTHON_VERSION``/site-packages/
   - pip install -q $DJANGO
   - pip install -r requirements.txt --use-mirrors
   - pip install -r test-requirements.txt --use-mirrors
