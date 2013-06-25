@@ -15,7 +15,7 @@ class IdentifierManager(object):
         if self._sites is None:
             from django.contrib.sites.models import Site
 
-            self._sites = {s.id: s for s in Site.objects.all()}
+            self._sites = dict([(s.id, s) for s in Site.objects.all()])
         return self._sites
 
     @property
@@ -23,7 +23,7 @@ class IdentifierManager(object):
         if self._ctypes is None:
             from django.contrib.contenttypes.models import ContentType
 
-            self._ctypes = {"%s.%s" % (c.app_label, c.model): c for c in ContentType.objects.all()}
+            self._ctypes = dict([("%s.%s" % (c.app_label, c.model), c) for c in ContentType.objects.all()])
         return self._ctypes
 
     def resolve_identifier(self, identifier):
