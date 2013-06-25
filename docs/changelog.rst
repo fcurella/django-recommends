@@ -3,8 +3,7 @@
 Changelog
 =========
 * v0.0.13
-    * Dropped Python 2.6 support
-    * Use dict comprehensions instead of ``dict()`` for better performance.
+    * Use ``{}`` instead of ``dict()`` for better performance.
 * v0.0.12
     * python 3.3 and Django 1.5 compatibility
 * v0.0.11
