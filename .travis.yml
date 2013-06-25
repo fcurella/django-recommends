@@ -5,6 +5,7 @@ services:
   - rabbitmq
 before_install:
   - sudo apt-get -q update
+  - sudo apt-get -q build-dep python-scipy
   - sudo apt-get install -qq python-scipy
 install:
   - ln -s /usr/lib/python``$TRAVIS_PYTHON_VERSION``/dist-packages/scipy ~/virtualenv/python``$TRAVIS_PYTHON_VERSION``_with_system_site_packages/lib/python``$TRAVIS_PYTHON_VERSION``/site-packages/
