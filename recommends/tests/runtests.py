@@ -27,7 +27,10 @@ settings.configure(
     BROKER_URL = 'redis://localhost:6379/0',
     CELERY_ALWAYS_EAGER = True,
     ALLOWED_HOSTS = ['*'],
-    SITE_ID = 1
+    SITE_ID = 1,
+    RECOMMENDS_TEST_REDIS = True,
+    RECOMMENDS_TEST_MONGO = True,
+    RECOMMENDS_TEST_RECSYS = True
 )
 
 
