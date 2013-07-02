@@ -9,6 +9,14 @@ tests Package
     :undoc-members:
     :show-inheritance:
 
+:mod:`admin` Module
+-------------------
+
+.. automodule:: recommends.tests.admin
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 :mod:`models` Module
 --------------------
 
@@ -21,6 +29,22 @@ tests Package
 -----------------------
 
 .. automodule:: recommends.tests.providers
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`runtests` Module
+----------------------
+
+.. automodule:: recommends.tests.runtests
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`settings` Module
+----------------------
+
+.. automodule:: recommends.tests.settings
     :members:
     :undoc-members:
     :show-inheritance:
