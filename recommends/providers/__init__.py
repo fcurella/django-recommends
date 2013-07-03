@@ -168,6 +168,10 @@ class RecommendationProvider(object):
         """
         This function will be called by the task manager in order
         to compile and store the results.
+
+        Returns a dictionary contains count of recommended and similar items
+        ::
+            {<similar_count>: XX, <recommend_count>: XX}
         """
         if vote_list is None:
             logger.info('fetching votes from the provider...')
@@ -184,9 +188,12 @@ class RecommendationProvider(object):
         itemIgnored = self.items_ignored()
 
         logger.info('saving recommendations...')
-        self.storage.store_recommendations(self.algorithm.calculate_recommendations(
+        recommendItems = self.algorithm.calculate_recommendations(
             vote_list, itemMatch, itemIgnored)
-        )
+        self.storage.store_recommendations(recommendItems)
+        return {
+            'similar_count': len(itemMatch),
+            'recommend_count': len(recommendItems)}
 
     def get_users(self):
         """Returns all users who have voted something."""
