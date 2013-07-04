@@ -11,13 +11,24 @@ logger = logging.getLogger(RECOMMENDS_LOGGER_NAME)
 
 
 class DjangoOrmStorage(BaseRecommendationStorage):
-    def get_similarities_for_object(self, obj, limit=10):
+    def get_similarities_for_object(self, obj, limit=10, use_raw_id=False):
         object_site_id = self.settings.SITE_ID
-        return Similarity.objects.similar_to(obj, related_object_site=object_site_id, score__gt=0).order_by('-score')[:limit]
+        qs = Similarity.objects.similar_to(
+            obj,
+            related_object_site=object_site_id,
+            score__gt=0).order_by('-score')
+        if use_raw_id:
+            return list(qs.values_list('related_object_id', flat=True))[:limit]
+        return qs[:limit]
 
-    def get_recommendations_for_user(self, user, limit=10):
+    def get_recommendations_for_user(self, user, limit=10, use_raw_id=False):
         object_site_id = self.settings.SITE_ID
-        return Recommendation.objects.filter(user=user.id, object_site=object_site_id).order_by('-score')[:limit]
+        qs = Recommendation.objects.filter(
+            user=user.id,
+            object_site=object_site_id).order_by('-score')
+        if use_raw_id:
+            return list(qs.values_list('object_id', flat=True))[:limit]
+        return qs[:limit]
 
     def get_votes(self):
         pass
