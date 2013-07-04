@@ -31,7 +31,7 @@ class BaseRecommendationStorage(object):
         if use_raw_id = False:
             Returns a list of ``Similarity`` objects for given ``obj``, ordered by score.
         else:
-            Returns a list of similar ``obj`` ids for given ``obj``, ordered by score.
+            Returns a list of similar ``model`` ids[pk] for given ``obj``, ordered by score.
         """
         raise NotImplementedError
 
@@ -40,7 +40,7 @@ class BaseRecommendationStorage(object):
         if use_raw_id = False:
             Returns a list of ``Recommendation`` objects for given ``user``, ordered by score.
         else:
-            Returns a list of recommended ``obj`` ids for given ``user``, ordered by score.
+            Returns a list of recommended ``model`` ids[pk] for given ``user``, ordered by score.
         """
         raise NotImplementedError
 

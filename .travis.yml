@@ -12,7 +12,8 @@ install:
   - pip install -r test-requirements.txt --use-mirrors
   - pip install -q $DJANGO
 before_script:
-  - export PYTHONPATH=$TRAVIS_BUILD_DIR:$PYTHONPATH
+  - "export PYTHONPATH=$TRAVIS_BUILD_DIR:$PYTHONPATH;"
+  - "django-admin.py version;"
   - "flake8 --exclude=migrations --ignore=E501,F403,F401 --statistics recommends;"
 python:
   - "2.6"
@@ -25,4 +26,4 @@ env:
 script: python recommends/tests/runtests.py
 after_failure:
   - env
-  - ls $PYTHONPATH
+  - cat $PYTHONPATH
