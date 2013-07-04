@@ -11,12 +11,10 @@ import os
 
 
 @override_settings(CELERY_DB_REUSE_MAX=200, LANGUAGES=(
-    ('en', 'English'),
-    ),
+    ('en', 'English'),),
     LANGUAGE_CODE='en',
     TEMPLATE_DIRS=(
-        os.path.join(os.path.dirname(__file__), 'templates'),
-        ),
+        os.path.join(os.path.dirname(__file__), 'templates'),),
     TEMPLATE_LOADERS=('django.template.loaders.filesystem.Loader',),
     USE_TZ=False, )
 class RecommendsTestCase(TestCase):
@@ -89,7 +87,6 @@ class RecommendsTestCase(TestCase):
         self.assertEquals(len(recommendation_ids), self.results['len_recommended'])
         self.assertTrue(self.wine.id in recommendation_ids)
         self.assertTrue(all([self.isObjectWithIdExists(object_id) for object_id in recommendation_ids]))
-
 
     def test_views(self):
         self.client.login(username='user1', password='user1')
