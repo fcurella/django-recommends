@@ -35,6 +35,8 @@ Requirements
 
 Optional
 --------
+* redis
+* pymongo
 * python-recsys
 
 Indices and tables
