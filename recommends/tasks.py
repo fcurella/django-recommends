@@ -16,7 +16,8 @@ if RECOMMENDS_TASK_RUN:
             provider_instance.precompute()
 
         with filelock('recommends_precompute.lock'):
-            [_precompute(provider_instance) for provider_instance in recommendation_registry.get_vote_providers()]
+            [_precompute(provider_instance)
+             for provider_instance in recommendation_registry.get_vote_providers()]
 
 
 @task(name='remove_suggestions')
