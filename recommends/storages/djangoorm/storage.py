@@ -18,7 +18,9 @@ class DjangoOrmStorage(BaseRecommendationStorage):
             related_object_site=object_site_id,
             score__gt=0).order_by('-score')
         if use_raw_id:
-            return list(qs.values_list('related_object_id', flat=True))[:limit]
+            return list(qs.extra(select={
+                'contect_type_id': 'object_ctype'}).values(
+                    'related_object_id', 'contect_type_id'))[:limit]
         return qs[:limit]
 
     def get_recommendations_for_user(self, user, limit=10, use_raw_id=False):
@@ -27,7 +29,9 @@ class DjangoOrmStorage(BaseRecommendationStorage):
             user=user.id,
             object_site=object_site_id).order_by('-score')
         if use_raw_id:
-            return list(qs.values_list('object_id', flat=True))[:limit]
+            return list(qs.extra(select={
+                'contect_type_id': 'object_ctype'}).values(
+                    'object_id', 'contect_type_id'))[:limit]
         return qs[:limit]
 
     def get_votes(self):

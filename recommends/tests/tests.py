@@ -64,8 +64,9 @@ class RecommendsTestCase(TestCase):
         self.assertTrue(type(similar_to_mug_ids) == list)
         self.assertNotEquals(len(similar_to_mug_ids), 0)
         self.assertEquals(len(similar_to_mug_ids), self.results['len_similar_to_mug'])
-        self.assertTrue(self.wine.id in similar_to_mug_ids)
-        self.assertTrue(all([self.isObjectWithIdExists(object_id) for object_id in similar_to_mug_ids]))
+        similar_to_mug_related_ids = [item['related_object_id'] for item in similar_to_mug_ids]
+        self.assertTrue(self.wine.id in similar_to_mug_related_ids)
+        self.assertTrue(all([self.isObjectWithIdExists(related_object_id) for related_object_id in similar_to_mug_related_ids]))
 
     def test_recommendation(self):
         # test recommendations
@@ -85,8 +86,9 @@ class RecommendsTestCase(TestCase):
         self.assertTrue(type(recommendation_ids) == list)
         self.assertNotEquals(len(recommendation_ids), 0)
         self.assertEquals(len(recommendation_ids), self.results['len_recommended'])
-        self.assertTrue(self.wine.id in recommendation_ids)
-        self.assertTrue(all([self.isObjectWithIdExists(object_id) for object_id in recommendation_ids]))
+        recommendation_object_ids = [item['object_id'] for item in recommendation_ids]
+        self.assertTrue(self.wine.id in recommendation_object_ids)
+        self.assertTrue(all([self.isObjectWithIdExists(object_id) for object_id in recommendation_object_ids]))
 
     def test_views(self):
         self.client.login(username='user1', password='user1')
