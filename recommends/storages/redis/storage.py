@@ -38,7 +38,10 @@ class RedisStorage(BaseRecommendationStorage):
             similarity_dict.update(self.identifier_manager.identifier_to_dict(identifier, score, related=True))
             similarity_dicts.append(similarity_dict)
         if use_raw_id:
-            return [item['related_object_id'] for item in similarity_dicts][:limit]
+            return [{
+                'related_object_id': item['related_object_id'],
+                'contect_type_id': item['object_ctype']}
+                for item in similarity_dicts][:limit]
         return self._get_mock_models(similarity_dicts, mock_class=MockSimilarity)
 
     def get_recommendations_for_user(self, user, limit=10, use_raw_id=False):
@@ -48,7 +51,10 @@ class RedisStorage(BaseRecommendationStorage):
 
         recommendation_dicts = [self.identifier_manager.identifier_to_dict(object_id, score) for object_id, score in scores]
         if use_raw_id:
-            return [item['object_id'] for item in recommendation_dicts][:limit]
+            return [{
+                    'object_id': item['object_id'],
+                    'contect_type_id': item['object_ctype']}
+                    for item in recommendation_dicts][:limit]
         return self._get_mock_models(recommendation_dicts, mock_class=MockModel)
 
     def get_votes(self):

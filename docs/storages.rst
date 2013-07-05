@@ -22,6 +22,17 @@ A storage backend can be any class extending ``recommends.storages.base.Recommen
     else:
         Returns a list of similar ``model`` ids[pk] for given ``obj``, ordered by score.
 
+        Example:
+
+    ::
+
+        [
+            {
+                "related_object_id": XX, "contect_type_id": XX
+            },
+            ..
+        ]
+
 
 .. method:: get_recommendations_for_user(self, user, limit, use_raw_id=False)
 
@@ -29,6 +40,17 @@ A storage backend can be any class extending ``recommends.storages.base.Recommen
         Returns a list of :doc:`Recommendation <models>` objects for given ``user``, order by score.
     else:
         Returns a list of recommended ``model`` ids[pk] for given ``user``, ordered by score.
+
+        Example:
+
+    ::
+
+        [
+            {
+                "object_id": XX, "contect_type_id": XX
+            },
+            ..
+        ]
 
 .. method:: get_votes(self)
 

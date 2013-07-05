@@ -22,9 +22,15 @@ class MongoStorage(BaseRecommendationStorage):
         documents = collection.find(spec, limit=limit, sort=[('score', pymongo.DESCENDING)])
         if use_raw_id:
             if mock_class is MockModel:
-                return [item['object_id'] for item in documents]
+                return [{
+                        'object_id': item['object_id'],
+                        'contect_type_id': item['object_ctype']}
+                        for item in documents]
             elif mock_class is MockSimilarity:
-                return [item['related_object_id'] for item in documents]
+                return [{
+                    'related_object_id': item['related_object_id'],
+                    'contect_type_id': item['object_ctype']}
+                    for item in documents]
         return map(lambda x: mock_class(**x), documents)
 
     def get_similarities_for_object(self, obj, limit=10, use_raw_id=False):
