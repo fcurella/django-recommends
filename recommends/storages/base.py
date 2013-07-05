@@ -26,15 +26,42 @@ class BaseRecommendationStorage(object):
         """
         return self.identifier_manager.resolve_identifier(identifier)
 
-    def get_similarities_for_object(self, obj, limit):
+    def get_similarities_for_object(self, obj, limit, use_raw_id=False):
         """
-        Returns a list of ``Similarity`` objects for ``obj``, ordered by score.
+        if use_raw_id = False:
+            Returns a list of ``Similarity`` objects for given ``obj``, ordered by score.
+        else:
+            Returns a list of similar ``model`` ids[pk] for given ``obj``, ordered by score.
+
+            Example:
+
+        ::
+
+            [
+                {
+                    "related_object_id": XX, "contect_type_id": XX
+                },
+                ..
+            ]
         """
         raise NotImplementedError
 
-    def get_recommendations_for_user(self, user, limit):
+    def get_recommendations_for_user(self, user, limit, use_raw_id=False):
         """
-        Returns a list of ``Recommendation`` objects for the user, order by score.
+        if use_raw_id = False:
+            Returns a list of ``Recommendation`` objects for given ``user``, ordered by score.
+        else:
+            Returns a list of recommended ``model`` ids[pk] for given ``user``, ordered by score.
+
+            Example:
+
+        ::
+            [
+                {
+                    "object_id": XX, "contect_type_id": XX
+                },
+                ..
+            ]
         """
         raise NotImplementedError
 

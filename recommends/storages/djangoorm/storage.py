@@ -11,13 +11,29 @@ logger = logging.getLogger(RECOMMENDS_LOGGER_NAME)
 
 
 class DjangoOrmStorage(BaseRecommendationStorage):
-    def get_similarities_for_object(self, obj, limit=10):
-        object_site_id = self.settings.SITE_ID
-        return Similarity.objects.similar_to(obj, related_object_site=object_site_id, score__gt=0).order_by('-score')[:limit]
 
-    def get_recommendations_for_user(self, user, limit=10):
+    def get_similarities_for_object(self, obj, limit=10, use_raw_id=False):
         object_site_id = self.settings.SITE_ID
-        return Recommendation.objects.filter(user=user.id, object_site=object_site_id).order_by('-score')[:limit]
+        qs = Similarity.objects.similar_to(
+            obj,
+            related_object_site=object_site_id,
+            score__gt=0).order_by('-score')
+        if use_raw_id:
+            return list(qs.extra(
+                select={'contect_type_id': 'object_ctype'}).values(
+                'related_object_id', 'contect_type_id'))[:limit]
+        return qs[:limit]
+
+    def get_recommendations_for_user(self, user, limit=10, use_raw_id=False):
+        object_site_id = self.settings.SITE_ID
+        qs = Recommendation.objects.filter(
+            user=user.id,
+            object_site=object_site_id).order_by('-score')
+        if use_raw_id:
+            return list(qs.extra(
+                select={'contect_type_id': 'object_ctype'}).values(
+                'object_id', 'contect_type_id'))[:limit]
+        return qs[:limit]
 
     def get_votes(self):
         pass
@@ -31,11 +47,13 @@ class DjangoOrmStorage(BaseRecommendationStorage):
             logger.info('saving similarities')
             count = 0
             for object_id, scores in itemMatch:
-                object_target, object_target_site = self.resolve_identifier(object_id)
+                object_target, object_target_site = self.resolve_identifier(
+                    object_id)
 
                 for related_object_id, score in scores:
                     if not math.isnan(score) and score > self.threshold_similarities:
-                        object_related, object_related_site = self.resolve_identifier(related_object_id)
+                        object_related, object_related_site = self.resolve_identifier(
+                            related_object_id)
                         if object_target != object_related:
                             count = count + 1
                             Similarity.objects.set_score_for_objects(
@@ -46,7 +64,9 @@ class DjangoOrmStorage(BaseRecommendationStorage):
                                 score=score
                             )
                             if count % RECOMMENDS_STORAGE_COMMIT_THRESHOLD == 0:
-                                logger.debug('saved %s similarities...' % count)
+                                logger.debug(
+                                    'saved %s similarities...' %
+                                    count)
                                 transaction.commit()
         finally:
             logger.info('saved %s similarities...' % count)
@@ -61,7 +81,8 @@ class DjangoOrmStorage(BaseRecommendationStorage):
                 for object_id, score in rankings:
                     if not math.isnan(score) and score > self.threshold_recommendations:
                         count = count + 1
-                        object_recommended, site = self.resolve_identifier(object_id)
+                        object_recommended, site = self.resolve_identifier(
+                            object_id)
                         Recommendation.objects.set_score_for_object(
                             user=user,
                             object_recommended=object_recommended,

@@ -15,13 +15,42 @@ A storage backend can be any class extending ``recommends.storages.base.Recommen
 
     This method is the opposite of ``get_identifier``. It resolve the object's identifier to an actual model.
 
-.. method:: get_similarities_for_object(self, obj, limit)
+.. method:: get_similarities_for_object(self, obj, limit, use_raw_id=False)
 
-    Returns a list of :doc:`Similarity <models>` objects for ``obj``, ordered by score.
+    if use_raw_id = False:
+        Returns a list of ``Similarity`` objects for given ``obj``, ordered by score.
+    else:
+        Returns a list of similar ``model`` ids[pk] for given ``obj``, ordered by score.
 
-.. method:: get_recommendations_for_user(self, user, limit)
+        Example:
 
-    Returns a list of :doc:`Recommendation <models>` objects for the user, order by score.
+    ::
+
+        [
+            {
+                "related_object_id": XX, "contect_type_id": XX
+            },
+            ..
+        ]
+
+
+.. method:: get_recommendations_for_user(self, user, limit, use_raw_id=False)
+
+    if use_raw_id = False:
+        Returns a list of :doc:`Recommendation <models>` objects for given ``user``, order by score.
+    else:
+        Returns a list of recommended ``model`` ids[pk] for given ``user``, ordered by score.
+
+        Example:
+
+    ::
+
+        [
+            {
+                "object_id": XX, "contect_type_id": XX
+            },
+            ..
+        ]
 
 .. method:: get_votes(self)
 

@@ -9,7 +9,7 @@ PROJECT_DIR = path.dirname(path.realpath(__file__))
 
 settings.configure(
     DATABASES={
-        'default': {'ENGINE': 'django.db.backends.sqlite3', 'NAME': ':memory;'}
+        'default': {'ENGINE': 'django.db.backends.sqlite3'}
     },
     INSTALLED_APPS=[
         'django.contrib.auth',

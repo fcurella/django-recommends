@@ -9,14 +9,19 @@ if RECOMMENDS_TASK_RUN:
 
     @periodic_task(name='recommends_precompute', run_every=crontab(**RECOMMENDS_TASK_CRONTAB))
     def recommends_precompute():
+        results = []
         from .providers import recommendation_registry
 
         # I know this is weird, but it's faster (tested on CPyhton 2.6.5)
         def _precompute(provider_instance):
-            provider_instance.precompute()
+            result = provider_instance.precompute()
+            results.append(result)
 
         with filelock('recommends_precompute.lock'):
-            [_precompute(provider_instance) for provider_instance in recommendation_registry.get_vote_providers()]
+            [_precompute(provider_instance)
+             for provider_instance in recommendation_registry.get_vote_providers()]
+
+        return results
 
 
 @task(name='remove_suggestions')
@@ -25,7 +30,8 @@ def remove_suggestions(rated_model, object_id):
     from recommends.providers import recommendation_registry
 
     ObjectClass = get_model(*rated_model.split('.'))
-    provider_instance = recommendation_registry.get_provider_for_content(ObjectClass)
+    provider_instance = recommendation_registry.get_provider_for_content(
+        ObjectClass)
     obj = ObjectClass.objects.get(pk=object_id)
 
     provider_instance.storage.remove_recommendations(obj)
@@ -37,7 +43,8 @@ def remove_similarities(rated_model, object_id):
     from recommends.providers import recommendation_registry
 
     ObjectClass = get_model(*rated_model.split('.'))
-    provider_instance = recommendation_registry.get_provider_for_content(ObjectClass)
+    provider_instance = recommendation_registry.get_provider_for_content(
+        ObjectClass)
     obj = ObjectClass.objects.get(pk=object_id)
 
     provider_instance.storage.remove_similarities(obj)

@@ -12,16 +12,16 @@ requirements = [
 ]
 
 setup(
-    name = "django-recommends",
-    version = ".".join(map(str, VERSION)),
-    description = "A django app that builds item-based suggestions for users",
-    long_description = read('README.rst'),
-    url = 'https://github.com/python-recsys/django-recommends',
-    license = 'MIT',
-    author = 'Flavio Curella',
-    author_email = 'flavio.curella@gmail.com',
-    packages = find_packages(exclude=['tests']),
-    classifiers = [
+    name="django-recommends",
+    version=".".join(map(str, VERSION)),
+    description="A django app that builds item-based suggestions for users",
+    long_description=read('README.rst'),
+    url='https://github.com/python-recsys/django-recommends',
+    license='MIT',
+    author='Flavio Curella',
+    author_email='flavio.curella@gmail.com',
+    packages=find_packages(exclude=['tests']),
+    classifiers=[
         'Development Status :: 3 - Alpha',
         'Environment :: Console',
         'Intended Audience :: Developers',
@@ -32,5 +32,5 @@ setup(
         'Framework :: Django',
         'Topic :: Scientific/Engineering :: Information Analysis',
     ],
-    install_requires = requirements,
+    install_requires=requirements,
 )
