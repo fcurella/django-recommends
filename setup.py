@@ -5,11 +5,14 @@ from recommends import VERSION
 
 
 def read(fname):
-    return open(os.path.join(os.path.dirname(__file__), fname)).read()
+    try:
+        with open(os.path.join(os.path.dirname(__file__), fname)) as fh:
+            return fh.read()
+    except IOError:
+        return ''
 
-requirements = [
-    'celery',
-]
+requirements = read('requirements').splitlines()
+tests_requirements = read('test-requirements').splitlines()
 
 setup(
     name = "django-recommends",
@@ -33,4 +36,5 @@ setup(
         'Topic :: Scientific/Engineering :: Information Analysis',
     ],
     install_requires = requirements,
+    tests_require = tests_requirements,
 )
