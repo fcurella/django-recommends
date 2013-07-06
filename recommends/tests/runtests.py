@@ -30,7 +30,8 @@ settings.configure(
     SITE_ID = 1,
     RECOMMENDS_TEST_REDIS = True,
     RECOMMENDS_TEST_MONGO = True,
-    RECOMMENDS_TEST_RECSYS = True
+    RECOMMENDS_TEST_RECSYS = True,
+    RECOMMENDS_STORAGE_MONGODB_FSYNC = True,
 )
 
 

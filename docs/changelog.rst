@@ -2,6 +2,8 @@
 
 Changelog
 =========
+* v0.0.14
+    * Introduced ``RECOMMENDS_STORAGE_MONGODB_FSYNC`` setting.
 * v0.0.13
     * Use ``{}`` instead of ``dict()`` for better performance.
 * v0.0.12

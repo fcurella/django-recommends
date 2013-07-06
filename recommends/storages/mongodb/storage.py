@@ -4,7 +4,12 @@ import pymongo
 from recommends.models import MockModel, MockSimilarity
 from recommends.storages.base import BaseRecommendationStorage
 from recommends.settings import RECOMMENDS_LOGGER_NAME, RECOMMENDS_STORAGE_LOGGING_THRESHOLD
-from .settings import RECOMMENDS_STORAGE_MONGODB_DATABASE, RECOMMENDS_STORAGE_MONGODB_SIMILARITY_COLLECTION, RECOMMENDS_STORAGE_MONGODB_RECOMMENDATION_COLLECTION
+from .settings import (
+    RECOMMENDS_STORAGE_MONGODB_DATABASE,
+    RECOMMENDS_STORAGE_MONGODB_SIMILARITY_COLLECTION,
+    RECOMMENDS_STORAGE_MONGODB_RECOMMENDATION_COLLECTION,
+    RECOMMENDS_STORAGE_MONGODB_FSYNC
+)
 from .managers import MongoStorageManager
 
 
@@ -68,7 +73,7 @@ class MongoStorage(BaseRecommendationStorage):
                     object_related, object_related_site = self.resolve_identifier(related_object_id)
                     if object_target != object_related:
                         spec = self.manager.similarity_for_objects(object_target=object_target, object_target_site=object_target_site, object_related=object_related, object_related_site=object_related_site)
-                        collection.update(spec, {'$set': {'score': score}}, upsert=True)
+                        collection.update(spec, {'$set': {'score': score}}, upsert=True, fsync=RECOMMENDS_STORAGE_MONGODB_FSYNC)
                         count = count + 1
 
                         if count % RECOMMENDS_STORAGE_LOGGING_THRESHOLD == 0:
@@ -94,7 +99,7 @@ class MongoStorage(BaseRecommendationStorage):
                         object_recommended=object_recommended,
                         object_site=site
                     )
-                    collection.update(spec, {'$set': {'score': score}}, upsert=True)
+                    collection.update(spec, {'$set': {'score': score}}, upsert=True, fsync=RECOMMENDS_STORAGE_MONGODB_FSYNC)
 
                     if count % RECOMMENDS_STORAGE_LOGGING_THRESHOLD == 0:
                         logger.debug('saved %s recommendations...' % count)
@@ -104,7 +109,7 @@ class MongoStorage(BaseRecommendationStorage):
         connection = pymongo.Connection(RECOMMENDS_STORAGE_MONGODB_DATABASE['HOST'], RECOMMENDS_STORAGE_MONGODB_DATABASE['PORT'])
         db = connection[RECOMMENDS_STORAGE_MONGODB_DATABASE['NAME']]
         collection = db[RECOMMENDS_STORAGE_MONGODB_RECOMMENDATION_COLLECTION]
-        collection.remove(self.manager.filter_for_object(obj))
+        collection.remove(self.manager.filter_for_object(obj), fsync=RECOMMENDS_STORAGE_MONGODB_FSYNC)
 
     def remove_similarities(self, obj):
         connection = pymongo.Connection(RECOMMENDS_STORAGE_MONGODB_DATABASE['HOST'], RECOMMENDS_STORAGE_MONGODB_DATABASE['PORT'])
@@ -112,5 +117,5 @@ class MongoStorage(BaseRecommendationStorage):
 
         collection = db[RECOMMENDS_STORAGE_MONGODB_SIMILARITY_COLLECTION]
 
-        collection.remove(self.manager.filter_for_object(obj))
-        collection.remove(self.manager.filter_for_related_object(obj))
+        collection.remove(self.manager.filter_for_object(obj), fsync=RECOMMENDS_STORAGE_MONGODB_FSYNC)
+        collection.remove(self.manager.filter_for_related_object(obj), fsync=RECOMMENDS_STORAGE_MONGODB_FSYNC)

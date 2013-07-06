@@ -174,7 +174,7 @@ Options
 Settings
 ~~~~~~~~
 
-``RECOMMENDS_STORAGE_REDIS_DATABASE``: A dictionary representing how to connect to the mongodb server. Defaults to:
+``RECOMMENDS_STORAGE_MONGODB_DATABASE``: A dictionary representing how to connect to the mongodb server. Defaults to:
 
 ::
 
@@ -183,3 +183,5 @@ Settings
 	    'PORT': 27017,
 	    'NAME': 'recommends'
 	}
+
+``RECOMMENDS_STORAGE_MONGODB_FSYNC``: Boolean specifying if MongoDB should force writes to the disk. Default to ``False``.
