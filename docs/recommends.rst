@@ -17,14 +17,6 @@ recommends Package
     :undoc-members:
     :show-inheritance:
 
-:mod:`listeners` Module
------------------------
-
-.. automodule:: recommends.listeners
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 :mod:`managers` Module
 ----------------------
 
