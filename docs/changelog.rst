@@ -3,6 +3,8 @@
 Changelog
 =========
 * v0.0.14
+    * more verbose ``recommends_precompute`` command. Thanks WANG GAOXIANG.
+    * Introduced ``raw_id` parameter for lighter queries. WANG GAOXIANG.
     * Introduced ``RECOMMENDS_STORAGE_MONGODB_FSYNC`` setting.
 * v0.0.13
     * Use ``{}`` instead of ``dict()`` for better performance.
