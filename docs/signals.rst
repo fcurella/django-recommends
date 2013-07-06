@@ -1,7 +1,7 @@
 Signals
 =======
 
-When a signal specified in the provider is fired up by the one fo the rated models, Django-recommends automaticaly calls a function with the same name.
+When a signal specified in the provider is fired up by the one of the rated models, Django-recommends automaticaly calls a function with the same name.
 
 You can override this function or connect to a different set of signals on the provider using the `signals` property::
 
