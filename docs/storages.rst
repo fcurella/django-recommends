@@ -28,7 +28,7 @@ A storage backend can be any class extending ``recommends.storages.base.Recommen
 
         [
             {
-                "related_object_id": XX, "contect_type_id": XX
+                "related_object_id": XX, "content_type_id": XX
             },
             ..
         ]
@@ -47,7 +47,7 @@ A storage backend can be any class extending ``recommends.storages.base.Recommen
 
         [
             {
-                "object_id": XX, "contect_type_id": XX
+                "object_id": XX, "content_type_id": XX
             },
             ..
         ]
