@@ -24,14 +24,14 @@ settings.configure(
     TEMPLATE_DIRS=(
         path.join(PROJECT_DIR, 'templates'),
     ),
-    BROKER_URL = 'redis://localhost:6379/0',
-    CELERY_ALWAYS_EAGER = True,
-    ALLOWED_HOSTS = ['*'],
-    SITE_ID = 1,
-    RECOMMENDS_TEST_REDIS = True,
-    RECOMMENDS_TEST_MONGO = True,
-    RECOMMENDS_TEST_RECSYS = True,
-    RECOMMENDS_STORAGE_MONGODB_FSYNC = True,
+    BROKER_URL='redis://localhost:6379/0',
+    CELERY_ALWAYS_EAGER=True,
+    ALLOWED_HOSTS=['*'],
+    SITE_ID=1,
+    RECOMMENDS_TEST_REDIS=True,
+    RECOMMENDS_TEST_MONGO=True,
+    RECOMMENDS_TEST_RECSYS=True,
+    RECOMMENDS_STORAGE_MONGODB_FSYNC=True,
 )
 
 
