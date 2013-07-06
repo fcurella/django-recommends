@@ -26,9 +26,9 @@ class BaseRecommendationStorage(object):
         """
         return self.identifier_manager.resolve_identifier(identifier)
 
-    def get_similarities_for_object(self, obj, limit, use_raw_id=False):
+    def get_similarities_for_object(self, obj, limit, raw_id=False):
         """
-        if use_raw_id = False:
+        if raw_id = False:
             Returns a list of ``Similarity`` objects for given ``obj``, ordered by score.
         else:
             Returns a list of similar ``model`` ids[pk] for given ``obj``, ordered by score.
@@ -46,9 +46,9 @@ class BaseRecommendationStorage(object):
         """
         raise NotImplementedError
 
-    def get_recommendations_for_user(self, user, limit, use_raw_id=False):
+    def get_recommendations_for_user(self, user, limit, raw_id=False):
         """
-        if use_raw_id = False:
+        if raw_id = False:
             Returns a list of ``Recommendation`` objects for given ``user``, ordered by score.
         else:
             Returns a list of recommended ``model`` ids[pk] for given ``user``, ordered by score.

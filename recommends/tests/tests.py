@@ -60,7 +60,7 @@ class RecommendsTestCase(TestCase):
 
     def test_similarities_raw_ids(self):
         # test similarities raw ids
-        similar_to_mug_ids = self.provider.storage.get_similarities_for_object(self.mug, use_raw_id=True)
+        similar_to_mug_ids = self.provider.storage.get_similarities_for_object(self.mug, raw_id=True)
         self.assertNotEquals(len(similar_to_mug_ids), 0)
         self.assertEquals(len(similar_to_mug_ids), self.results['len_similar_to_mug'])
         similar_to_mug_related_ids = [item['related_object_id'] for item in similar_to_mug_ids]
@@ -81,7 +81,7 @@ class RecommendsTestCase(TestCase):
 
     def test_recommendation_raw_ids(self):
         # test recommendation raw ids
-        recommendation_ids = self.provider.storage.get_recommendations_for_user(self.user1, use_raw_id=True)
+        recommendation_ids = self.provider.storage.get_recommendations_for_user(self.user1, raw_id=True)
         self.assertNotEquals(len(recommendation_ids), 0)
         self.assertEquals(len(recommendation_ids), self.results['len_recommended'])
         recommendation_object_ids = [item['object_id'] for item in recommendation_ids]

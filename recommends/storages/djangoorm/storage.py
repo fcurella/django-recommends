@@ -12,25 +12,25 @@ logger = logging.getLogger(RECOMMENDS_LOGGER_NAME)
 
 class DjangoOrmStorage(BaseRecommendationStorage):
 
-    def get_similarities_for_object(self, obj, limit=10, use_raw_id=False):
+    def get_similarities_for_object(self, obj, limit=10, raw_id=False):
         object_site_id = self.settings.SITE_ID
         qs = Similarity.objects.similar_to(
             obj,
             related_object_site=object_site_id,
             score__gt=0).order_by('-score')
-        if use_raw_id:
+        if raw_id:
             qs = qs.extra(
                 select={'contect_type_id': 'object_ctype'}).values(
                     'related_object_id', 'contect_type_id'
                 )
         return qs[:limit]
 
-    def get_recommendations_for_user(self, user, limit=10, use_raw_id=False):
+    def get_recommendations_for_user(self, user, limit=10, raw_id=False):
         object_site_id = self.settings.SITE_ID
         qs = Recommendation.objects.filter(
             user=user.id,
             object_site=object_site_id).order_by('-score')
-        if use_raw_id:
+        if raw_id:
             qs = qs.extra(
                 select={'contect_type_id': 'object_ctype'}).values(
                     'object_id', 'contect_type_id'

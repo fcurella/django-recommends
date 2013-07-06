@@ -19,13 +19,13 @@ logger = logging.getLogger(RECOMMENDS_LOGGER_NAME)
 class MongoStorage(BaseRecommendationStorage):
     manager = MongoStorageManager()
 
-    def _get_mock_models(self, spec, collection_name, limit, use_raw_id, mock_class=MockModel):
+    def _get_mock_models(self, spec, collection_name, limit, raw_id, mock_class=MockModel):
         connection = pymongo.Connection(RECOMMENDS_STORAGE_MONGODB_DATABASE['HOST'], RECOMMENDS_STORAGE_MONGODB_DATABASE['PORT'])
         db = connection[RECOMMENDS_STORAGE_MONGODB_DATABASE['NAME']]
         collection = db[collection_name]
 
         documents = collection.find(spec, limit=limit, sort=[('score', pymongo.DESCENDING)])
-        if use_raw_id:
+        if raw_id:
             if mock_class is MockModel:
                 return [{
                         'object_id': item['object_id'],
@@ -38,18 +38,18 @@ class MongoStorage(BaseRecommendationStorage):
                     for item in documents]
         return map(lambda x: mock_class(**x), documents)
 
-    def get_similarities_for_object(self, obj, limit=10, use_raw_id=False):
+    def get_similarities_for_object(self, obj, limit=10, raw_id=False):
         object_site_id = self.settings.SITE_ID
         spec = dict(related_object_site=object_site_id, **self.manager.filter_for_object(obj))
         collection_name = RECOMMENDS_STORAGE_MONGODB_SIMILARITY_COLLECTION
 
-        return self._get_mock_models(spec, collection_name, limit, use_raw_id, mock_class=MockSimilarity)
+        return self._get_mock_models(spec, collection_name, limit, raw_id, mock_class=MockSimilarity)
 
-    def get_recommendations_for_user(self, user, limit=10, use_raw_id=False):
+    def get_recommendations_for_user(self, user, limit=10, raw_id=False):
         spec = {'user': user.id, 'object_site': self.settings.SITE_ID}
         collection_name = RECOMMENDS_STORAGE_MONGODB_RECOMMENDATION_COLLECTION
 
-        return self._get_mock_models(spec, collection_name, limit, use_raw_id)
+        return self._get_mock_models(spec, collection_name, limit, raw_id)
 
     def get_votes(self):
         pass
