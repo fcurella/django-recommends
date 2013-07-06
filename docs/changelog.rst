@@ -2,6 +2,8 @@
 
 Changelog
 =========
+* v0.0.15
+    * added ``--verbose`` option to ``recommends_precompute`` command.
 * v0.0.14
     * more verbose ``recommends_precompute`` command. Thanks WANG GAOXIANG.
     * Introduced ``raw_id` parameter for lighter queries. WANG GAOXIANG.
