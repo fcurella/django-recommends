@@ -5,4 +5,4 @@ django-recommends
 
 A django app that builds item-based suggestions for users.
 
-Documentation on `readthedocs <http://readthedocs.org/docs/django-recommends/en/latest/>`_.
+Documentation on `readthedocs <http://django-recommends.rtfd.org/>`_.
