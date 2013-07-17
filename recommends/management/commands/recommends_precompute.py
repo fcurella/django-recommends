@@ -9,22 +9,19 @@ from optparse import make_option
 class Command(BaseCommand):
     help = 'Calculate recommendations and similarities based on ratings'
     option_list = BaseCommand.option_list + (
-        make_option('--verbose',
-            action='store_true',
-            dest='verbost',
-            default=False,
-            help='verbose mode'
-        ),
+        make_option(
+            '--verbosity', action='store', dest='verbosity', default='1',
+            type='choice', choices=['0', '1'],
+            help='Verbosity level; 0=no output, 1=normal output'),
     )
 
     def handle(self, *args, **options):
-        self.stdout.write("\nCalculation Started.\n")
-        start_time = datetime.now()
-        results = recommends_precompute()
-        if not options['verbose']:
-            # avoids allocating the results
-            recommends_precompute()
+        verbosity = int(options.get('verbosity', 1))
+        if verbosity == 0:
+            results = recommends_precompute()
         else:
+            self.stdout.write("\nCalculation Started.\n")
+            start_time = datetime.now()
             results = recommends_precompute()
             end_time = datetime.now()
             rd = dateutil.relativedelta.relativedelta(end_time, start_time)
