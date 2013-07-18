@@ -2,6 +2,8 @@
 
 Changelog
 =========
+* v0.0.16
+    * renamed ``--verbose`` option to ``--verbosity``.
 * v0.0.15
     * added ``--verbose`` option to ``recommends_precompute`` command.
 * v0.0.14
