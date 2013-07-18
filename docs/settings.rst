@@ -1,17 +1,6 @@
 Settings
 ========
 
-Celery Task
------------
-
-Computations are done by a scheduled celery task. The task is run every 24 hours by default, but can be overridden by the ``RECOMMENDS_TASK_CRONTAB`` setting::
-    
-    RECOMMENDS_TASK_CRONTAB = {'hour': '*/24'}
-
-``RECOMMENDS_TASK_CRONTAB`` must be a dictionary of kwargs acceptable by celery.schedulers.crontab.
-
-If you don’t want to run this task (maybe because you want to write your own), set ``RECOMMENDS_TASK_RUN = False``
-
 Template tags and filters cache timeout
 ---------------------------------------
 

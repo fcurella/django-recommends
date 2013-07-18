@@ -1,26 +1,21 @@
-from celery.task import task, periodic_task
-from celery.schedules import crontab
+from celery import task
 from .utils import filelock
 
-from .settings import RECOMMENDS_TASK_RUN, RECOMMENDS_TASK_CRONTAB
 
+@task(name='recommends_precompute')
+def recommends_precompute():
+    results = []
+    from .providers import recommendation_registry
 
-if RECOMMENDS_TASK_RUN:
+    # I know this is weird, but it's faster (tested on CPyhton 2.6.5)
+    def _precompute(provider_instance):
+        results.append(provider_instance.precompute())
 
-    @periodic_task(name='recommends_precompute', run_every=crontab(**RECOMMENDS_TASK_CRONTAB))
-    def recommends_precompute():
-        results = []
-        from .providers import recommendation_registry
+    with filelock('recommends_precompute.lock'):
+        [_precompute(provider_instance)
+            for provider_instance in recommendation_registry.get_vote_providers()]
 
-        # I know this is weird, but it's faster (tested on CPyhton 2.6.5)
-        def _precompute(provider_instance):
-            results.append(provider_instance.precompute())
-
-        with filelock('recommends_precompute.lock'):
-            [_precompute(provider_instance)
-             for provider_instance in recommendation_registry.get_vote_providers()]
-
-        return results
+    return results
 
 
 @task(name='remove_suggestions')
