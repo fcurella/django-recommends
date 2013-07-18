@@ -4,6 +4,7 @@ Changelog
 =========
 * v0.0.16
     * renamed ``--verbose`` option to ``--verbosity``.
+    * The ``recommends_precompute`` method is available even with ``RECOMMENDS_TASK_RUN = False``.
 * v0.0.15
     * added ``--verbose`` option to ``recommends_precompute`` command.
 * v0.0.14

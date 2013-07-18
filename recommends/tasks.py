@@ -5,22 +5,24 @@ from .utils import filelock
 from .settings import RECOMMENDS_TASK_RUN, RECOMMENDS_TASK_CRONTAB
 
 
+def recommends_precompute():
+    results = []
+    from .providers import recommendation_registry
+
+    # I know this is weird, but it's faster (tested on CPyhton 2.6.5)
+    def _precompute(provider_instance):
+        results.append(provider_instance.precompute())
+
+    with filelock('recommends_precompute.lock'):
+        [_precompute(provider_instance)
+         for provider_instance in recommendation_registry.get_vote_providers()]
+
+    return results
+
 if RECOMMENDS_TASK_RUN:
-
     @periodic_task(name='recommends_precompute', run_every=crontab(**RECOMMENDS_TASK_CRONTAB))
-    def recommends_precompute():
-        results = []
-        from .providers import recommendation_registry
-
-        # I know this is weird, but it's faster (tested on CPyhton 2.6.5)
-        def _precompute(provider_instance):
-            results.append(provider_instance.precompute())
-
-        with filelock('recommends_precompute.lock'):
-            [_precompute(provider_instance)
-             for provider_instance in recommendation_registry.get_vote_providers()]
-
-        return results
+    def _recommends_precompute():
+        recommends_precompute()
 
 
 @task(name='remove_suggestions')
