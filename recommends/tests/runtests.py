@@ -19,6 +19,8 @@ settings.configure(
         'recommends',
         'recommends.storages.djangoorm',
         'recommends.tests',
+        'celery',
+        'djcelery',
     ],
     ROOT_URLCONF='recommends.tests.urls',
     TEMPLATE_DIRS=(
