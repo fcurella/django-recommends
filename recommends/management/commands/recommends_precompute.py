@@ -29,8 +29,7 @@ class Command(BaseCommand):
             # avoids allocating the results
             recommends_precompute()
         else:
-            if verbosity > 0:
-                self.stdout.write("\nCalculation Started.\n")
+            self.stdout.write("\nCalculation Started.\n")
             start_time = datetime.now()
             results = recommends_precompute()
             end_time = datetime.now()
@@ -39,8 +38,7 @@ class Command(BaseCommand):
                     self.stdout.write(
                         "%d similarities and %d recommendations saved.\n"
                         % (r['similar_count'], r['recommend_count']))
-            if verbosity > 0:
-                rd = dateutil.relativedelta.relativedelta(end_time, start_time)
-                self.stdout.write(
-                    "Calculation finished in %d years, %d months, %d days, %d hours, %d minutes and %d seconds\n"
-                    % (rd.years, rd.months, rd.days, rd.hours, rd.minutes, rd.seconds))
+            rd = dateutil.relativedelta.relativedelta(end_time, start_time)
+            self.stdout.write(
+                "Calculation finished in %d years, %d months, %d days, %d hours, %d minutes and %d seconds\n"
+                % (rd.years, rd.months, rd.days, rd.hours, rd.minutes, rd.seconds))
