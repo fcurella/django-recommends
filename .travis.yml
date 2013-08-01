@@ -14,7 +14,7 @@ install:
   - pip install -q $CELERY
   - pip install -q $DJCELERY
 before_script:
-  - "pip install ."
+  - "export PYTHONPATH=$TRAVIS_BUILD_DIR:$PYTHONPATH;"
   - "django-admin.py version;"
   - "flake8 --exclude=migrations --ignore=E501,E123,E124,E126,E128 --statistics .;"
 python:
