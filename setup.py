@@ -1,7 +1,7 @@
 import os
 from setuptools import setup, find_packages
 
-from recommends import VERSION
+VERSION = "0.0.16"
 
 
 def read(fname):
@@ -16,7 +16,7 @@ tests_requirements = read('test-requirements').splitlines()
 
 setup(
     name="django-recommends",
-    version=".".join(map(str, VERSION)),
+    version=VERSION,
     description="A django app that builds item-based suggestions for users",
     long_description=read('README.rst'),
     url='https://github.com/python-recsys/django-recommends',
