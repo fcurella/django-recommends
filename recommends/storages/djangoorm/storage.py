@@ -11,7 +11,6 @@ logger = logging.getLogger(RECOMMENDS_LOGGER_NAME)
 
 
 class DjangoOrmStorage(BaseRecommendationStorage):
-
     def get_similarities_for_object(self, obj, limit=10, raw_id=False):
         object_site_id = self.settings.SITE_ID
         qs = Similarity.objects.similar_to(
