@@ -103,6 +103,8 @@ class RecommendsTestCase(TestCase):
 
 
 class RecommendsListenersTestCase(TestCase):
+    fixtures = ['products.json']
+
     def setUp(self):
         self.client = Client()
         self.mug = RecProduct.objects.get(name='Coffee Mug')
