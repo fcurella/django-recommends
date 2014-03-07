@@ -2,7 +2,7 @@ from celery.task import task, periodic_task
 from celery.schedules import crontab
 from .utils import filelock
 
-from .settings import RECOMMENDS_TASK_RUN, RECOMMENDS_TASK_CRONTAB
+from .settings import RECOMMENDS_TASK_RUN, RECOMMENDS_TASK_CRONTAB, RECOMMENDS_TASK_EXPIRES
 
 
 def recommends_precompute():
@@ -20,7 +20,7 @@ def recommends_precompute():
     return results
 
 if RECOMMENDS_TASK_RUN:
-    @periodic_task(name='recommends_precompute', run_every=crontab(**RECOMMENDS_TASK_CRONTAB))
+    @periodic_task(name='recommends_precompute', run_every=crontab(**RECOMMENDS_TASK_CRONTAB), expires=RECOMMENDS_TASK_EXPIRES)
     def _recommends_precompute():
         recommends_precompute()
 
