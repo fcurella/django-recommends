@@ -7,6 +7,7 @@ before_install:
   - sudo apt-get -q update
   - sudo apt-get -q build-dep python-scipy
   - sudo apt-get install -qq python-scipy
+  - sudo apt-get install -qq python-numpy
 install:
   - pip install -r requirements.txt
   - pip install -r test-requirements.txt
