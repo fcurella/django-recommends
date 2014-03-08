@@ -10,8 +10,8 @@ before_install:
   - sudo apt-get install -qq python-numpy
 install:
   - pip install --quiet --upgrade pip
-  - pip install -r requirements.txt
-  - pip install -r test-requirements.txt
+  - pip install --quiet -r requirements.txt
+  - pip install --quiet -r test-requirements.txt
   - pip install -q $DJANGO
   - pip install -q $CELERY
   - pip install -q $DJCELERY
