@@ -26,10 +26,7 @@ class RedisStorage(BaseRecommendationStorage):
         return self._redis
 
     def get_lock(self):
-        result = self.redis.setnx(self.LOCK_KEY, 1)
-        if result:
-            self.redis.expire(self.LOCK_KEY, 3600)
-        return result
+        return self.redis.setnx(self.LOCK_KEY, 1)
 
     def release_lock(self):
         return self.redis.delete(self.LOCK_KEY)
