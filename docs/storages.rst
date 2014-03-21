@@ -5,7 +5,7 @@ Storage backend
 
 Results of the computation are stored according to the storage backend defined in ``RECOMMENDS_STORAGE_BACKEND`` (default to ``'recommends.storages.djangoorm.storage.DjangoOrmStorage'``). A storage backend defines how de/serialize and store/retrieve objects and results.
 
-A storage backend can be any class extending ``recommends.storages.base.RecommendationStorage`` that implements the following methods:
+A storage backend can be any class extending ``recommends.storages.base.RecommendationStorage`` that implements the following methods and properties:
 
 .. method:: get_identifier(self, obj, *args, **kwargs)
 
@@ -108,6 +108,19 @@ A storage backend can be any class extending ``recommends.storages.base.Recommen
 .. method:: remove_similarities(self, obj)
 
     Deletes all similarities that have object ``obj`` as source or target.
+
+.. method:: get_lock(self)
+
+    Optional. Acquires an exclusive lock on the storage is acquired. Returns ``True`` if the lock is aquired, or ``False`` if the lock is already acquired by a previous process.
+
+.. method:: release_lock(self)
+
+    Optional. Releases the lock acquired with the ``get_lock`` method.
+
+.. property:: can_lock
+
+
+    Optional. Determines if the storage provides its own locking mechanism. Defaults to ``False``, meaning the default file-base locking will be used.
 
 RedisStorage
 ------------

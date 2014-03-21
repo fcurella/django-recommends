@@ -13,9 +13,15 @@ def recommends_precompute():
     def _precompute(provider_instance):
         results.append(provider_instance.precompute())
 
-    with filelock('recommends_precompute.lock'):
-        [_precompute(provider_instance)
-         for provider_instance in recommendation_registry.get_vote_providers()]
+    if recommendation_registry.storage.can_lock:
+        locked = recommendation_registry.storage.get_lock()
+        if locked:
+            [_precompute(provider_instance) for provider_instance in recommendation_registry.get_vote_providers()]
+            recommendation_registry.storage.release_lock()
+    else:
+        with filelock('recommends_precompute.lock'):
+            [_precompute(provider_instance)
+             for provider_instance in recommendation_registry.get_vote_providers()]
 
     return results
 
