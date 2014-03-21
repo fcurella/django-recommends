@@ -2,6 +2,8 @@
 
 Changelog
 =========
+* v0.0.19
+    * added storages locking. Thanks Kirill Zaitsev.
 * v0.0.16
     * renamed ``--verbose`` option to ``--verbosity``.
     * The ``recommends_precompute`` method is available even with ``RECOMMENDS_TASK_RUN = False``.
