@@ -5,6 +5,8 @@ class BaseRecommendationStorage(object):
     threshold_similarities = 0
     threshold_recommendations = 0
 
+    can_lock = False
+
     def __init__(self, settings=None):
         self.identifier_manager = IdentifierManager()
         self.settings = settings
@@ -132,3 +134,16 @@ class BaseRecommendationStorage(object):
         Deletes all similarities that have object ``obj`` as source or target.
         """
         raise NotImplementedError
+
+    def get_lock(self):
+        """
+        Acquire a storage-specific lock
+        """
+        raise NotImplementedError
+
+    def release_lock(self):
+        """
+        Release a storage-specific lock
+        """
+        raise NotImplementedError
+
