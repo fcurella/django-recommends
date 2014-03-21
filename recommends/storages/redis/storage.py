@@ -16,11 +16,23 @@ class RedisStorage(BaseRecommendationStorage):
 
     _redis = None
 
+    can_lock = True
+    LOCK_KEY = 'recommends-redis-lock-key'
+
     @property
     def redis(self):
         if self._redis is None:
             self._redis = redis.StrictRedis(host=RECOMMENDS_STORAGE_REDIS_DATABASE['HOST'], port=RECOMMENDS_STORAGE_REDIS_DATABASE['PORT'], db=RECOMMENDS_STORAGE_REDIS_DATABASE['NAME'])
         return self._redis
+
+    def get_lock(self):
+        result = self.redis.setnx(self.LOCK_KEY, 1)
+        if result:
+            self.redis.expire(self.LOCK_KEY, 3600)
+        return result
+
+    def release_lock(self):
+        return self.redis.delete(self.LOCK_KEY)
 
     def _get_mock_models(self, dicts, mock_class=MockModel):
         return map(lambda x: mock_class(**x), dicts)
