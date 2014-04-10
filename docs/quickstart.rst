@@ -8,7 +8,7 @@ Quickstart
 
 2. Create a RecommendationProvider for your models, and register it in your ``models.py`` (see :doc:`providers`)
 
-3. Add ``'recommends'`` and ``'recommends.storage.djangoorm'`` to ``INSTALLED_APPS``
+3. Add ``'recommends'`` and ``'recommends.storages.djangoorm'`` to ``INSTALLED_APPS``
 
 4. Run ``syncdb``
 
