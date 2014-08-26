@@ -13,8 +13,11 @@ before_install:
   - sudo rm -rf /dev/shm
   - sudo ln -s /run/shm /dev/shm
 install:
+  - conda update --yes conda
+  - conda create --yes -n condaenv python=$TRAVIS_PYTHON_VERSION
+  - conda install --yes -n condaenv pip
+  - source activate condaenv
   - conda install --yes python=$TRAVIS_PYTHON_VERSION numpy scipy
-
   - pip install --quiet --upgrade pip
   - pip install -r test-requirements.txt
   - pip install .
