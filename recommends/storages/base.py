@@ -146,4 +146,3 @@ class BaseRecommendationStorage(object):
         Release a storage-specific lock
         """
         raise NotImplementedError
-

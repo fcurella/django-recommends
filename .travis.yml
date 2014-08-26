@@ -4,15 +4,23 @@ services:
   - mongodb
   - rabbitmq
 before_install:
-  - sudo apt-get -q update
-  - sudo apt-get -q build-dep python-scipy
-  - sudo apt-get install -qq python-scipy
-  - sudo apt-get install -qq python-numpy
-  - sudo apt-get install -qq python-sparse
+  - wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh
+  - chmod +x miniconda.sh
+  - ./miniconda.sh -b
+  - export PATH=/home/travis/miniconda/bin:$PATH
+  - conda update --yes conda
+  # The next couple lines fix a crash with multiprocessing on Travis and are not specific to using Miniconda
+  - sudo rm -rf /dev/shm
+  - sudo ln -s /run/shm /dev/shm
 install:
+  - conda update --yes conda
+  - conda create --yes -n condaenv python=$TRAVIS_PYTHON_VERSION
+  - conda install --yes -n condaenv pip
+  - source activate condaenv
+  - conda install --yes python=$TRAVIS_PYTHON_VERSION numpy scipy
   - pip install --quiet --upgrade pip
-  - pip install --quiet -r requirements.txt
   - pip install -r test-requirements.txt
+  - pip install .
   - pip install -q $DJANGO
   - pip install -q $CELERY
   - pip install -q $DJCELERY
@@ -21,10 +29,7 @@ before_script:
   - "django-admin.py version;"
   - "flake8 --exclude=docs --ignore=E501,E123,E124,E126,E127,E128 --statistics .;"
 python:
-  - "2.6"
   - "2.7"
-virtualenv:
-  system_site_packages: true
 env:
   - DJANGO="Django>=1.4,<1.5",CELERY="celery>=2.0,<3.0"
   - DJANGO="Django>=1.5,<1.6",CELERY="celery>=2.0,<3.0"
