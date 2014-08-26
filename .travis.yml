@@ -13,7 +13,7 @@ before_install:
   - sudo rm -rf /dev/shm
   - sudo ln -s /run/shm /dev/shm
 install:
-  - conda install --yes python=$TRAVIS_PYTHON_VERSION numpy scipy sparse
+  - conda install --yes python=$TRAVIS_PYTHON_VERSION numpy scipy
 
   - pip install --quiet --upgrade pip
   - pip install -r test-requirements.txt
