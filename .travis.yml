@@ -26,7 +26,6 @@ before_script:
   - "django-admin.py version;"
   - "flake8 --exclude=docs --ignore=E501,E123,E124,E126,E127,E128 --statistics .;"
 python:
-  - "2.6"
   - "2.7"
 env:
   - DJANGO="Django>=1.4,<1.5",CELERY="celery>=2.0,<3.0"
