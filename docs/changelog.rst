@@ -2,6 +2,10 @@
 
 Changelog
 =========
+* v0.0.21
+    * Release lock even if an exception is raised.
+* v0.0.20
+    * Removed lock expiration in Redis Storage.
 * v0.0.19
     * added storages locking. Thanks Kirill Zaitsev.
 * v0.0.16
