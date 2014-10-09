@@ -19,7 +19,7 @@ class DjangoOrmStorage(BaseRecommendationStorage):
             score__gt=0).order_by('-score')
         if raw_id:
             qs = qs.extra(
-                select={'contect_type_id': 'object_ctype'}).values(
+                select={'contect_type_id': 'object_ctype_id'}).values(
                     'related_object_id', 'contect_type_id'
                 )
         return qs[:limit]
@@ -31,7 +31,7 @@ class DjangoOrmStorage(BaseRecommendationStorage):
             object_site=object_site_id).order_by('-score')
         if raw_id:
             qs = qs.extra(
-                select={'contect_type_id': 'object_ctype'}).values(
+                select={'contect_type_id': 'object_ctype_id'}).values(
                     'object_id', 'contect_type_id'
                 )
         return qs[:limit]
