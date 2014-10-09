@@ -24,6 +24,13 @@ settings.configure(
     TEMPLATE_DIRS=(
         path.join(PROJECT_DIR, 'templates'),
     ),
+    MIDDLEWARE_CLASSES = (
+        'django.contrib.sessions.middleware.SessionMiddleware',
+        'django.middleware.common.CommonMiddleware',
+        'django.middleware.csrf.CsrfViewMiddleware',
+        'django.contrib.auth.middleware.AuthenticationMiddleware',
+        'django.contrib.messages.middleware.MessageMiddleware',
+    ),
     BROKER_URL='redis://localhost:6379/0',
     CELERY_ALWAYS_EAGER=True,
     ALLOWED_HOSTS=['*'],
@@ -37,6 +44,11 @@ settings.configure(
 
 
 def runtests(*test_args):
+    import django
+    try:
+        django.setup()  # Django 1.7+
+    except AttributeError:
+        pass
     import django.test.utils
     runner_class = django.test.utils.get_runner(settings)
     test_runner = runner_class(verbosity=1, interactive=True)
