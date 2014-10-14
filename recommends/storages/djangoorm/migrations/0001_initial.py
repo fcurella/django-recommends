@@ -7,7 +7,6 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('contenttypes', '0001_initial'),
     ]
 
     operations = [
@@ -15,11 +14,11 @@ class Migration(migrations.Migration):
             name='Recommendation',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('object_ctype', models.PositiveIntegerField()),
                 ('object_id', models.PositiveIntegerField()),
                 ('object_site', models.PositiveIntegerField()),
                 ('user', models.PositiveIntegerField()),
                 ('score', models.FloatField(default=None, null=True, blank=True)),
-                ('object_ctype', models.ForeignKey(to='contenttypes.ContentType')),
             ],
             options={
                 'ordering': ['-score'],
@@ -30,13 +29,13 @@ class Migration(migrations.Migration):
             name='Similarity',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('object_ctype', models.PositiveIntegerField()),
                 ('object_id', models.PositiveIntegerField()),
                 ('object_site', models.PositiveIntegerField()),
                 ('score', models.FloatField(default=None, null=True, blank=True)),
+                ('related_object_ctype', models.PositiveIntegerField()),
                 ('related_object_id', models.PositiveIntegerField()),
                 ('related_object_site', models.PositiveIntegerField()),
-                ('object_ctype', models.ForeignKey(to='contenttypes.ContentType')),
-                ('related_object_ctype', models.ForeignKey(related_name='similar', to='contenttypes.ContentType')),
             ],
             options={
                 'ordering': ['-score'],
