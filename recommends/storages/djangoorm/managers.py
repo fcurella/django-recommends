@@ -39,10 +39,10 @@ class SimilarityManager(RecommendsManager):
         related_object_id = object_related.id
 
         return self.get_or_create(
-            object_ctype=object_ctype_id,
+            object_ctype_id=object_ctype_id,
             object_id=object_id,
             object_site=object_target_site.id,
-            related_object_ctype=related_object_ctype_id,
+            related_object_ctype_id=related_object_ctype_id,
             related_object_id=related_object_id,
             related_object_site=object_related_site.id
         )
@@ -75,7 +75,7 @@ class RecommendationManager(RecommendsManager):
         object_id = object_recommended.id
 
         return self.get_or_create(
-            object_ctype=object_ctype_id,
+            object_ctype_id=object_ctype_id,
             object_id=object_id,
             object_site=object_site.id,
             user=user.id
