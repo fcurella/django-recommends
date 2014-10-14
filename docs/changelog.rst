@@ -2,6 +2,9 @@
 
 Changelog
 =========
+
+* v0.0.22
+    * Django 1.7 compatibility. Thanks Ilya Baryshev.
 * v0.0.21
     * Release lock even if an exception is raised.
 * v0.0.20
