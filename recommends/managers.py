@@ -12,7 +12,7 @@ class CachedContentTypesMixin():
 
     def get_ctype_id_for_obj(self, obj):
         app_label = obj._meta.app_label
-        module_name = obj._meta.module_name
+        module_name = obj._meta.model_name
         return self.ctypes["%s.%s" % (app_label, module_name)]
 
 
