@@ -28,8 +28,8 @@ class SimilarityManager(RecommendsManager):
             related_object_id=related_obj.id
         )
 
-    def get_query_set(self):
-        return super(SimilarityManager, self).get_query_set().filter(score__isnull=False)
+    def get_queryset(self):
+        return super(SimilarityManager, self).get_queryset().filter(score__isnull=False)
 
     def get_or_create_for_objects(self, object_target, object_target_site, object_related, object_related_site):
         object_ctype_id = self.get_ctype_id_for_obj(object_target)
@@ -67,8 +67,8 @@ class SimilarityManager(RecommendsManager):
 
 
 class RecommendationManager(RecommendsManager):
-    def get_query_set(self):
-        return super(RecommendationManager, self).get_query_set().filter(score__isnull=False)
+    def get_queryset(self):
+        return super(RecommendationManager, self).get_queryset().filter(score__isnull=False)
 
     def get_or_create_for_object(self, user, object_recommended, object_site):
         object_ctype_id = self.get_ctype_id_for_obj(object_recommended)
