@@ -51,7 +51,7 @@ class GhettoAlgorithm(BaseAlgorithm):
                         totalSim[item2] += similarity
 
             # Divide each total score by total weighting to get an average
-            rankings = ((item, (score / totalSim[item])) for item, score in scores.iteritems() if totalSim[item] != 0)
+            rankings = [(item, (score / totalSim[item])) for item, score in scores.iteritems() if totalSim[item] != 0]
             return rankings
         return []
 
