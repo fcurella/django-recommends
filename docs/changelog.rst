@@ -2,7 +2,9 @@
 
 Changelog
 =========
-
+* v0.1.0
+    * Django 1.8 compatibility. Removed support for Django 1.6.
+    * Added Providers autodiscovery.
 * v0.0.22
     * Django 1.7 compatibility. Thanks Ilya Baryshev.
 * v0.0.21

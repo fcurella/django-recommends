@@ -21,7 +21,6 @@ Example::
     from django.contrib.auth.models import User
     from django.contrib.sites.models import Site
     from django.utils.encoding import python_2_unicode_compatible
-    from recommends.providers import recommendation_registry, RecommendationProvider
 
 
     @python_2_unicode_compatible
@@ -54,6 +53,16 @@ Example::
             return "Vote"
 
 
+Create a file called ``recommendations.py`` inside your app::
+
+    # recommendations.py
+
+    from django.contrib.auth.models import User
+    from recommends.providers import RecommendationProvider
+    from recommends.providers import recommendation_registry
+
+    from .models import Product, Vote
+
     class ProductRecommendationProvider(RecommendationProvider):
         def get_users(self):
             return User.objects.filter(is_active=True, votes__isnull=False).distinct()
@@ -77,6 +86,23 @@ Example::
             return rating.product
 
     recommendation_registry.register(Vote, [Product], ProductRecommendationProvider)
+
+All files called ``recommendations.py`` will be autodiscovered and loaded by
+``django-recommends``. You can change the default module name, or disable
+autodiscovery by tweaking the ``RECOMMENDS_AUTODISCOVER_MODULE`` setting (see
+:doc:`settings`), or you could manually import your module in your app's
+``AppConfig.ready``::
+
+    # apps.py
+
+    from django.apps import AppConfig
+
+
+    class MyAppConfig(AppConfig):
+        name = 'my_app'
+
+        def ready(self):
+            from .myrecs import *
 
 Properties
 ----------
