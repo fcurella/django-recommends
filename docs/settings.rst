@@ -1,6 +1,15 @@
 Settings
 ========
 
+Autodiscovery
+-------------
+
+By default, ``django-recommends`` will import and load any modules called
+``recommendations`` within your apps.
+
+You can change the default module name by setting ``RECOMMENDS_AUTODISCOVER_MODULE``
+to the name that you want, or you can disable this behavior by setting it to ``False``.
+
 Celery Task
 -----------
 
