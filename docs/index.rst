@@ -29,7 +29,7 @@ Requirements
 ============
 
 * Python 2.7, Python 3.3
-* Django>=1.4.1
+* Django>=1.7
 * celery>=2.3.3
 * django-celery>=2.3.3
 

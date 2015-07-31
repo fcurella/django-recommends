@@ -31,14 +31,9 @@ before_script:
 python:
   - "2.7"
 env:
-  - DJANGO="Django>=1.4,<1.5",CELERY="celery>=2.0,<3.0"
-  - DJANGO="Django>=1.5,<1.6",CELERY="celery>=2.0,<3.0"
-  - DJANGO="Django>=1.6,<1.7",CELERY="celery>=2.0,<3.0"
   - DJANGO="Django>=1.7,<1.8",CELERY="celery>=2.0,<3.0"
-  - DJANGO="Django>=1.4,<1.5",CELERY="celery>=3.0,<4.0"
-  - DJANGO="Django>=1.5,<1.6",CELERY="celery>=3.0,<4.0"
-  - DJANGO="Django>=1.6,<1.7",CELERY="celery>=3.0,<4.0"
   - DJANGO="Django>=1.7,<1.8",CELERY="celery>=3.0,<4.0"
+  - DJANGO="Django>=1.8,<1.9",CELERY="celery>=3.0,<4.0"
 script: python recommends/tests/runtests.py
 after_failure:
   - env

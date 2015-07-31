@@ -2,13 +2,11 @@ try:
     from django.conf.urls.defaults import patterns, include, url
 except ImportError:
     from django.conf.urls import patterns, include, url
-from django.views.generic import TemplateView, DetailView
-from .models import RecProduct
+from django.views.generic import TemplateView
 
-
-# Uncomment the next two lines to enable the admin:
 from django.contrib import admin
-admin.autodiscover()
+
+from .views import RecProductView
 
 urlpatterns = patterns('',
     # Examples:
@@ -25,8 +23,7 @@ urlpatterns = patterns('',
     url(r'^login/',
         'recommends.tests.views.login', name='login'),
     url(r'^product/(?P<pk>\d+)/$',
-        DetailView.as_view(
-            model=RecProduct), name='product_detail'),
+        RecProductView.as_view(), name='product_detail'),
     url(r'^$', TemplateView.as_view(
         template_name='home.html'), name='home'),
 )

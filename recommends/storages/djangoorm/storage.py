@@ -1,6 +1,5 @@
 import logging
 import math
-from django.db import transaction
 from recommends.storages.base import BaseRecommendationStorage
 from recommends.settings import RECOMMENDS_LOGGER_NAME
 from .settings import RECOMMENDS_STORAGE_COMMIT_THRESHOLD
@@ -42,7 +41,6 @@ class DjangoOrmStorage(BaseRecommendationStorage):
     def store_votes(self, iterable):
         pass
 
-    @transaction.commit_manually
     def store_similarities(self, itemMatch):
         try:
             logger.info('saving similarities')
@@ -68,12 +66,9 @@ class DjangoOrmStorage(BaseRecommendationStorage):
                                 logger.debug(
                                     'saved %s similarities...' %
                                     count)
-                                transaction.commit()
         finally:
             logger.info('saved %s similarities...' % count)
-            transaction.commit()
 
-    @transaction.commit_manually
     def store_recommendations(self, recommendations):
         try:
             logger.info('saving recommendations')
@@ -92,10 +87,8 @@ class DjangoOrmStorage(BaseRecommendationStorage):
                         )
                         if count % RECOMMENDS_STORAGE_COMMIT_THRESHOLD == 0:
                             logger.debug('saved %s recommendations...' % count)
-                            transaction.commit()
         finally:
             logger.info('saved %s recommendations...' % count)
-            transaction.commit()
 
     def remove_recommendations(self, obj):
         Recommendation.objects.filter_for_object(obj=obj).delete()
