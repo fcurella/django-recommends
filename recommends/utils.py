@@ -27,7 +27,7 @@ def filelock(name, wait_delay=.1):
     while True:
         try:
             fd = os.open(path, os.O_CREAT | os.O_EXCL | os.O_RDWR)
-        except OSError, e:
+        except OSError as e:
             if e.errno != errno.EEXIST:
                 raise
             time.sleep(wait_delay)

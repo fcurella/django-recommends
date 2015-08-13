@@ -1,0 +1,3 @@
+-r test-requirements.txt
+
+git+https://github.com/ocelma/python-recsys.git

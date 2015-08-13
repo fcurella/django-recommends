@@ -2,6 +2,9 @@
 
 Changelog
 =========
+* v0.2.0
+    * Added support for Python 3.4
+    * Dropped support for Celery 2.x
 * v0.1.0
     * Django 1.8 compatibility. Removed support for Django 1.6.
     * Added Providers autodiscovery.

@@ -55,7 +55,7 @@ class RecommendsTestCase(TestCase):
         self.assertEquals(len(similar_to_mug), self.results['len_similar_to_mug'])
         self.assertTrue(self.wine in [s.related_object for s in similar_to_mug])
         # Make sure we didn't get all 0s
-        zero_scores = filter(lambda x: x.score == 0, similar_to_mug)
+        zero_scores = list(filter(lambda x: x.score == 0, similar_to_mug))
         self.assertNotEquals(len(zero_scores), len(similar_to_mug))
 
     def test_similarities_raw_ids(self):
@@ -74,7 +74,7 @@ class RecommendsTestCase(TestCase):
         self.assertEquals(len(recommendations), self.results['len_recommended'])
         self.assertTrue(self.wine in [s.object for s in recommendations])
         # Make sure we didn't get all 0s
-        zero_scores = filter(lambda x: x.score == 0, recommendations)
+        zero_scores = list(filter(lambda x: x.score == 0, recommendations))
         self.assertNotEquals(len(zero_scores), len(recommendations))
         # Make sure we don't recommend item that the user already have
         self.assertFalse(self.mug in [v.product for v in RecVote.objects.filter(user=self.user1)])
@@ -92,14 +92,14 @@ class RecommendsTestCase(TestCase):
         self.client.login(username='user1', password='user1')
 
         response = self.client.get(self.mug.get_absolute_url())
-        self.assertTrue(self.orange_juice.get_absolute_url() in response.content)
+        self.assertContains(response, self.orange_juice.get_absolute_url())
 
     def _test_performance(self):
         stmt = """recommends_precompute()"""
         setup = """from recommends.tasks import recommends_precompute"""
-        print "timing..."
+        print("timing...")
         times = timeit.repeat(stmt, setup, number=100)
-        print times
+        print(times)
 
 
 class RecommendsListenersTestCase(TestCase):
@@ -130,18 +130,18 @@ class RecommendsListenersTestCase(TestCase):
 
         response = self.client.get(reverse('home'))
         steak_url = self.steak.get_absolute_url()
-        self.assertTrue(steak_url in response.content)
+        self.assertContains(response, steak_url)
         recommendations = self.provider.storage.get_recommendations_for_user(self.user1)
-        steak_recs = filter(lambda x: x.object_id == self.steak.id, recommendations)
-        self.assertEqual(1L, len(steak_recs))
+        steak_recs = list(filter(lambda x: x.object_id == self.steak.id, recommendations))
+        self.assertEqual(1, len(steak_recs))
 
         self.steak.delete()
 
         response = self.client.get(reverse('home'))
-        self.assertFalse(steak_url in response.content)
+        self.assertNotContains(response, steak_url)
         recommendations = self.provider.storage.get_recommendations_for_user(self.user1)
-        steak_recs = filter(lambda x: x.object_id == self.steak.id, recommendations)
-        self.assertEqual(0L, len(steak_recs))
+        steak_recs = list(filter(lambda x: x.object_id == self.steak.id, recommendations))
+        self.assertEqual(0, len(steak_recs))
 
     def tearDown(self):
         self.vote.delete()
