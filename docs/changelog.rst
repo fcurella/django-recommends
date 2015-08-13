@@ -2,6 +2,10 @@
 
 Changelog
 =========
+* v0.2.2
+    * Added Python 3.3 Trove classifier to `setup.py`.
+* v0.2.1
+    * Added Python 3.4 Trove classifier to `setup.py`.
 * v0.2.0
     * Added support for Python 3.4
     * Dropped support for Celery 2.x

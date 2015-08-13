@@ -30,6 +30,7 @@ before_script:
   - "flake8 --exclude=docs,south_migrations --ignore=E501,E123,E124,E126,E127,E128 --statistics .;"
 python:
   - "2.7"
+  - "3.3"
   - "3.4"
 env:
   - DJANGO="Django>=1.7,<1.8",CELERY="celery>=3.0,<4.0"
