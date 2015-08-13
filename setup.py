@@ -11,8 +11,7 @@ def read(fname):
     except IOError:
         return ''
 
-requirements = read('requirements').splitlines()
-tests_requirements = read('test-requirements').splitlines()
+requirements = read('requirements.txt').splitlines()
 
 setup(
     name="django-recommends",
@@ -36,5 +35,4 @@ setup(
         'Topic :: Scientific/Engineering :: Information Analysis',
     ],
     install_requires=requirements,
-    tests_require=tests_requirements,
 )

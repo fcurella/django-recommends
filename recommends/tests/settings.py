@@ -1,4 +1,7 @@
+import sys
 from os import path
+
+
 # Django settings for example_project project.
 PROJECT_DIR = path.dirname(path.realpath(__file__))
 
@@ -166,4 +169,4 @@ DATABASES = {
     }
 }
 
-RECOMMENDS_TEST_RECSYS = True
+RECOMMENDS_TEST_RECSYS = sys.version_info[0] == 2
