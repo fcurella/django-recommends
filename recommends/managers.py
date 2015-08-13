@@ -1,7 +1,7 @@
 from recommends.utils import ctypes_dict
 
 
-class CachedContentTypesMixin():
+class CachedContentTypesMixin(object):
     _ctypes = None
 
     @property
@@ -16,7 +16,7 @@ class CachedContentTypesMixin():
         return self.ctypes["%s.%s" % (app_label, module_name)]
 
 
-class DictStorageManager(object, CachedContentTypesMixin):
+class DictStorageManager(CachedContentTypesMixin):
     def similarity_for_objects(self, object_target, object_target_site, object_related, object_related_site):
         object_ctype_id = self.get_ctype_id_for_obj(object_target)
         object_id = object_target.id

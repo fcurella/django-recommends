@@ -36,7 +36,7 @@ class GhettoAlgorithm(BaseAlgorithm):
             totalSim = defaultdict(int)
 
             # Loop over items rated by this user
-            for (item, rating) in userRatings.iteritems():
+            for (item, rating) in userRatings.items():
                 # Loop over items similar to this one
                 for (item2, similarity) in itemMatch[item]:
                     # Skip ignored items
@@ -51,7 +51,7 @@ class GhettoAlgorithm(BaseAlgorithm):
                         totalSim[item2] += similarity
 
             # Divide each total score by total weighting to get an average
-            rankings = ((item, (score / totalSim[item])) for item, score in scores.iteritems() if totalSim[item] != 0)
+            rankings = ((item, (score / totalSim[item])) for item, score in scores.items() if totalSim[item] != 0)
             return rankings
         return []
 

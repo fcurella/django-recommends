@@ -1,4 +1,3 @@
 redis==2.7.4
 pymongo==2.5.2
-git+https://github.com/ocelma/python-recsys.git
 flake8>=2.0
