@@ -3,7 +3,7 @@ import errno
 import os
 import time
 import tempfile
-from django.utils import importlib
+import importlib
 
 
 def import_from_classname(class_name_str):
