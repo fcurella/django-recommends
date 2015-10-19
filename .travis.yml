@@ -21,9 +21,8 @@ install:
   - pip install --quiet --upgrade pip
   - pip install -r test-requirements-py$TRAVIS_PYTHON_VERSION.txt
   - pip install .
+  - pip install -q "celery>=3.0,<4.0"
   - pip install -q $DJANGO
-  - pip install -q $CELERY
-  - pip install -q $DJCELERY
 before_script:
   - "export PYTHONPATH=$TRAVIS_BUILD_DIR:$PYTHONPATH;"
   - "django-admin.py version;"
@@ -33,8 +32,9 @@ python:
   - "3.3"
   - "3.4"
 env:
-  - DJANGO="Django>=1.7,<1.8",CELERY="celery>=3.0,<4.0"
-  - DJANGO="Django>=1.8,<1.9",CELERY="celery>=3.0,<4.0"
+  - DJANGO="Django>=1.7,<1.8"
+  - DJANGO="Django>=1.8,<1.9"
+  - DJANGO="Django>=1.9a1,<1.10"
 script: python recommends/tests/runtests.py
 after_failure:
   - env
