@@ -37,7 +37,7 @@ Optional
 --------
 * redis
 * pymongo
-* python-recsys (ython 2.x only)
+* python-recsys (Python 2.x only)
 
 Indices and tables
 ==================
