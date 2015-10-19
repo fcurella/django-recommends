@@ -1,5 +1,5 @@
 from collections import defaultdict
-from django.db import models
+from django.apps import apps
 
 
 def model_path(obj):
@@ -33,7 +33,7 @@ class IdentifierManager(object):
         app_module, site_id, object_id = identifier.split(':')
         app_label, model = app_module.split('.')
         site = self.sites[int(site_id)]
-        ModelClass = models.get_model(app_label, model)
+        ModelClass = apps.get_model(app_label, model)
         model = ModelClass.objects.get(pk=object_id)
         return model, site
 
