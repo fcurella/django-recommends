@@ -21,7 +21,6 @@ install:
   - pip install --quiet --upgrade pip
   - pip install -r test-requirements-py$TRAVIS_PYTHON_VERSION.txt
   - pip install .
-  - pip install -q "celery>=3.0,<4.0"
   - pip install -q $DJANGO
 before_script:
   - "export PYTHONPATH=$TRAVIS_BUILD_DIR:$PYTHONPATH;"
