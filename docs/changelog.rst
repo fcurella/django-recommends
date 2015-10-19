@@ -2,6 +2,9 @@
 
 Changelog
 =========
+
+* v0.3.0
+    * Added support for Django 1.9.
 * v0.2.2
     * Added Python 3.3 Trove classifier to `setup.py`.
 * v0.2.1
