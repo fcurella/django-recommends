@@ -30,10 +30,16 @@ python:
   - "2.7"
   - "3.3"
   - "3.4"
+  - "3.5"
 env:
   - DJANGO="Django>=1.7,<1.8"
   - DJANGO="Django>=1.8,<1.9"
   - DJANGO="Django>=1.9a1,<1.10"
+matrix:
+  exclude:
+    - python: 3.3
+      env: DJANGO="Django>=1.9a1,<1.10"
+
 script: python recommends/tests/runtests.py
 after_failure:
   - env
