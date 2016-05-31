@@ -25,7 +25,7 @@ install:
 before_script:
   - "export PYTHONPATH=$TRAVIS_BUILD_DIR:$PYTHONPATH;"
   - "django-admin.py version;"
-  - "flake8 --exclude=docs,south_migrations --ignore=E501,E123,E124,E126,E127,E128 --statistics .;"
+  - "flake8 --exclude=docs,south_migrations,tests --ignore=E501,E123,E124,E126,E127,E128 --statistics .;"
 python:
   - "2.7"
   - "3.3"
