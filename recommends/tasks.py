@@ -35,7 +35,7 @@ if RECOMMENDS_TASK_RUN:
 
 @task(name='remove_suggestions')
 def remove_suggestions(rated_model, object_id):
-    from django.db.models import apps
+    from django.apps import apps
     from recommends.providers import recommendation_registry
 
     ObjectClass = apps.get_model(*rated_model.split('.'))
@@ -48,7 +48,7 @@ def remove_suggestions(rated_model, object_id):
 
 @task(name='remove_similarities')
 def remove_similarities(rated_model, object_id):
-    from django.db.models import apps
+    from django.apps import apps
     from recommends.providers import recommendation_registry
 
     ObjectClass = apps.get_model(*rated_model.split('.'))

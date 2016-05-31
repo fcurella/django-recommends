@@ -2,6 +2,9 @@
 import sys
 from os import path
 
+import django
+from django.test.utils import get_runner
+
 from django.conf import settings
 
 PROJECT_DIR = path.dirname(path.realpath(__file__))
@@ -24,7 +27,7 @@ settings.configure(
     TEMPLATE_DIRS=(
         path.join(PROJECT_DIR, 'templates'),
     ),
-    MIDDLEWARE_CLASSES = (
+    MIDDLEWARE_CLASSES=(
         'django.contrib.sessions.middleware.SessionMiddleware',
         'django.middleware.common.CommonMiddleware',
         'django.middleware.csrf.CsrfViewMiddleware',
@@ -44,13 +47,11 @@ settings.configure(
 
 
 def runtests(*test_args):
-    import django
     try:
         django.setup()  # Django 1.7+
     except AttributeError:
         pass
-    import django.test.utils
-    runner_class = django.test.utils.get_runner(settings)
+    runner_class = get_runner(settings)
     test_runner = runner_class(verbosity=1, interactive=True)
     failures = test_runner.run_tests(['recommends'])
     sys.exit(failures)
