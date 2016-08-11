@@ -1,14 +1,12 @@
-try:
-    from django.conf.urls.defaults import patterns, include, url
-except ImportError:
-    from django.conf.urls import patterns, include, url
+from django.conf.urls import url
+
 from django.views.generic import TemplateView
 
 from django.contrib import admin
 
-from .views import RecProductView
+from .views import login, RecProductView
 
-urlpatterns = patterns('',
+urlpatterns = [
     # Examples:
     # url(r'^$', 'example_project.views.home', name='home'),
     # url(r'^example_project/',
@@ -19,11 +17,11 @@ urlpatterns = patterns('',
     # include('django.contrib.admindocs.urls')),
 
     # Uncomment the next line to enable the admin:
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin/', admin.site.urls),
     url(r'^login/',
-        'recommends.tests.views.login', name='login'),
+        login, name='login'),
     url(r'^product/(?P<pk>\d+)/$',
         RecProductView.as_view(), name='product_detail'),
     url(r'^$', TemplateView.as_view(
         template_name='home.html'), name='home'),
-)
+]

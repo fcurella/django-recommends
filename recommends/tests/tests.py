@@ -38,6 +38,8 @@ class RecommendsTestCase(TestCase):
         self.wine = RecProduct.objects.get(name='Bottle of Red Wine')
         RecProduct.objects.get(name='1lb Tenderloin Steak').delete()
         self.user1 = User.objects.get(username='user1')
+        self.user1.set_password('user1')
+        self.user1.save()
 
         from django.template import loader
         loader.template_source_loaders = None
@@ -117,6 +119,8 @@ class RecommendsListenersTestCase(TestCase):
         self.wine = RecProduct.objects.get(name='Bottle of Red Wine')
         self.steak = RecProduct.objects.get(name='1lb Tenderloin Steak')
         self.user1 = User.objects.get(username='user1')
+        self.user1.set_password('user1')
+        self.user1.save()
 
         self.provider = recommendation_registry.get_provider_for_content(RecProduct)
 
