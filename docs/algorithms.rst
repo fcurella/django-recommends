@@ -1,7 +1,7 @@
 .. ref-algorithms:
 
 Recommendation Algorithms
-========================
+=========================
 
 A Recommendation Algorithm is a subclass of ``recommends.algorithms.base.BaseAlgorithm`` that implements methods for calculating similarities and recommendations.
 
@@ -54,8 +54,8 @@ Subclasses must implement this methods:
                 ]),
             ]
 
-GhettoAlgorithm
----------------
+NaiveAlgorithm
+--------------
 
 This class implement a basic algorithm (adapted from: Segaran, T: Programming Collective Intelligence) that doesn't require any dependency at the expenses of performances.
 

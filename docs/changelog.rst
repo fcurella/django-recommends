@@ -2,7 +2,10 @@
 
 Changelog
 =========
-
+* v0.3.11
+    * Start deprecating ``GhettoAlgorithm`` in favor of ``NaiveAlgorithm``.
+* v0.3.1
+    * Fix wrong import
 * v0.3.0
     * Added support for Django 1.9.
 * v0.2.2

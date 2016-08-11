@@ -6,7 +6,7 @@ from ..converters import model_path
 from ..settings import RECOMMENDS_STORAGE_BACKEND, RECOMMENDS_LOGGER_NAME
 from ..tasks import remove_suggestions, remove_similarities
 from ..utils import import_from_classname
-from ..algorithms.ghetto import GhettoAlgorithm
+from ..algorithms.naive import NaiveAlgorithm
 
 
 logger = logging.getLogger(RECOMMENDS_LOGGER_NAME)
@@ -85,7 +85,7 @@ class RecommendationProvider(object):
     its score, and user.
     """
     rate_signals = ['django.db.models.signals.pre_delete']
-    algorithm = GhettoAlgorithm()
+    algorithm = NaiveAlgorithm()
 
     def __init__(self):
         if not getattr(self, 'storage', False):
