@@ -11,7 +11,7 @@ Subclasses override properties amd methods in order to determine what constitute
 
 The algorithm to use for computing is specified by the ``algorithm`` property.
 
-A basic algorithm class is provided for convenience at ``recommends.algorithms.ghetto.GhettoAlgorithm``, but users can implement their own solutions. See :doc:`algorithms`.
+A basic algorithm class is provided for convenience at ``recommends.algorithms.naive.NaiveAlgorithm``, but users can implement their own solutions. See :doc:`algorithms`.
 
 Example::
 
@@ -118,7 +118,7 @@ Properties
     
     * ``algorithm``
         
-        Defaults to ``recommends.algorithms.ghetto.GhettoAlgorithm``
+        Defaults to ``recommends.algorithms.naive.NaiveAlgorithm``
 
 Methods
 -------

@@ -1,13 +1,18 @@
+import os
+import warnings
+
 import timeit
-from django.test import TestCase
+
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
-from django.test import Client
-from recommends.providers import recommendation_registry
-from recommends.tasks import recommends_precompute
-from .models import RecProduct, RecVote
+from django.test import Client, TestCase
 from django.test.utils import override_settings
-import os
+
+from recommends.algorithms.ghetto import GhettoAlgorithm
+from recommends.providers import RecommendationProvider, recommendation_registry
+from recommends.tasks import recommends_precompute
+
+from .models import RecProduct, RecVote
 
 
 @override_settings(CELERY_DB_REUSE_MAX=200, LANGUAGES=(
@@ -146,3 +151,16 @@ class RecommendsListenersTestCase(TestCase):
     def tearDown(self):
         self.vote.delete()
         recommends_precompute()
+
+
+class GhettoAlgoTestCase(TestCase):
+    def test_ghetto_algo_warning(self):
+        with warnings.catch_warnings(record=True) as w:
+            # Cause all warnings to always be triggered.
+            warnings.simplefilter("always")
+
+            class GhettAlgoRecommendationProvider(RecommendationProvider):
+                algorithm = GhettoAlgorithm()
+
+            self.assertEqual(len(w), 1)
+            self.assertTrue(issubclass(w[-1].category, PendingDeprecationWarning))
