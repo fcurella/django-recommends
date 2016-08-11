@@ -170,7 +170,6 @@ To minimize disk I/O from the database, Similiarities and Suggestions will be co
 
 ``RECOMMENDS_STORAGE_DATABASE_ALIAS`` is used as the database where similarities and suggestions will be stored. Note that you will have to add ``recommends.storages.djangoorm.routers.RecommendsRouter`` to your settings' ``DATABASE_ROUTERS`` if you want to use something else than the default database. Default value is set to ``'recommends'``.
 
-Using the router requires at least Django 1.3 rev16869 (which includes fixes not present in Django 1.3.1). You can install Django 1.3-svn running ``pip install svn+http://code.djangoproject.com/svn/django/branches/releases/1.3.X#egg=Django``.
 
 MongoStorage
 ------------
