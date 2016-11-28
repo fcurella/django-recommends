@@ -26,12 +26,12 @@ Subclasses must implement this methods:
 
             [
                 ("<object_identifier1>", [
-                                (<related_object_identifier2>, <score>),
-                                (<related_object_identifier3>, <score>),
+                    (<related_object_identifier2>, <score>),
+                    (<related_object_identifier3>, <score>),
                 ]),
                 ("<object_identifier2>", [
-                                (<related_object_identifier2>, <score>),
-                                (<related_object_identifier3>, <score>),
+                    (<related_object_identifier2>, <score>),
+                    (<related_object_identifier3>, <score>),
                 ]),
             ]
 
