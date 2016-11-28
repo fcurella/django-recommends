@@ -27,6 +27,7 @@ def recommends_precompute():
 
     return results
 
+
 if RECOMMENDS_TASK_RUN:
     @periodic_task(name='recommends_precompute', run_every=crontab(**RECOMMENDS_TASK_CRONTAB), expires=RECOMMENDS_TASK_EXPIRES)
     def _recommends_precompute():
