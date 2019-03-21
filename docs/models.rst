@@ -8,7 +8,7 @@ These classes don't have be Django Models (ie: tied to a table in a database). A
 
 .. class:: Similarity()
 
-    A ``Similarity`` is an object with the fellowing properties:
+    A ``Similarity`` is an object with the following properties:
 
     .. attribute:: object
 
@@ -24,7 +24,7 @@ These classes don't have be Django Models (ie: tied to a table in a database). A
 
 .. class:: Recommendation()
 
-    A ``Recommendation`` is an object with the fellowing properties:
+    A ``Recommendation`` is an object with the following properties:
 
     .. attribute:: object
 
