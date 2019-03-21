@@ -40,7 +40,7 @@ class BaseAlgorithm(object):
             ]
 
         """
-        raise NotImplemented
+        raise NotImplementedError
 
     def calculate_recommendations(self, vote_list, itemMatch):
         """
@@ -62,4 +62,4 @@ class BaseAlgorithm(object):
             ]
 
         """
-        raise NotImplemented
+        raise NotImplementedError
