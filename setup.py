@@ -14,6 +14,7 @@ def read(fname):
 
 requirements = read('requirements.txt').splitlines()
 
+
 setup(
     name="django-recommends",
     version=VERSION,
