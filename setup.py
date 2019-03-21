@@ -11,7 +11,9 @@ def read(fname):
     except IOError:
         return ''
 
+
 requirements = read('requirements.txt').splitlines()
+
 
 setup(
     name="django-recommends",

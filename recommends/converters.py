@@ -41,6 +41,8 @@ class IdentifierManager(object):
         """
         The opposite of ``get_identifier()``
         """
+        if type(identifier) is not str:
+            identifier = identifier.decode('utf-8')
         app_module, site_id, object_id = identifier.split(':')
         ctype = self.ctypes[app_module]
 

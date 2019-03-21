@@ -66,10 +66,12 @@ class RecommendationProviderRegistry(object):
     def get_vote_providers(self):
         return self._vote_providers.values()
 
+
 recommendation_registry = RecommendationProviderRegistry()
 
 
 class Rating(object):
+
     def __init__(self, user, rated_object, rating):
         self.user = user
         self.rated_object = rated_object
