@@ -25,7 +25,6 @@ env:
   - DJANGO="Django>=1.11,<2.0"
   - DJANGO="Django>=2.0,<2.1"
   - DJANGO="Django>=2.1,<2.2"
-  - DJANGO="Django>=2.2,<3.0"
 jobs:
   exclude:
     - python: "3.7"
