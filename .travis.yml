@@ -8,12 +8,9 @@ services:
   - mongodb
   - rabbitmq-server
 install:
-  - conda create --yes -n condaenv python=$TRAVIS_PYTHON_VERSION
-  - conda install --yes -n condaenv pip
-  - source activate condaenv
-  - conda install --yes python=$TRAVIS_PYTHON_VERSION numpy scipy
   - pip install --quiet --upgrade pip
   - pip install -r test-requirements.txt
+  - pip install numpy scipy
   - pip install .
   - pip install -q $DJANGO
 before_script:
