@@ -1,9 +1,7 @@
 from __future__ import unicode_literals
 from django.contrib.contenttypes.models import ContentType
-from django.utils.encoding import python_2_unicode_compatible
 
 
-@python_2_unicode_compatible
 class MockModel(object):
     _object = None
 
@@ -24,7 +22,6 @@ class MockModel(object):
         return self._object
 
 
-@python_2_unicode_compatible
 class MockSimilarity(MockModel):
     _related_object = None
 

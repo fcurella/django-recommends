@@ -3,10 +3,8 @@ from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.contrib.contenttypes.fields import GenericForeignKey
 from .managers import RecommendsManager, SimilarityManager, RecommendationManager
-from django.utils.encoding import python_2_unicode_compatible
 
 
-@python_2_unicode_compatible
 class RecommendsBaseModel(models.Model):
     """(RecommendsBaseModel description)"""
     object_ctype = models.ForeignKey(ContentType)
@@ -24,7 +22,6 @@ class RecommendsBaseModel(models.Model):
         return "RecommendsBaseModel"
 
 
-@python_2_unicode_compatible
 class Similarity(RecommendsBaseModel):
     """How much an object is similar to another"""
 
@@ -46,7 +43,6 @@ class Similarity(RecommendsBaseModel):
         return "Similarity between %s and %s" % (self.object, self.related_object)
 
 
-@python_2_unicode_compatible
 class Recommendation(RecommendsBaseModel):
     """Recommended an object for a particular user"""
     user = models.PositiveIntegerField()
