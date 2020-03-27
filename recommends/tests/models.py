@@ -26,9 +26,11 @@ class RecProduct(models.Model):
 
 class RecVote(models.Model):
     """A Vote on a Product"""
-    user = models.ForeignKey(auth_models.User, related_name='rec_votes')
-    product = models.ForeignKey(RecProduct)
-    site = models.ForeignKey(Site)
+    user = models.ForeignKey(
+        auth_models.User, related_name='rec_votes', on_delete=models.CASCADE,
+    )
+    product = models.ForeignKey(RecProduct, on_delete=models.CASCADE)
+    site = models.ForeignKey(Site, on_delete=models.CASCADE)
     score = models.FloatField()
 
     class Meta:
