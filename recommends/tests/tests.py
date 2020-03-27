@@ -131,7 +131,7 @@ class RecommendsListenersTestCase(TestCase):
         recommends_precompute()
 
     def test_listeners(self):
-        self.client.login(username='user1', password='user1')
+        logged_in = self.client.login(username='user1', password='user1')
         response = self.client.get(reverse('home'))
 
         self.vote = RecVote.objects.create(

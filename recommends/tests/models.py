@@ -1,7 +1,9 @@
 from __future__ import unicode_literals
+
 from django.db import models
 from django.contrib.sites.models import Site
 from django.contrib.auth import models as auth_models
+from django.urls import reverse
 
 
 class RecProduct(models.Model):
@@ -15,9 +17,8 @@ class RecProduct(models.Model):
     def __str__(self):
         return self.name
 
-    @models.permalink
     def get_absolute_url(self):
-        return ('product_detail', [self.id])
+        return reverse('product_detail', args=[self.id])
 
     def sites_str(self):
         return ', '.join([s.name for s in self.sites.all()])
@@ -26,9 +27,11 @@ class RecProduct(models.Model):
 
 class RecVote(models.Model):
     """A Vote on a Product"""
-    user = models.ForeignKey(auth_models.User, related_name='rec_votes')
-    product = models.ForeignKey(RecProduct)
-    site = models.ForeignKey(Site)
+    user = models.ForeignKey(
+        auth_models.User, related_name='rec_votes', on_delete=models.CASCADE,
+    )
+    product = models.ForeignKey(RecProduct, on_delete=models.CASCADE)
+    site = models.ForeignKey(Site, on_delete=models.CASCADE)
     score = models.FloatField()
 
     class Meta:

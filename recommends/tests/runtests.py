@@ -12,13 +12,15 @@ PROJECT_DIR = path.dirname(path.realpath(__file__))
 
 settings.configure(
     DATABASES={
-        'default': {'ENGINE': 'django.db.backends.sqlite3'}
+        'default': {'ENGINE': 'django.db.backends.sqlite3', 'NAME': ':memory:'}
     },
     INSTALLED_APPS=[
         'django.contrib.auth',
+        'django.contrib.messages',
+        'django.contrib.sites',
+        'django.contrib.admin',
         'django.contrib.sessions',
         'django.contrib.contenttypes',
-        'django.contrib.sites',
         'recommends',
         'recommends.storages.djangoorm',
         'recommends.tests',
@@ -44,7 +46,7 @@ settings.configure(
             },
         },
     ],
-    MIDDLEWARE_CLASSES=(
+    MIDDLEWARE=(
         'django.contrib.sessions.middleware.SessionMiddleware',
         'django.middleware.common.CommonMiddleware',
         'django.middleware.csrf.CsrfViewMiddleware',

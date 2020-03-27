@@ -20,10 +20,9 @@ Example::
     from django.db import models
     from django.contrib.auth.models import User
     from django.contrib.sites.models import Site
-    from django.utils.encoding import python_2_unicode_compatible
+    from django.urls import reverse
 
 
-    @python_2_unicode_compatible
     class Product(models.Model):
         """A generic Product"""
         name = models.CharField(blank=True, max_length=100)
@@ -32,19 +31,17 @@ Example::
         def __str__(self):
             return self.name
 
-        @models.permalink
         def get_absolute_url(self):
-            return ('product_detail', [self.id])
+            return reverse('product_detail', args=[self.id])
 
         def sites_str(self):
             return ', '.join([s.name for s in self.sites.all()])
         sites_str.short_description = 'sites'
 
 
-    @python_2_unicode_compatible
     class Vote(models.Model):
         """A Vote on a Product"""
-        user = models.ForeignKey(User, related_name='votes')
+        user = models.ForeignKey(User, related_name='votes', on_delete=models.CASCADE)
         product = models.ForeignKey(Product)
         site = models.ForeignKey(Site)
         score = models.FloatField()
