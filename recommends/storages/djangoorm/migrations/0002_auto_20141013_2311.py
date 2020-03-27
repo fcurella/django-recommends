@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
+import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
@@ -15,16 +16,16 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='recommendation',
             name='object_ctype',
-            field=models.ForeignKey(to='contenttypes.ContentType'),
+            field=models.ForeignKey(to='contenttypes.ContentType', on_delete=django.db.models.deletion.CASCADE),
         ),
         migrations.AlterField(
             model_name='similarity',
             name='object_ctype',
-            field=models.ForeignKey(to='contenttypes.ContentType'),
+            field=models.ForeignKey(to='contenttypes.ContentType', on_delete=django.db.models.deletion.CASCADE),
         ),
         migrations.AlterField(
             model_name='similarity',
             name='related_object_ctype',
-            field=models.ForeignKey(related_name='similar', to='contenttypes.ContentType'),
+            field=models.ForeignKey(related_name='similar', to='contenttypes.ContentType', on_delete=django.db.models.deletion.CASCADE),
         ),
     ]

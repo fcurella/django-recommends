@@ -37,7 +37,7 @@ class SuggestionNode(template.Node):
 
     def render(self, context):
         user = context['user']
-        if user.is_authenticated():  # We need an id after all
+        if user.is_authenticated:  # We need an id after all
             cache_key = 'recommends:recommendations:%s:%s:%s' % (settings.SITE_ID, user.id, self.limit)
             suggestions = cache.get(cache_key)
             if suggestions is None:
