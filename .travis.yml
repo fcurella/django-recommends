@@ -1,14 +1,12 @@
 language: python
+addons:
+  apt:
+    packages:
+    - rabbitmq-server 
 services:
   - redis-server
   - mongodb
-  - rabbitmq
-before_install:
-  - wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh
-  - chmod +x miniconda.sh
-  - ./miniconda.sh -b
-  - export PATH=/home/travis/miniconda2/bin:$PATH
-  - conda update --yes conda
+  - rabbitmq-server
 install:
   - conda create --yes -n condaenv python=$TRAVIS_PYTHON_VERSION
   - conda install --yes -n condaenv pip
