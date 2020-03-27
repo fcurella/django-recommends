@@ -9,7 +9,7 @@ from django.utils.encoding import python_2_unicode_compatible
 @python_2_unicode_compatible
 class RecommendsBaseModel(models.Model):
     """(RecommendsBaseModel description)"""
-    object_ctype = models.ForeignKey(ContentType)
+    object_ctype = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     object_site = models.PositiveIntegerField()
     object = GenericForeignKey('object_ctype', 'object_id')
@@ -30,7 +30,7 @@ class Similarity(RecommendsBaseModel):
 
     score = models.FloatField(null=True, blank=True, default=None)
 
-    related_object_ctype = models.ForeignKey(ContentType, related_name='similar')
+    related_object_ctype = models.ForeignKey(ContentType, related_name='similar', on_delete=models.CASCADE)
     related_object_id = models.PositiveIntegerField()
     related_object_site = models.PositiveIntegerField()
     related_object = GenericForeignKey('related_object_ctype', 'related_object_id')
