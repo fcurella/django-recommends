@@ -1,10 +1,10 @@
 from __future__ import unicode_literals
+
 from django.contrib.contenttypes.models import ContentType
+from django.utils.functional import cached_property
 
 
 class MockModel(object):
-    _object = None
-
     def __init__(self, **kwargs):
         self.__dict__ = kwargs
 
@@ -14,23 +14,17 @@ class MockModel(object):
     def __repr__(self):
         return "<%s>" % self.__str__()
 
-    @property
+    @cached_property
     def object(self):
-        if self._object is None:
-            ModelClass = ContentType.objects.get(pk=self.object_ctype).model_class()
-            self._object = ModelClass.objects.get(pk=self.object_id)
-        return self._object
+        ModelClass = ContentType.objects.get(pk=self.object_ctype).model_class()
+        return ModelClass.objects.get(pk=self.object_id)
 
 
 class MockSimilarity(MockModel):
-    _related_object = None
-
-    @property
+    @cached_property
     def related_object(self):
-        if self._related_object is None:
-            ModelClass = ContentType.objects.get(pk=self.related_object_ctype).model_class()
-            self._related_object = ModelClass.objects.get(pk=self.related_object_id)
-        return self._related_object
+        ModelClass = ContentType.objects.get(pk=self.related_object_ctype).model_class()
+        return ModelClass.objects.get(pk=self.related_object_id)
 
     def __str__(self):
         return "Similarity between %s and %s" % (self.object, self.related_object)

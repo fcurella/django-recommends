@@ -1,5 +1,6 @@
 from collections import defaultdict
 from django.apps import apps
+from django.utils.functional import cached_property
 
 
 def model_path(obj):
@@ -7,24 +8,21 @@ def model_path(obj):
 
 
 class IdentifierManager(object):
-    _sites = None
-    _ctypes = None
-
-    @property
+    @cached_property
     def sites(self):
-        if self._sites is None:
-            from django.contrib.sites.models import Site
+        from django.contrib.sites.models import Site
 
-            self._sites = dict([(s.id, s) for s in Site.objects.all()])
-        return self._sites
+        try:
+            _sites = dict([(s.id, s) for s in Site.objects.all()])
+        except:  # NOQA
+            _sites = {1: Site(domain='default.example', name='default')}
+        return _sites
 
-    @property
+    @cached_property
     def ctypes(self):
-        if self._ctypes is None:
-            from django.contrib.contenttypes.models import ContentType
+        from django.contrib.contenttypes.models import ContentType
 
-            self._ctypes = dict([("%s.%s" % (c.app_label, c.model), c) for c in ContentType.objects.all()])
-        return self._ctypes
+        return dict([("%s.%s" % (c.app_label, c.model), c) for c in ContentType.objects.all()])
 
     def resolve_identifier(self, identifier):
         """
