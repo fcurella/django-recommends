@@ -1,25 +1,16 @@
 language: python
+addons:
+  apt:
+    packages:
+    - rabbitmq-server 
 services:
   - redis-server
   - mongodb
-  - rabbitmq
-before_install:
-  - wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh
-  - chmod +x miniconda.sh
-  - ./miniconda.sh -b
-  - export PATH=/home/travis/miniconda2/bin:$PATH
-  - conda update --yes conda
-  # The next couple lines fix a crash with multiprocessing on Travis and are not specific to using Miniconda
-  - sudo rm -rf /dev/shm
-  - sudo ln -s /run/shm /dev/shm
+  - rabbitmq-server
 install:
-  - conda update --yes conda
-  - conda create --yes -n condaenv python=$TRAVIS_PYTHON_VERSION
-  - conda install --yes -n condaenv pip
-  - source activate condaenv
-  - conda install --yes python=$TRAVIS_PYTHON_VERSION numpy scipy
   - pip install --quiet --upgrade pip
-  - pip install -r test-requirements-py$TRAVIS_PYTHON_VERSION.txt
+  - pip install -r test-requirements.txt
+  - pip install numpy scipy
   - pip install .
   - pip install -q $DJANGO
 before_script:
@@ -27,14 +18,11 @@ before_script:
   - "django-admin.py version;"
   - "flake8 --exclude=docs,south_migrations,tests,tasks --ignore=E501,E123,E124,E126,E127,E128 --statistics .;"
 python:
-  - "2.7"
-  - "3.4"
   - "3.5"
+  - "3.6"
+  - "3.7"
 env:
-  - DJANGO="Django>=1.8,<1.9"
-  - DJANGO="Django>=1.9,<1.10"
-  - DJANGO="Django>=1.10,<1.11"
-
+  - DJANGO="Django>=1.11,<2"
 script: python recommends/tests/runtests.py
 after_failure:
   - env

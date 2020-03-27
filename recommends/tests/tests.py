@@ -3,8 +3,8 @@ import warnings
 
 import timeit
 
-from django.contrib.auth.models import User
-from django.core.urlresolvers import reverse
+from django.contrib.auth import get_user_model
+from django.urls import reverse
 from django.test import Client, TestCase
 from django.test.utils import override_settings
 
@@ -32,6 +32,8 @@ class RecommendsTestCase(TestCase):
     }
 
     def setUp(self):
+        User = get_user_model()
+
         self.client = Client()
         self.mug = RecProduct.objects.get(name='Coffee Mug')
         self.orange_juice = RecProduct.objects.get(name='Orange Juice')
@@ -113,6 +115,8 @@ class RecommendsListenersTestCase(TestCase):
     fixtures = ['products.json']
 
     def setUp(self):
+        User = get_user_model()
+
         self.client = Client()
         self.mug = RecProduct.objects.get(name='Coffee Mug')
         self.orange_juice = RecProduct.objects.get(name='Orange Juice')
