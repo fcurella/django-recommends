@@ -20,6 +20,7 @@ Example::
     from django.db import models
     from django.contrib.auth.models import User
     from django.contrib.sites.models import Site
+    from django.urls import reverse
 
 
     class Product(models.Model):
@@ -30,9 +31,8 @@ Example::
         def __str__(self):
             return self.name
 
-        @models.permalink
         def get_absolute_url(self):
-            return ('product_detail', [self.id])
+            return reverse('product_detail', args=[self.id])
 
         def sites_str(self):
             return ', '.join([s.name for s in self.sites.all()])
