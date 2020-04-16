@@ -2,7 +2,7 @@
 
 Changelog
 =========
-* v0.5.0
+* v1.0.0
     * Drop support for Python 2
     * Drop support for Django 1.10
     * Add support for Django 1.11 up to Django 2.1
