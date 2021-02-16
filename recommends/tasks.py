@@ -1,4 +1,5 @@
-from celery.task import task, periodic_task
+from celery import shared_task
+from celery.task import periodic_task
 from celery.schedules import crontab
 from .utils import filelock
 
@@ -34,7 +35,7 @@ if RECOMMENDS_TASK_RUN:
         recommends_precompute()
 
 
-@task(name='remove_suggestions')
+@shared_task(name='remove_suggestions')
 def remove_suggestions(rated_model, object_id):
     from django.apps import apps
     from recommends.providers import recommendation_registry
@@ -47,7 +48,7 @@ def remove_suggestions(rated_model, object_id):
     provider_instance.storage.remove_recommendations(obj)
 
 
-@task(name='remove_similarities')
+@shared_task(name='remove_similarities')
 def remove_similarities(rated_model, object_id):
     from django.apps import apps
     from recommends.providers import recommendation_registry
