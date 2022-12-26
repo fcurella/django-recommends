@@ -2,4 +2,4 @@ redis==2.7.4
 pymongo==2.9.5
 flake8>=2.0
 twine==1.14.0
-wheel==0.33.6
+wheel==0.38.1
