@@ -1,4 +1,4 @@
-redis==2.7.4
+redis==4.5.3
 pymongo==2.9.5
 flake8>=2.0
 twine==1.14.0
